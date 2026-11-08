@@ -26,5 +26,9 @@
 | :--- | :--- |
 | [`CONTEXT.md`](./CONTEXT.md) | System architecture, scope boundaries (Public + Student + Panelist only), and mock strategy |
 | [`docs/IMPLEMENTATION_CHECKLIST.md`](./docs/IMPLEMENTATION_CHECKLIST.md) | Live progress tracker and bounded Work Packages (`WP-0` to `WP-6`) |
+| [`docs/FRONTEND_ARCHITECTURE_AND_MOCK_API_SPEC.md`](./docs/FRONTEND_ARCHITECTURE_AND_MOCK_API_SPEC.md) | Complete source-to-target file map and all 35+ Mock API endpoint contracts (`api.client.ts`) |
 | [`docs/EVALUATION_GUIDE_AND_SCENARIOS_SPEC.md`](./docs/EVALUATION_GUIDE_AND_SCENARIOS_SPEC.md) | Specification for the **Scenario Switcher Bar**, **Arrow Coach-Mark Guides**, and route-by-route behavior |
+| [`docs/plans/WP1_WP2_FOUNDATION_AND_EVAL_ENGINE_PLAN.md`](./docs/plans/WP1_WP2_FOUNDATION_AND_EVAL_ENGINE_PLAN.md) | Step-by-step frontend blueprint for Next.js scaffolding, Mock Session/API, Public pages, and Arrow Guide engine |
+| [`docs/plans/WP3_WP4_STUDENT_PORTAL_IMPLEMENTATION_PLAN.md`](./docs/plans/WP3_WP4_STUDENT_PORTAL_IMPLEMENTATION_PLAN.md) | Page-by-page frontend blueprint for Student Portal & all 5 unlocked Thesis Journey pages |
+| [`docs/plans/WP5_PANELIST_PORTAL_AND_WORKSPACE_PLAN.md`](./docs/plans/WP5_PANELIST_PORTAL_AND_WORKSPACE_PLAN.md) | Page-by-page frontend blueprint for Faculty/Panelist Portal, Defense Workspace, and Adviser workflows |
 | [`.agents/skills/graduate-eval-builder/SKILL.md`](./.agents/skills/graduate-eval-builder/SKILL.md) | Reusable skill workflow for porting pages and wiring evaluation guides |
