@@ -71,19 +71,35 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
     autoShowOnFirstVisit: true,
     steps: [
       {
+        id: "scenario-switcher",
+        targetSelector: '[data-guide="scenario-switcher"]',
+        title: "Preview Dashboard Across Journey Stages",
+        description:
+          "Use this Scenario Switcher to toggle the Student Dashboard between (1) Scheduled Proposal Defense, (2) Active Title Defense, and (3) Completed Thesis Journey.",
+        placement: "bottom",
+      },
+      {
         id: "dashboard-welcome",
         targetSelector: '[data-guide="dashboard-welcome"]',
         title: "Student Status & Degree Banner",
         description:
-          "Displays the enrolled graduate student's profile summary, active degree program (MAEd in Administration & Supervision), and current academic standing.",
+          "Displays the enrolled graduate student's profile summary, active degree program (MAEd in Administration & Supervision), Comprehensive Exam standing, and current thesis stage.",
         placement: "bottom",
       },
       {
-        id: "dashboard-journey-card",
-        targetSelector: '[data-guide="dashboard-journey-card"], [data-guide="dashboard-next-step"], [data-guide="dashboard-milestones"]',
-        title: "Current Thesis Milestone Progress",
+        id: "dashboard-next-step",
+        targetSelector: '[data-guide="dashboard-next-step"]',
+        title: "Your Immediate Next Step",
         description:
-          "Tracks real-time progress across the 5 institutional Thesis Journey stages and highlights the immediate next action required from the student.",
+          "Highlights the exact action or waiting status for your active Thesis Journey milestone with a direct action button.",
+        placement: "top",
+      },
+      {
+        id: "dashboard-milestones",
+        targetSelector: '[data-guide="dashboard-milestones"]',
+        title: "5-Step Thesis Journey Progress",
+        description:
+          "Tracks real-time progress across all 5 institutional Thesis Journey stages (Title Defense, Adviser Request, Proposal Defense, STRIKE Plagiarism, and Final Defense).",
         placement: "top",
       },
       {
@@ -91,7 +107,7 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
         targetSelector: '[data-guide="dashboard-upcoming-defense"]',
         title: "Scheduled Defense Quick View",
         description:
-          "Shows upcoming or active oral defense details including date, wall-clock time, defense room or virtual link, and assigned committee members.",
+          "Shows upcoming or active oral defense details including date, wall-clock time, defense room or virtual link, and session status.",
         placement: "top",
       },
       ...COMMON_STUDENT_SHELL_STEPS,
@@ -371,10 +387,18 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
       },
       {
         id: "repo-submit-form",
-        targetSelector: '[data-guide="repo-submit-form"], [data-guide="repo-submit-files"]',
-        title: "Controlled Research Databank (DL-9) Package",
+        targetSelector: '[data-guide="repo-submit-form"]',
+        title: "Archival Metadata & Abstract Entry",
         description:
-          "Graduating students enter their final abstract and keywords and upload the 4 required archival artifacts (Final Manuscript, Signed Certifications, Instruments, and Anonymized Dataset).",
+          "Graduating students enter their comprehensive research abstract (150+ words) and indexed keywords, or click 'Fill Sample Evaluation Data' to test submission.",
+        placement: "top",
+      },
+      {
+        id: "repo-submit-files",
+        targetSelector: '[data-guide="repo-submit-files"], [data-guide="repo-submit-form"]',
+        title: "4 Required Archival Artifacts (DL-9)",
+        description:
+          "Upload or download the Approved Final Manuscript (Ch. 1–5), Signed Certifications, Research Instruments, and Data-Privacy-Restricted Respondent Dataset.",
         placement: "top",
       },
     ],

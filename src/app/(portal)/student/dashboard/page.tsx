@@ -9,12 +9,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { ScenarioSwitcherBar } from "@/components/evaluation/scenario-switcher-bar";
 import { useStudentThesisJourney } from "@/hooks/use-student-thesis-journey";
 import {
   JOURNEY_STEP_ORDER,
   formatDefenseDate,
   formatDefenseTime,
   journeyLabelFor,
+  journeyRouteFor,
   sessionStatusLabel,
 } from "@/lib/student-thesis-journey";
 import {
@@ -36,6 +38,7 @@ import {
   Bell,
   BookOpen,
   CalendarClock,
+  CheckCircle2,
   ClipboardList,
   ExternalLink,
   FileText,
@@ -246,81 +249,88 @@ export default function StudentDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* A. Welcome + identity */}
-      {overviewQuery.isLoading ? (
-        <div className="space-y-2" aria-busy="true" aria-live="polite">
-          <Skeleton className="h-8 w-64" />
-          <Skeleton className="h-4 w-56 max-w-full" />
-          <Skeleton className="h-3 w-40" />
-        </div>
-      ) : (
-        <PageHeader
-          title={`Welcome back, ${firstName}!`}
-          description={programName}
-        >
-          {studentNumber ? (
-            <p className="text-xs text-(--earist-body-text)">
-              Student Number: {studentNumber}
-            </p>
-          ) : null}
-        </PageHeader>
-      )}
+      <ScenarioSwitcherBar
+        pageKey="student-dashboard"
+        title="Dashboard Stage Preview:"
+        helperText="Toggle between stages to preview how the Student Dashboard adapts at different points in the Thesis Journey."
+      />
 
-      {overviewQuery.isError ? (
-        <p className="text-xs text-(--earist-body-text)">
-          Some account details could not be loaded.
-        </p>
-      ) : null}
-
-      {/* B. Academic status summary */}
-      <section aria-label="Academic status summary">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Card>
-            <CardContent className="space-y-1 p-4">
-              <p className="flex items-center gap-2 text-xs font-semibold text-(--earist-body-text)">
-                <BookOpen className="h-4 w-4" aria-hidden="true" />
-                Comprehensive Examination
-              </p>
-              {overviewQuery.isLoading ? (
-                <Skeleton className="h-7 w-24" />
-              ) : overviewQuery.isError ? (
-                <p className="text-sm text-(--earist-body-text)">Unavailable</p>
-              ) : (
-                <p className="text-2xl font-bold text-(--earist-primary)">
-                  {compExamStatusLabel(compExamStatus)}
-                </p>
-              )}
+      {/* A & B. Welcome + Academic status summary */}
+      <div data-guide="dashboard-welcome" className="space-y-6">
+        {overviewQuery.isLoading ? (
+          <div className="space-y-2" aria-busy="true" aria-live="polite">
+            <Skeleton className="h-8 w-64" />
+            <Skeleton className="h-4 w-56 max-w-full" />
+            <Skeleton className="h-3 w-40" />
+          </div>
+        ) : (
+          <PageHeader
+            title={`Welcome back, ${firstName}!`}
+            description={programName}
+          >
+            {studentNumber ? (
               <p className="text-xs text-(--earist-body-text)">
-                Required before Title Defense.
+                Student Number: {studentNumber}
               </p>
-            </CardContent>
-          </Card>
+            ) : null}
+          </PageHeader>
+        )}
 
-          <Card>
-            <CardContent className="space-y-1 p-4">
-              <p className="flex items-center gap-2 text-xs font-semibold text-(--earist-body-text)">
-                <Milestone className="h-4 w-4" aria-hidden="true" />
-                Current Thesis Stage
-              </p>
-              {journeyQuery.isLoading ? (
-                <Skeleton className="h-7 w-32" />
-              ) : journeyQuery.isError ? (
-                <p className="text-sm text-(--earist-body-text)">Unavailable</p>
-              ) : (
-                <p className="text-2xl font-bold text-(--earist-primary)">
-                  {currentStageLabel}
+        {overviewQuery.isError ? (
+          <p className="text-xs text-(--earist-body-text)">
+            Some account details could not be loaded.
+          </p>
+        ) : null}
+
+        <section aria-label="Academic status summary">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Card>
+              <CardContent className="space-y-1 p-4">
+                <p className="flex items-center gap-2 text-xs font-semibold text-(--earist-body-text)">
+                  <BookOpen className="h-4 w-4" aria-hidden="true" />
+                  Comprehensive Examination
                 </p>
-              )}
-              <p className="text-xs text-(--earist-body-text)">
-                Based on your Student Thesis Journey.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+                {overviewQuery.isLoading ? (
+                  <Skeleton className="h-7 w-24" />
+                ) : overviewQuery.isError ? (
+                  <p className="text-sm text-(--earist-body-text)">Unavailable</p>
+                ) : (
+                  <p className="text-2xl font-bold text-(--earist-primary)">
+                    {compExamStatusLabel(compExamStatus)}
+                  </p>
+                )}
+                <p className="text-xs text-(--earist-body-text)">
+                  Required before Title Defense.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="space-y-1 p-4">
+                <p className="flex items-center gap-2 text-xs font-semibold text-(--earist-body-text)">
+                  <Milestone className="h-4 w-4" aria-hidden="true" />
+                  Current Thesis Stage
+                </p>
+                {journeyQuery.isLoading ? (
+                  <Skeleton className="h-7 w-32" />
+                ) : journeyQuery.isError ? (
+                  <p className="text-sm text-(--earist-body-text)">Unavailable</p>
+                ) : (
+                  <p className="text-2xl font-bold text-(--earist-primary)">
+                    {currentStageLabel}
+                  </p>
+                )}
+                <p className="text-xs text-(--earist-body-text)">
+                  Based on your Student Thesis Journey.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+      </div>
 
       {/* C. Your Next Step — primary focus */}
-      <Card>
+      <Card data-guide="dashboard-next-step">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <ClipboardList
@@ -350,7 +360,7 @@ export default function StudentDashboard() {
       </Card>
 
       {/* D. Thesis Journey overview */}
-      <Card>
+      <Card data-guide="dashboard-milestones">
         <CardHeader>
           <div className="flex items-start justify-between gap-3">
             <CardTitle className="flex items-center gap-2 text-base">
@@ -364,7 +374,7 @@ export default function StudentDashboard() {
               href="/student/thesis"
               className="shrink-0 text-xs font-medium text-(--earist-secondary) hover:underline"
             >
-              Open Thesis Journey
+              Open Thesis Journey Hub
             </Link>
           </div>
         </CardHeader>
@@ -387,28 +397,31 @@ export default function StudentDashboard() {
               {JOURNEY_STEP_ORDER.map((key, index) => {
                 const step = journey.steps.find((s) => s.key === key);
                 const label = journeyLabelFor(key, step?.label);
+                const href = journeyRouteFor(key);
                 const stateLabel = step
                   ? milestoneStateLabel(step, journey.policy.strikeRequired)
                   : "—";
                 return (
-                  <li
-                    key={key}
-                    className="rounded-lg border border-(--earist-border-gray) p-3"
-                  >
-                    <p className="text-[11px] font-semibold text-(--earist-body-text)">
-                      Step {index + 1}
-                    </p>
-                    <p className="mt-0.5 text-sm font-medium break-words text-foreground">
-                      {label}
-                    </p>
-                    <span
-                      className={cn(
-                        "mt-2 inline-block rounded-full px-2 py-0.5 text-[11px] font-semibold",
-                        milestoneTone(step, journey.policy.strikeRequired),
-                      )}
+                  <li key={key}>
+                    <Link
+                      href={href}
+                      className="block h-full rounded-lg border border-(--earist-border-gray) p-3 transition-all hover:border-(--earist-primary) hover:shadow-xs"
                     >
-                      {stateLabel}
-                    </span>
+                      <p className="text-[11px] font-semibold text-(--earist-body-text)">
+                        Step {index + 1}
+                      </p>
+                      <p className="mt-0.5 text-sm font-medium break-words text-foreground">
+                        {label}
+                      </p>
+                      <span
+                        className={cn(
+                          "mt-2 inline-block rounded-full px-2 py-0.5 text-[11px] font-semibold",
+                          milestoneTone(step, journey.policy.strikeRequired),
+                        )}
+                      >
+                        {stateLabel}
+                      </span>
+                    </Link>
                   </li>
                 );
               })}
@@ -417,53 +430,83 @@ export default function StudentDashboard() {
         </CardContent>
       </Card>
 
-      {/* E. Defense Schedule — conditional */}
-      {active ? (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-base">
-              <CalendarClock
-                className="h-4 w-4 text-(--earist-secondary)"
-                aria-hidden="true"
-              />
-              Defense Schedule
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm font-semibold text-foreground">
-              {active.label}
+      {/* E. Defense Schedule */}
+      <Card data-guide="dashboard-upcoming-defense">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <CalendarClock
+              className="h-4 w-4 text-(--earist-secondary)"
+              aria-hidden="true"
+            />
+            Defense Schedule
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {active ? (
+            <>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <p className="text-sm font-semibold text-foreground">
+                  {active.label}
+                </p>
+                <Link
+                  href={journeyRouteFor(active.stepKey)}
+                  className="text-xs font-medium text-(--earist-secondary) hover:underline"
+                >
+                  Open {active.label} Details →
+                </Link>
+              </div>
+              <dl className="grid gap-x-6 gap-y-3 text-xs sm:grid-cols-3">
+                <div className="min-w-0">
+                  <dt className="text-(--earist-body-text)">Date</dt>
+                  <dd className="mt-0.5 font-medium break-words text-foreground">
+                    {formatDefenseDate(active.session.defenseDate)}
+                  </dd>
+                </div>
+                <div className="min-w-0">
+                  <dt className="text-(--earist-body-text)">Time</dt>
+                  <dd className="mt-0.5 font-medium break-words text-foreground">
+                    {formatDefenseTime(active.session.defenseTime)}
+                  </dd>
+                </div>
+                <div className="min-w-0">
+                  <dt className="text-(--earist-body-text)">Session Status</dt>
+                  <dd className="mt-0.5 font-medium text-foreground">
+                    {sessionStatusLabel(active.session.sessionStatus)}
+                  </dd>
+                </div>
+                <div className="min-w-0 sm:col-span-3">
+                  <dt className="text-(--earist-body-text)">
+                    Venue / Meeting Details
+                  </dt>
+                  <dd className="mt-0.5 font-medium break-words text-foreground">
+                    <ScheduleVenue venueOrLink={active.session.venueOrLink} />
+                  </dd>
+                </div>
+              </dl>
+            </>
+          ) : journey && !journey.currentStep ? (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-emerald-200 bg-emerald-50/70 p-3.5 text-xs text-emerald-900">
+              <div className="flex items-center gap-2.5">
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
+                <span>
+                  All oral defense sessions (Title, Proposal, and Final Defense) have been concluded and passed.
+                </span>
+              </div>
+              <Link
+                href="/student/repository/submit"
+                className="font-semibold text-(--earist-primary) hover:underline"
+              >
+                Proceed to Research Databank →
+              </Link>
+            </div>
+          ) : (
+            <p className="text-xs text-(--earist-body-text)">
+              No active oral defense session is currently scheduled for this stage. Switch to{" "}
+              <strong>1. Scheduled Proposal Defense</strong> above or open any Thesis Journey step to inspect scheduled defense details.
             </p>
-            <dl className="grid gap-x-6 gap-y-3 text-xs sm:grid-cols-3">
-              <div className="min-w-0">
-                <dt className="text-(--earist-body-text)">Date</dt>
-                <dd className="mt-0.5 font-medium break-words text-foreground">
-                  {formatDefenseDate(active.session.defenseDate)}
-                </dd>
-              </div>
-              <div className="min-w-0">
-                <dt className="text-(--earist-body-text)">Time</dt>
-                <dd className="mt-0.5 font-medium break-words text-foreground">
-                  {formatDefenseTime(active.session.defenseTime)}
-                </dd>
-              </div>
-              <div className="min-w-0">
-                <dt className="text-(--earist-body-text)">Session Status</dt>
-                <dd className="mt-0.5 font-medium text-foreground">
-                  {sessionStatusLabel(active.session.sessionStatus)}
-                </dd>
-              </div>
-              <div className="min-w-0 sm:col-span-3">
-                <dt className="text-(--earist-body-text)">
-                  Venue / Meeting Details
-                </dt>
-                <dd className="mt-0.5 font-medium break-words text-foreground">
-                  <ScheduleVenue venueOrLink={active.session.venueOrLink} />
-                </dd>
-              </div>
-            </dl>
-          </CardContent>
-        </Card>
-      ) : null}
+          )}
+        </CardContent>
+      </Card>
 
       {/* F. Recent updates */}
       <div className="grid gap-4 lg:grid-cols-2">

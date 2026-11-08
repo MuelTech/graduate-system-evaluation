@@ -11,7 +11,7 @@
 | **WP-0** | Documentation, Specs, & Agent Skill Setup | **COMPLETED** | `GEMINI.md`, `CONTEXT.md`, Checklist, Spec, and `graduate-eval-builder` skill created |
 | **WP-1** | Base Frontend Scaffolding, Mock API Layer & Public Entry | **COMPLETED** | Next.js App Router at repo root, EARIST theme, UI primitives, Public pages, Role Selector, Mock Session & API router |
 | **WP-2** | Evaluation UI Engine (Arrow Coach-Marks, Scenario Switcher & Sample PDFs) | **COMPLETED** | `PageGuideOverlay`, `ScenarioSwitcherBar`, `RoleSwitcherPill`, and `public/sample-docs/*.pdf` + PDF API routes |
-| **WP-3** | Student Portal — Layout & Core Pages + Guides | **PENDING** | Unlocked Sidebar, Dashboard, Profile, Curriculum, Academic Journey, Repository, Announcements, Notifications |
+| **WP-3** | Student Portal — Layout & Core Pages + Guides | **COMPLETED** | Unlocked Sidebar, Dashboard, Profile, Curriculum, Academic Journey, Repository, Announcements, Notifications |
 | **WP-4** | Student Portal — Unlocked Thesis Journey Steps + Multi-State Scenarios | **PENDING** | Title Defense, Adviser Request, Proposal Defense, STRIKE / Plagiarism, Final Defense (all states unlocked) |
 | **WP-5** | Faculty / Panelist Portal — All Pages & Collaborative Defense Workspace | **PENDING** | Dashboard, Profile, My Defenses, Defense Workspace (PDF Annotation, Scoring, RAP), My Advisees, E-Signatures, Repository, Announcements, Notifications |
 | **WP-6** | End-to-End QA, Guide Verification & Vercel Deployment Readiness | **PENDING** | Full `next build` check, link/route audit, responsive check, `vercel.json` / README instructions |
@@ -66,10 +66,10 @@
 ### WP-3: Student Portal — Layout & Core Pages + Guides
 **Goal:** Port the Student Portal chrome with all sidebar items unlocked and implement all general Student pages with hardcoded EARIST data and page guides.
 
-- [ ] **3.1 Student Layout (`src/app/(portal)/student/layout.tsx`):**
+- [x] **3.1 Student Layout (`src/app/(portal)/student/layout.tsx`):**
   - Unlock all 5 **Thesis Journey** steps in the sidebar (`isNavigable = true` for all steps) while displaying realistic status badges.
   - Integrate `RoleSwitcherPill` and `[? Page Guide]` trigger in the Student header.
-- [ ] **3.2 Student Core Pages:**
+- [x] **3.2 Student Core Pages:**
   - `/student/dashboard` — Progress summary, active thesis milestone, upcoming defense schedule, recent notifications.
   - `/student/profile` — Student academic profile, degree program, student ID, contact info.
   - `/student/curriculum` — Degree curriculum checklist, completed/enrolled units, GPA summary.
@@ -77,7 +77,7 @@
   - `/student/repository` & `/student/repository/submit` — Graduate Thesis Repository browser, document viewer, and archival submission form.
   - `/student/announcements` — Official Graduate School memos and announcements.
   - `/student/notifications` — Interactive notification list with read/unread toggles.
-- [ ] **3.3 Wire Arrow Guides (`data-guide` attributes) for all WP-3 pages.**
+- [x] **3.3 Wire Arrow Guides (`data-guide` attributes) for all WP-3 pages.**
 
 ---
 

@@ -3,6 +3,7 @@
 import { useSyncExternalStore, useCallback } from "react";
 
 export type ScenarioPageKey =
+  | "student-dashboard"
   | "title-defense"
   | "adviser-request"
   | "proposal-defense"
@@ -20,6 +21,29 @@ export interface ScenarioOption {
 }
 
 export const SCENARIO_DEFINITIONS: Record<ScenarioPageKey, ScenarioOption[]> = {
+  "student-dashboard": [
+    {
+      id: "PROPOSAL_SCHEDULED",
+      label: "1. Scheduled Proposal Defense",
+      badge: "Scheduled",
+      description:
+        "Student has passed Title Defense & Adviser Request, and has an upcoming Proposal Defense scheduled.",
+    },
+    {
+      id: "TITLE_ACTIVE",
+      label: "2. Active Title Defense",
+      badge: "Step 1 Action",
+      description:
+        "Student is at Step 1 (Title Defense) and needs to submit their 3-Title Proposal Package.",
+    },
+    {
+      id: "COMPLETED_JOURNEY",
+      label: "3. Completed Thesis Journey",
+      badge: "All 5 Passed",
+      description:
+        "All 5 Thesis Journey milestones are completed and the student is ready for Research Databank archival.",
+    },
+  ],
   "title-defense": [
     {
       id: "NOT_SUBMITTED",
@@ -228,6 +252,7 @@ export const SCENARIO_DEFINITIONS: Record<ScenarioPageKey, ScenarioOption[]> = {
 };
 
 const DEFAULT_SCENARIOS: Record<ScenarioPageKey, string> = {
+  "student-dashboard": "PROPOSAL_SCHEDULED",
   "title-defense": "NOT_SUBMITTED",
   "adviser-request": "SELECT_ADVISER",
   "proposal-defense": "ADVISER_REVIEW",

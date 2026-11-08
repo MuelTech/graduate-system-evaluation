@@ -157,7 +157,7 @@ export function RepositoryBrowser({
       </div>
 
       {/* Filter and Search Bar */}
-      <Card>
+      <Card data-guide="repo-search-filters">
         <CardContent className="py-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative flex-1">

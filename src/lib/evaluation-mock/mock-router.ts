@@ -112,7 +112,10 @@ export async function evaluationMockRouter(
   }
 
   // 2. Research Repository Publications
-  if (pathname === "/databank/publications" && method === "GET") {
+  if (
+    (pathname === "/databank/publications" || pathname === "/repository") &&
+    method === "GET"
+  ) {
     const q = (searchParams.get("q") ?? searchParams.get("search") ?? "")
       .trim()
       .toLowerCase();
@@ -137,6 +140,10 @@ export async function evaluationMockRouter(
       return matchesQuery && matchesProgram;
     });
 
+    if (pathname === "/repository") {
+      return filtered;
+    }
+
     const start = (page - 1) * pageSize;
     return {
       data: filtered.slice(start, start + pageSize),
@@ -153,6 +160,7 @@ export async function evaluationMockRouter(
 
   if (pathname === "/thesis/journey" && method === "GET") {
     return buildStudentThesisJourney({
+      studentDashboard: getScenario("student-dashboard"),
       titleDefense: getScenario("title-defense"),
       adviserRequest: getScenario("adviser-request"),
       proposalDefense: getScenario("proposal-defense"),

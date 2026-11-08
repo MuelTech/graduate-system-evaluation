@@ -517,6 +517,7 @@ export const FINAL_SESSION_SUMMARY: DefenseSessionSummary = {
  * while keeping all 5 steps navigable and realistic.
  */
 export function buildStudentThesisJourney(scenarios: {
+  studentDashboard?: string;
   titleDefense: string;
   adviserRequest: string;
   proposalDefense: string;
@@ -525,6 +526,240 @@ export function buildStudentThesisJourney(scenarios: {
   activePathname?: string;
 }): StudentThesisJourney {
   const path = scenarios.activePathname ?? "";
+  const isDashboard = path === "/student/dashboard" || path === "";
+  const dashScenario = scenarios.studentDashboard ?? "PROPOSAL_SCHEDULED";
+
+  if (isDashboard) {
+    if (dashScenario === "TITLE_ACTIVE") {
+      return {
+        currentStep: "TITLE_DEFENSE",
+        selectedTitle: null,
+        activeAdviser: null,
+        adviserRequest: null,
+        policy: { strikeRequired: true },
+        steps: [
+          {
+            key: "TITLE_DEFENSE",
+            label: "Title Defense",
+            state: "CURRENT",
+            lockReason: null,
+            nextAction:
+              "Submit your 3 proposed thesis titles, Proposal Package PDF, current COR, and defense-fee receipt.",
+            detail: "Ready for Title Defense application submission.",
+            defenseStatus: "NOT_SUBMITTED",
+            defenseSession: null,
+          },
+          {
+            key: "ADVISER_REQUEST",
+            label: "Adviser Request",
+            state: "LOCKED",
+            lockReason: "Complete Title Defense first.",
+            nextAction: null,
+            detail: null,
+            defenseStatus: null,
+            defenseSession: null,
+          },
+          {
+            key: "PROPOSAL_DEFENSE",
+            label: "Proposal Defense",
+            state: "LOCKED",
+            lockReason: "Complete Adviser Request first.",
+            nextAction: null,
+            detail: null,
+            defenseStatus: null,
+            defenseSession: null,
+          },
+          {
+            key: "STRIKE",
+            label: "STRIKE / Plagiarism",
+            state: "LOCKED",
+            lockReason: "Complete Proposal Defense first.",
+            nextAction: null,
+            detail: null,
+            defenseStatus: null,
+            defenseSession: null,
+          },
+          {
+            key: "FINAL_DEFENSE",
+            label: "Final Defense",
+            state: "LOCKED",
+            lockReason: "Complete STRIKE / Plagiarism clearance first.",
+            nextAction: null,
+            detail: null,
+            defenseStatus: null,
+            defenseSession: null,
+          },
+        ],
+      };
+    }
+
+    if (dashScenario === "COMPLETED_JOURNEY") {
+      return {
+        currentStep: null,
+        selectedTitle: {
+          id: "title-opt-01",
+          titleText: OFFICIAL_APPROVED_TITLE,
+        },
+        activeAdviser: {
+          userId: "panelist-eval-01",
+          name: "Dr. Maria Clara R. Santos, EdD",
+        },
+        adviserRequest: {
+          id: "adv-req-01",
+          status: "APPROVED",
+          adviserStatus: "CONFORMED",
+          deanStatus: "APPROVED",
+          requestedAdviserId: "panelist-eval-01",
+          requestedAdviserName: "Dr. Maria Clara R. Santos, EdD",
+        },
+        policy: { strikeRequired: true },
+        steps: [
+          {
+            key: "TITLE_DEFENSE",
+            label: "Title Defense",
+            state: "COMPLETED",
+            lockReason: null,
+            nextAction: null,
+            detail: `Approved Title: "${OFFICIAL_APPROVED_TITLE}"`,
+            defenseStatus: "COMPLETED",
+            defenseSession: {
+              ...TITLE_SESSION_SUMMARY,
+              sessionStatus: "CONCLUDED",
+            },
+          },
+          {
+            key: "ADVISER_REQUEST",
+            label: "Adviser Request",
+            state: "COMPLETED",
+            lockReason: null,
+            nextAction: null,
+            detail: "Assigned Adviser: Dr. Maria Clara R. Santos, EdD",
+            defenseStatus: null,
+            defenseSession: null,
+          },
+          {
+            key: "PROPOSAL_DEFENSE",
+            label: "Proposal Defense",
+            state: "COMPLETED",
+            lockReason: null,
+            nextAction: null,
+            detail: "Proposal Defense Passed — Official RAP Report finalized.",
+            defenseStatus: "COMPLETED",
+            defenseSession: {
+              ...PROPOSAL_SESSION_SUMMARY,
+              sessionStatus: "CONCLUDED",
+            },
+          },
+          {
+            key: "STRIKE",
+            label: "STRIKE / Plagiarism",
+            state: "COMPLETED",
+            lockReason: null,
+            nextAction: null,
+            detail:
+              "STRIKE Similarity Clearance Issued — 8.4% Overall Similarity Index (Passed).",
+            defenseStatus: null,
+            defenseSession: null,
+          },
+          {
+            key: "FINAL_DEFENSE",
+            label: "Final Defense",
+            state: "COMPLETED",
+            lockReason: null,
+            nextAction: null,
+            detail:
+              "Final Oral Defense Passed — Eligible for Research Databank archival.",
+            defenseStatus: "COMPLETED",
+            defenseSession: {
+              ...FINAL_SESSION_SUMMARY,
+              sessionStatus: "CONCLUDED",
+            },
+          },
+        ],
+      };
+    }
+
+    // Default dashboard scenario: PROPOSAL_SCHEDULED
+    return {
+      currentStep: "PROPOSAL_DEFENSE",
+      selectedTitle: {
+        id: "title-opt-01",
+        titleText: OFFICIAL_APPROVED_TITLE,
+      },
+      activeAdviser: {
+        userId: "panelist-eval-01",
+        name: "Dr. Maria Clara R. Santos, EdD",
+      },
+      adviserRequest: {
+        id: "adv-req-01",
+        status: "APPROVED",
+        adviserStatus: "CONFORMED",
+        deanStatus: "APPROVED",
+        requestedAdviserId: "panelist-eval-01",
+        requestedAdviserName: "Dr. Maria Clara R. Santos, EdD",
+      },
+      policy: { strikeRequired: true },
+      steps: [
+        {
+          key: "TITLE_DEFENSE",
+          label: "Title Defense",
+          state: "COMPLETED",
+          lockReason: null,
+          nextAction: null,
+          detail: `Approved Title: "${OFFICIAL_APPROVED_TITLE}"`,
+          defenseStatus: "COMPLETED",
+          defenseSession: {
+            ...TITLE_SESSION_SUMMARY,
+            sessionStatus: "CONCLUDED",
+          },
+        },
+        {
+          key: "ADVISER_REQUEST",
+          label: "Adviser Request",
+          state: "COMPLETED",
+          lockReason: null,
+          nextAction: null,
+          detail: "Assigned Adviser: Dr. Maria Clara R. Santos, EdD",
+          defenseStatus: null,
+          defenseSession: null,
+        },
+        {
+          key: "PROPOSAL_DEFENSE",
+          label: "Proposal Defense",
+          state: "WAITING",
+          lockReason:
+            "Your Proposal Defense is scheduled for March 24, 2026 at 9:00 AM.",
+          nextAction: "Attend your scheduled Proposal Defense.",
+          detail: "Proposal Defense scheduled at EARIST GS Defense Room 302.",
+          defenseStatus: "SCHEDULED",
+          defenseSession: {
+            ...PROPOSAL_SESSION_SUMMARY,
+            sessionStatus: "SCHEDULED",
+          },
+        },
+        {
+          key: "STRIKE",
+          label: "STRIKE / Plagiarism",
+          state: "LOCKED",
+          lockReason: "Complete Proposal Defense first.",
+          nextAction: null,
+          detail: null,
+          defenseStatus: null,
+          defenseSession: null,
+        },
+        {
+          key: "FINAL_DEFENSE",
+          label: "Final Defense",
+          state: "LOCKED",
+          lockReason: "Complete STRIKE / Plagiarism clearance first.",
+          nextAction: null,
+          detail: null,
+          defenseStatus: null,
+          defenseSession: null,
+        },
+      ],
+    };
+  }
 
   // Determine Title Defense step view from `title-defense` scenario
   const titleScenario = scenarios.titleDefense;
