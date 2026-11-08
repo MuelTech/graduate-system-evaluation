@@ -10,7 +10,7 @@
 | :--- | :--- | :--- | :--- |
 | **WP-0** | Documentation, Specs, & Agent Skill Setup | **COMPLETED** | `GEMINI.md`, `CONTEXT.md`, Checklist, Spec, and `graduate-eval-builder` skill created |
 | **WP-1** | Base Frontend Scaffolding, Mock API Layer & Public Entry | **COMPLETED** | Next.js App Router at repo root, EARIST theme, UI primitives, Public pages, Role Selector, Mock Session & API router |
-| **WP-2** | Evaluation UI Engine (Arrow Coach-Marks, Scenario Switcher & Sample PDFs) | **PENDING** | `PageGuideOverlay`, `ScenarioSwitcherBar`, `RoleSwitcherBanner`, and `public/sample-docs/*.pdf` |
+| **WP-2** | Evaluation UI Engine (Arrow Coach-Marks, Scenario Switcher & Sample PDFs) | **COMPLETED** | `PageGuideOverlay`, `ScenarioSwitcherBar`, `RoleSwitcherPill`, and `public/sample-docs/*.pdf` + PDF API routes |
 | **WP-3** | Student Portal — Layout & Core Pages + Guides | **PENDING** | Unlocked Sidebar, Dashboard, Profile, Curriculum, Academic Journey, Repository, Announcements, Notifications |
 | **WP-4** | Student Portal — Unlocked Thesis Journey Steps + Multi-State Scenarios | **PENDING** | Title Defense, Adviser Request, Proposal Defense, STRIKE / Plagiarism, Final Defense (all states unlocked) |
 | **WP-5** | Faculty / Panelist Portal — All Pages & Collaborative Defense Workspace | **PENDING** | Dashboard, Profile, My Defenses, Defense Workspace (PDF Annotation, Scoring, RAP), My Advisees, E-Signatures, Repository, Announcements, Notifications |
@@ -49,16 +49,16 @@
 ### WP-2: Evaluation UI Engine (Arrow Coach-Marks, Scenario Switcher & Sample PDFs)
 **Goal:** Build the reusable evaluation overlays and sample documents so respondents understand every page and can preview every workflow state.
 
-- [ ] **2.1 Interactive Arrow Guide (`src/components/evaluation/page-guide-overlay.tsx`):**
+- [x] **2.1 Interactive Arrow Guide (`src/components/evaluation/page-guide-overlay.tsx`):**
   - Spotlight highlight on target DOM elements (`data-guide="..."`).
   - Animated SVG directional arrow pointing directly to the highlighted feature.
   - Step card showing: Step counter (`Step 1 of N`), clear title, explanation of what the section does in the system, and `Previous` / `Next` / `Done` buttons.
   - Header button (`[? Page Guide]`) to re-open the guide on any page at any time.
-- [ ] **2.2 Scenario Switcher Bar (`src/components/evaluation/scenario-switcher-bar.tsx`):**
+- [x] **2.2 Scenario Switcher Bar (`src/components/evaluation/scenario-switcher-bar.tsx`):**
   - Compact, clearly labeled evaluation bar at the top of multi-state pages allowing respondents to switch between workflow stages (e.g., *1. Submit Form*, *2. Under Review*, *3. Scheduled Defense*, *4. Completed & Official Records*, *5. Returned for Revision*).
-- [ ] **2.3 Floating/Header Role Switcher (`src/components/evaluation/role-switcher-pill.tsx`):**
+- [x] **2.3 Floating/Header Role Switcher (`src/components/evaluation/role-switcher-pill.tsx`):**
   - Allows respondents to jump between the **Student Portal** and **Faculty / Panelist Portal** (or return to the Evaluation Home) in one click.
-- [ ] **2.4 Built-in Sample PDF Documents (`public/sample-docs/`):**
+- [x] **2.4 Built-in Sample PDF Documents (`public/sample-docs/`):**
   - Generate valid, multi-page institutional sample PDFs (`sample-manuscript.pdf`, `sample-gs020-adviser-request.pdf`, `sample-defense-application.pdf`, `sample-rap-report.pdf`, `sample-cor.pdf`, `sample-strike-certificate.pdf`) and wire `/api/documents/...` & PDF routes to serve them cleanly on Vercel.
 
 ---

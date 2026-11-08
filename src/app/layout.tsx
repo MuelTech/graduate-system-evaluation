@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/components/providers/session-provider";
 import QueryProvider from "@/components/providers/query-provider";
+import { PageGuideProvider } from "@/components/evaluation/page-guide-overlay";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
@@ -19,7 +20,9 @@ export default function RootLayout({
     <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <body className="flex min-h-full flex-col font-sans">
         <QueryProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <PageGuideProvider>{children}</PageGuideProvider>
+          </AuthProvider>
         </QueryProvider>
         <Toaster />
       </body>

@@ -72,7 +72,10 @@ export function DocumentViewer({
   useEffect(() => {
     const urlChanged = fetchUrl !== prevFetchUrlRef.current;
     const justOpened = open && !wasOpenRef.current;
-    if (open && fetchUrl && fetchUrl.startsWith("/api/") && (justOpened || urlChanged)) {
+    const isValidFetchUrl =
+      Boolean(fetchUrl) &&
+      (fetchUrl.startsWith("/api/") || fetchUrl.startsWith("/sample-docs/"));
+    if (open && isValidFetchUrl && (justOpened || urlChanged)) {
       setLoadState("loading");
       setZoom(100);
       setErrorMessage("");
@@ -83,7 +86,10 @@ export function DocumentViewer({
 
   // Fetch the document
   useEffect(() => {
-    if (!open || !fetchUrl || !fetchUrl.startsWith("/api/")) return;
+    const isValidFetchUrl =
+      Boolean(fetchUrl) &&
+      (fetchUrl.startsWith("/api/") || fetchUrl.startsWith("/sample-docs/"));
+    if (!open || !isValidFetchUrl) return;
 
     const controller = new AbortController();
     abortRef.current = controller;
