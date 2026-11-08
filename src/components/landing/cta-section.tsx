@@ -16,10 +16,10 @@ export function CTASection() {
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
-              href="/register"
+              href="/login"
               className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-(--earist-accent) px-8 text-sm font-medium text-(--earist-body-text) transition-colors hover:bg-(--earist-accent)/90"
             >
-              Start Your Application
+              Open Respondent Role Selector
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link

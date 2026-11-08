@@ -14,7 +14,7 @@
 | **WP-3** | Student Portal — Layout & Core Pages + Guides | **COMPLETED** | Unlocked Sidebar, Dashboard, Profile, Curriculum, Academic Journey, Repository, Announcements, Notifications |
 | **WP-4** | Student Portal — Unlocked Thesis Journey Steps + Multi-State Scenarios | **COMPLETED** | Title Defense, Adviser Request, Proposal Defense, STRIKE / Plagiarism, Final Defense (all states unlocked) |
 | **WP-5** | Faculty / Panelist Portal — All Pages & Collaborative Defense Workspace | **COMPLETED** | Dashboard, Profile, My Defenses, Defense Workspace (PDF Annotation, Scoring, RAP), My Advisees, E-Signatures, Repository, Announcements, Notifications |
-| **WP-6** | End-to-End QA, Guide Verification & Vercel Deployment Readiness | **PENDING** | Full `next build` check, link/route audit, responsive check, `vercel.json` / README instructions |
+| **WP-6** | End-to-End QA, Guide Verification & Vercel Deployment Readiness | **COMPLETED** | Full `next build` check, link/route audit, `pdf.worker.min.mjs` static bundle, and `README.md` instructions |
 
 ---
 
@@ -122,9 +122,9 @@
 ### WP-6: End-to-End QA, Guide Verification & Vercel Deployment Readiness
 **Goal:** Verify that every route builds and functions cleanly for respondents and prepare the repo for 1-click Vercel deployment.
 
-- [ ] **6.1 Production Build & Typecheck Verification:**
+- [x] **6.1 Production Build & Typecheck Verification:**
   - Run `npm run build` and ensure zero TypeScript or Next.js static/SSR build errors.
-- [ ] **6.2 Route & Interactive Walkthrough Audit:**
+- [x] **6.2 Route & Interactive Walkthrough Audit:**
   - Verify all Student and Panelist routes render with populated data, working Scenario Switchers, working PDF previews, and accurate Arrow Guide targets.
-- [ ] **6.3 README & Vercel Deployment Setup:**
+- [x] **6.3 README & Vercel Deployment Setup:**
   - Write a clear `README.md` with Vercel deployment instructions and respondent evaluation link guide.

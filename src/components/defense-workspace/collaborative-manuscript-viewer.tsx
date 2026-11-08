@@ -42,14 +42,11 @@ type PdfJsModule = typeof import("pdfjs-dist");
 
 let pdfjsPromise: Promise<PdfJsModule> | null = null;
 
-/** Load + configure pdf.js once (worker bundled via the CDW-0-proven pattern). */
+/** Load + configure pdf.js once using static /pdf.worker.min.mjs asset in public/. */
 function getPdfjs(): Promise<PdfJsModule> {
   if (!pdfjsPromise) {
     pdfjsPromise = import("pdfjs-dist").then((mod) => {
-      mod.GlobalWorkerOptions.workerSrc = new URL(
-        "pdfjs-dist/build/pdf.worker.min.mjs",
-        import.meta.url,
-      ).toString();
+      mod.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
       return mod;
     });
   }
@@ -299,7 +296,15 @@ export function CollaborativeManuscriptViewer({
             </p>
           )}
 
-          {status === "error" && (
+          {status === "error" &&
+            documentId &&
+            (errorCode === "invalid" || errorCode === "load_failed") ? (
+            <iframe
+              src={`/api/documents/thesis-document/${encodeURIComponent(documentId)}/file`}
+              className="h-full w-full rounded border-0 bg-white"
+              title={documentLabel || "Thesis Manuscript PDF"}
+            />
+          ) : status === "error" ? (
             <div
               role="alert"
               className="flex flex-col items-center justify-center gap-2 self-center text-center"
@@ -313,7 +318,7 @@ export function CollaborativeManuscriptViewer({
                 {errorCode ? ERROR_MESSAGES[errorCode] : ERROR_MESSAGES.load_failed}
               </p>
             </div>
-          )}
+          ) : null}
 
           {status === "ready" && pdf && pdfjs && (
             <ManuscriptPage

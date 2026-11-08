@@ -297,7 +297,10 @@ export default function AdviseeDetailPage() {
         description={`${data.student.studentNumber || "—"} · ${data.student.program || "—"}`}
       />
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div
+        data-guide="advisee-detail-overview"
+        className="grid gap-4 lg:grid-cols-3"
+      >
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-sm font-semibold text-(--earist-secondary)">
@@ -414,7 +417,7 @@ export default function AdviseeDetailPage() {
 
       {data.research.thesisId && <AdviserCertificationRecords thesisId={data.research.thesisId} />}
 
-      <Card>
+      <Card data-guide="advisee-research-docs">
         <CardHeader>
           <CardTitle className="text-sm font-semibold text-(--earist-secondary)">
             Research Documents

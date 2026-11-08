@@ -579,6 +579,38 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
     ],
   },
   {
+    routePattern: "/panelist/advisees/",
+    pageTitle: "Advisee Supervision & Pre-Defense Review Guide",
+    subtitle:
+      "Inspect an advisee's thesis progress, issue Pre-Defense Certifications, and review historical defense records.",
+    steps: [
+      {
+        id: "advisee-detail-overview",
+        targetSelector: '[data-guide="advisee-detail-overview"]',
+        title: "Advisee Academic & Supervision Overview",
+        description:
+          "Displays the advisee's active thesis stage, working research title, and official GS-020 adviser assignment date.",
+        placement: "bottom",
+      },
+      {
+        id: "adviser-review-actions",
+        targetSelector: '[data-guide="adviser-review-actions"]',
+        title: "Pre-Defense Manuscript Review & Certification",
+        description:
+          "Click 'Review manuscript' to inspect the uploaded PDF, request revisions, or affix your digital signature to issue the official Pre-Defense Certification.",
+        placement: "top",
+      },
+      {
+        id: "advisee-research-docs",
+        targetSelector: '[data-guide="advisee-research-docs"]',
+        title: "Stage Manuscripts & Defense History",
+        description:
+          "View all uploaded manuscripts across Title, Proposal, and Final stages as well as finalized Committee RAP Reports.",
+        placement: "top",
+      },
+    ],
+  },
+  {
     routePattern: "/panelist/advisees",
     pageTitle: "My Advisees & Adviser Endorsements Guide",
     subtitle:
@@ -674,6 +706,82 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
       },
     ],
   },
+
+  // ============================================================================
+  // C. PUBLIC & RESPONDENT ENTRY ROUTES (/, /login, /repository)
+  // ============================================================================
+  {
+    routePattern: "/login",
+    pageTitle: "Respondent Role Selector Guide",
+    subtitle:
+      "Choose between Graduate Student and Faculty / Panelist personas with zero login friction.",
+    steps: [
+      {
+        id: "login-student-card",
+        targetSelector: '[data-guide="login-student-card"]',
+        title: "Role 1: Graduate Student Persona (Juan M. Dela Cruz)",
+        description:
+          "Click 'Enter Student Portal' to evaluate all 5 unlocked Thesis Journey steps, interactive Scenario Switcher bars, Curriculum tracking, and Databank archival.",
+        placement: "bottom",
+      },
+      {
+        id: "login-panelist-card",
+        targetSelector: '[data-guide="login-panelist-card"]',
+        title: "Role 2: Faculty / Panelist Persona (Dr. Maria Clara R. Santos)",
+        description:
+          "Click 'Enter Faculty / Panelist Portal' to evaluate the Collaborative Defense Workspace (PDF annotation, rubric matrix, RAP editor, verdict) and Adviser workflows.",
+        placement: "bottom",
+      },
+      {
+        id: "login-eval-tips",
+        targetSelector: '[data-guide="login-eval-tips"]',
+        title: "3 Built-In Evaluation Tools",
+        description:
+          "Every portal screen includes (1) Interactive Arrow Page Guides, (2) Multi-State Scenario Switchers, and (3) Pre-loaded Sample Institutional PDFs.",
+        placement: "top",
+      },
+    ],
+  },
+  {
+    routePattern: "/repository",
+    pageTitle: "Public Graduate Research Repository Guide",
+    subtitle:
+      "Explore published Master's theses and Doctoral dissertations from EARIST Graduate School.",
+    steps: [
+      {
+        id: "repo-search-filters",
+        targetSelector: '[data-guide="repo-search-filters"]',
+        title: "Search & Filter Published Research",
+        description:
+          "Search by title, author, keyword, or degree program and generate APA/MLA/Chicago academic citations.",
+        placement: "bottom",
+      },
+    ],
+  },
+  {
+    routePattern: "/",
+    pageTitle: "EARIST Graduate System — Evaluation Entry Guide",
+    subtitle:
+      "Welcome to the UI/UX Evaluation Edition. Start your walkthrough as a Student or Faculty / Panelist.",
+    steps: [
+      {
+        id: "hero-role-entry",
+        targetSelector: '[data-guide="hero-role-entry"]',
+        title: "1-Click Respondent Portal Entry",
+        description:
+          "Click 'Evaluate as Graduate Student' or 'Evaluate as Faculty / Panelist' to jump straight into the unlocked portals without needing a password.",
+        placement: "bottom",
+      },
+      {
+        id: "public-navbar-ctas",
+        targetSelector: '[data-guide="public-navbar-ctas"]',
+        title: "Quick Portal & Role Selector Links",
+        description:
+          "Use these top navigation shortcuts at any time to open the Student View, Faculty / Panelist View, or Respondent Role Selector (/login).",
+        placement: "bottom",
+      },
+    ],
+  },
 ];
 
 export function getRouteGuideConfig(pathname: string | null): RouteGuideConfig {
@@ -685,16 +793,16 @@ export function getRouteGuideConfig(pathname: string | null): RouteGuideConfig {
   );
   if (exact) return exact;
 
-  // Prefix match (longest pattern first, e.g., /panelist/defense-workspace/[scheduleId] or /panelist/advisees/[studentId])
-  const sortedByLength = [...ROUTE_GUIDE_DEFINITIONS].sort(
-    (a, b) => b.routePattern.length - a.routePattern.length,
-  );
+  // Prefix match (longest pattern first, exclude "/" from prefix matching everything)
+  const sortedByLength = [...ROUTE_GUIDE_DEFINITIONS]
+    .filter((cfg) => cfg.routePattern !== "/")
+    .sort((a, b) => b.routePattern.length - a.routePattern.length);
   const prefixMatch = sortedByLength.find((cfg) =>
     cleanPath.startsWith(cfg.routePattern),
   );
   if (prefixMatch) return prefixMatch;
 
-  // Fallback for any other Student or Panelist route
+  // Fallback for any other Student, Panelist, or Public route
   if (cleanPath.startsWith("/panelist")) {
     return {
       routePattern: cleanPath,
@@ -705,11 +813,30 @@ export function getRouteGuideConfig(pathname: string | null): RouteGuideConfig {
     };
   }
 
+  if (cleanPath.startsWith("/student")) {
+    return {
+      routePattern: cleanPath,
+      pageTitle: "Student Portal Evaluation Guide",
+      subtitle:
+        "Explore all unlocked Thesis Journey stages, scenario switchers, and official EARIST forms.",
+      steps: COMMON_STUDENT_SHELL_STEPS,
+    };
+  }
+
   return {
     routePattern: cleanPath,
-    pageTitle: "Student Portal Evaluation Guide",
+    pageTitle: "EARIST Graduate School Portal Guide",
     subtitle:
-      "Explore all unlocked Thesis Journey stages, scenario switchers, and official EARIST forms.",
-    steps: COMMON_STUDENT_SHELL_STEPS,
+      "Use the top navigation bar to enter the Student Portal, Faculty / Panelist Portal, or Role Selector.",
+    steps: [
+      {
+        id: "public-navbar-ctas",
+        targetSelector: '[data-guide="public-navbar-ctas"]',
+        title: "Enter Student or Faculty / Panelist Portal",
+        description:
+          "Click 'Student View' or 'Faculty / Panelist View' in the navigation bar to begin evaluating the Graduate School Information System.",
+        placement: "bottom",
+      },
+    ],
   };
 }

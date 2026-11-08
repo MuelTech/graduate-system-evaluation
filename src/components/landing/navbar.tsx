@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, GraduationCap, Presentation, UserCheck } from "lucide-react";
 import { setActiveEvaluationRole } from "@/lib/evaluation-session";
+import { PageGuideTrigger } from "@/components/evaluation/page-guide-overlay";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -46,7 +47,11 @@ export function Navbar() {
         </div>
 
         {/* Desktop CTA Buttons */}
-        <div className="hidden md:flex md:items-center md:gap-2.5">
+        <div
+          data-guide="public-navbar-ctas"
+          className="hidden md:flex md:items-center md:gap-2.5"
+        >
+          <PageGuideTrigger compact />
           <Link
             href="/student/dashboard"
             onClick={() => setActiveEvaluationRole("student")}

@@ -11,7 +11,7 @@ import { NotificationItem } from "@/types/index";
 export function NotificationBell({
   role = "STUDENT",
 }: {
-  role?: "STUDENT" | "ADMIN" | "PANELIST";
+  role?: "STUDENT" | "PANELIST";
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
@@ -38,16 +38,12 @@ export function NotificationBell({
   const recentNotifications = notifications.slice(0, 5); // Show top 5 in dropdown
 
   const basePath =
-    role === "ADMIN"
-      ? "/admin/notifications"
-      : role === "PANELIST"
+    role === "PANELIST"
       ? "/panelist/notifications"
       : "/student/notifications";
 
   const announcementsPath =
-    role === "ADMIN"
-      ? "/admin/memos"
-      : role === "PANELIST"
+    role === "PANELIST"
       ? "/panelist/announcements"
       : "/student/announcements";
 

@@ -48,7 +48,10 @@ export function HeroSection() {
         </p>
 
         {/* Primary Respondent Entry CTA Buttons */}
-        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <div
+          data-guide="hero-role-entry"
+          className="flex flex-col items-center justify-center gap-4 sm:flex-row"
+        >
           <Link
             href="/student/dashboard"
             onClick={() => setActiveEvaluationRole("student")}

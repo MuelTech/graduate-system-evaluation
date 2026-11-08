@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { PageGuideTrigger } from "@/components/evaluation/page-guide-overlay";
 
 export default function RespondentEvaluationLoginPage() {
   const router = useRouter();
@@ -56,13 +57,16 @@ export default function RespondentEvaluationLoginPage() {
               </span>
             </div>
           </Link>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-white/30 px-3.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-white/10"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            Back to Landing Page
-          </Link>
+          <div className="flex items-center gap-2.5">
+            <PageGuideTrigger />
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-white/30 px-3.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-white/10"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back to Landing Page
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -98,7 +102,10 @@ export default function RespondentEvaluationLoginPage() {
           {/* Two Role Cards */}
           <div className="grid gap-6 md:grid-cols-2">
             {/* Card 1: Graduate Student */}
-            <Card className="flex flex-col justify-between border-t-4 border-t-(--earist-primary) bg-white shadow-md transition-all hover:shadow-xl">
+            <Card
+              data-guide="login-student-card"
+              className="flex flex-col justify-between border-t-4 border-t-(--earist-primary) bg-white shadow-md transition-all hover:shadow-xl"
+            >
               <CardHeader className="space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--earist-surface-light-red) text-(--earist-primary)">
@@ -178,7 +185,10 @@ export default function RespondentEvaluationLoginPage() {
             </Card>
 
             {/* Card 2: Faculty / Panelist */}
-            <Card className="flex flex-col justify-between border-t-4 border-t-(--earist-accent) bg-white shadow-md transition-all hover:shadow-xl">
+            <Card
+              data-guide="login-panelist-card"
+              className="flex flex-col justify-between border-t-4 border-t-(--earist-accent) bg-white shadow-md transition-all hover:shadow-xl"
+            >
               <CardHeader className="space-y-3">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-(--earist-primary)">
@@ -256,7 +266,10 @@ export default function RespondentEvaluationLoginPage() {
           </div>
 
           {/* Evaluation Tips Footer Card */}
-          <div className="grid gap-4 rounded-xl border border-(--earist-border-gray) bg-white p-5 sm:grid-cols-3">
+          <div
+            data-guide="login-eval-tips"
+            className="grid gap-4 rounded-xl border border-(--earist-border-gray) bg-white p-5 sm:grid-cols-3"
+          >
             <div className="flex items-start gap-3">
               <Compass className="mt-0.5 h-5 w-5 shrink-0 text-(--earist-primary)" />
               <div className="text-xs">

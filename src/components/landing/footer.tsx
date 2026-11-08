@@ -12,8 +12,9 @@ const quickLinks = [
   { href: "/programs", label: "Programs" },
   { href: "/repository", label: "Repository" },
   { href: "/faq", label: "FAQ" },
-  { href: "/login", label: "Login" },
-  { href: "/register", label: "Register" },
+  { href: "/login", label: "Role Selector (/login)" },
+  { href: "/student/dashboard", label: "Student Portal" },
+  { href: "/panelist/dashboard", label: "Faculty / Panelist Portal" },
 ];
 
 export function Footer() {
@@ -71,20 +72,20 @@ export function Footer() {
               Connect With Us
             </h3>
             <div className="mb-4 flex gap-3">
-              <a
-                href="#"
-                aria-label="Facebook"
+              <Link
+                href="/about"
+                aria-label="About EARIST Graduate School"
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-(--earist-accent) hover:text-(--earist-primary)"
               >
                 <Globe className="h-4 w-4" />
-              </a>
-              <a
-                href="#"
-                aria-label="Website"
+              </Link>
+              <Link
+                href="/repository"
+                aria-label="Research Repository"
                 className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-(--earist-accent) hover:text-(--earist-primary)"
               >
                 <ExternalLink className="h-4 w-4" />
-              </a>
+              </Link>
             </div>
             <p className="text-sm text-white/70">
               Committed to excellence in graduate education, research, and
@@ -103,16 +104,16 @@ export function Footer() {
             </p>
             <div className="flex gap-4">
               <Link
-                href="/privacy"
+                href="/about"
                 className="text-xs text-white/50 transition-colors hover:text-white"
               >
-                Privacy Policy
+                About System
               </Link>
               <Link
-                href="/terms"
+                href="/faq"
                 className="text-xs text-white/50 transition-colors hover:text-white"
               >
-                Terms of Use
+                Help &amp; FAQ
               </Link>
             </div>
           </div>

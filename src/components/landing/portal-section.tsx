@@ -13,7 +13,7 @@ const portals = [
     title: "Applicant Portal",
     description:
       "Register, check program alignment, schedule exams, and upload your Certificate of Registration.",
-    href: "/register",
+    href: "/login",
     color: "bg-(--earist-accent)",
   },
   {

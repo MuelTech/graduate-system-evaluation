@@ -156,10 +156,10 @@ export default function ProgramsPage() {
                     {program.description}
                   </p>
                   <Link
-                    href="/register"
+                    href="/login"
                     className="inline-flex items-center gap-1 text-sm font-semibold text-(--earist-secondary) transition-colors hover:text-(--earist-primary)"
                   >
-                    Apply for this Program
+                    Evaluate Program Portal
                     <ArrowRight className="h-3 w-3" />
                   </Link>
                 </div>
@@ -173,16 +173,16 @@ export default function ProgramsPage() {
       <section className="bg-(--earist-surface-light-red) py-12">
         <div className="container mx-auto px-4 text-center sm:px-6 lg:px-8">
           <h2 className="mb-4 text-2xl font-bold text-(--earist-primary)">
-            Ready to Start Your Graduate Journey?
+            Ready to Evaluate the Graduate Portal?
           </h2>
           <p className="mb-6 text-(--earist-body-text)">
-            Applications are now open for the upcoming academic year.
+            Enter the Student or Faculty / Panelist Portal to explore the complete thesis and defense workflow.
           </p>
           <Link
-            href="/register"
+            href="/login"
             className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-(--earist-accent) px-8 text-base font-bold text-(--earist-primary) transition-colors hover:bg-(--earist-accent)/90"
           >
-            Apply for Admission
+            Open Respondent Role Selector
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
