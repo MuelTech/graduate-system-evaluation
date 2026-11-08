@@ -9,7 +9,7 @@
 | Work Package | Title | Status | Notes |
 | :--- | :--- | :--- | :--- |
 | **WP-0** | Documentation, Specs, & Agent Skill Setup | **COMPLETED** | `GEMINI.md`, `CONTEXT.md`, Checklist, Spec, and `graduate-eval-builder` skill created |
-| **WP-1** | Base Frontend Scaffolding, Mock API Layer & Public Entry | **PENDING** | Next.js App Router at repo root (or `frontend/`), EARIST theme, UI primitives, Public pages, Role Switcher |
+| **WP-1** | Base Frontend Scaffolding, Mock API Layer & Public Entry | **COMPLETED** | Next.js App Router at repo root, EARIST theme, UI primitives, Public pages, Role Selector, Mock Session & API router |
 | **WP-2** | Evaluation UI Engine (Arrow Coach-Marks, Scenario Switcher & Sample PDFs) | **PENDING** | `PageGuideOverlay`, `ScenarioSwitcherBar`, `RoleSwitcherBanner`, and `public/sample-docs/*.pdf` |
 | **WP-3** | Student Portal — Layout & Core Pages + Guides | **PENDING** | Unlocked Sidebar, Dashboard, Profile, Curriculum, Academic Journey, Repository, Announcements, Notifications |
 | **WP-4** | Student Portal — Unlocked Thesis Journey Steps + Multi-State Scenarios | **PENDING** | Title Defense, Adviser Request, Proposal Defense, STRIKE / Plagiarism, Final Defense (all states unlocked) |
@@ -32,15 +32,15 @@
 ### WP-1: Base Frontend Scaffolding, Mock API Layer & Public Entry
 **Goal:** Establish the Next.js project structure with the exact EARIST styling, shared `shadcn/ui` components, mock session/API layer, and Public Portal + Respondent Role Entry.
 
-- [ ] **1.1 Project Structure & Config:**
+- [x] **1.1 Project Structure & Config:**
   - Copy base Next.js config (`package.json`, `tsconfig.json`, `postcss.config.mjs`, `next.config.ts`, `src/app/globals.css`, `src/app/layout.tsx`, `public/` assets) from `MuelTech/graduate-system/frontend`.
   - Remove Admin/Applicant-only dependencies or server-only auth barriers so Vercel builds cleanly without environment variables.
-- [ ] **1.2 Shared UI & Layout Components:**
+- [x] **1.2 Shared UI & Layout Components:**
   - Port `src/components/ui/*`, `src/components/providers.tsx`, `src/components/chatbot/chatbot-widget.tsx`, and `src/components/layout/notification-bell.tsx`.
-- [ ] **1.3 Mock Session & Deterministic Mock API Engine:**
+- [x] **1.3 Mock Session & Deterministic Mock API Engine:**
   - Replace `next-auth/react` calls with a client-safe Evaluation Session layer supporting instant switching between **Student** (`Juan Dela Cruz — MAEd Administration & Supervision`) and **Faculty / Panelist** (`Dr. Maria Clara Santos — Graduate Faculty / Panel Chair`).
   - Implement deterministic mock handler in `src/lib/api.client.ts` and `src/lib/api.server.ts` backed by `src/lib/evaluation-mock/` so all React Query hooks resolve without a backend server.
-- [ ] **1.4 Public Portal & Respondent Login / Role Selector:**
+- [x] **1.4 Public Portal & Respondent Login / Role Selector:**
   - Port `(public)/layout.tsx`, `(public)/page.tsx`, `(public)/about/page.tsx`, `(public)/programs/page.tsx`, `(public)/faq/page.tsx`, `(public)/repository/page.tsx`.
   - Create respondent-friendly `/login` (and prominent hero CTA buttons) with 1-click **"Evaluate as Student"** and **"Evaluate as Faculty / Panelist"** cards.
 
