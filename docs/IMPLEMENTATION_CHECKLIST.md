@@ -13,7 +13,7 @@
 | **WP-2** | Evaluation UI Engine (Arrow Coach-Marks, Scenario Switcher & Sample PDFs) | **COMPLETED** | `PageGuideOverlay`, `ScenarioSwitcherBar`, `RoleSwitcherPill`, and `public/sample-docs/*.pdf` + PDF API routes |
 | **WP-3** | Student Portal — Layout & Core Pages + Guides | **COMPLETED** | Unlocked Sidebar, Dashboard, Profile, Curriculum, Academic Journey, Repository, Announcements, Notifications |
 | **WP-4** | Student Portal — Unlocked Thesis Journey Steps + Multi-State Scenarios | **COMPLETED** | Title Defense, Adviser Request, Proposal Defense, STRIKE / Plagiarism, Final Defense (all states unlocked) |
-| **WP-5** | Faculty / Panelist Portal — All Pages & Collaborative Defense Workspace | **PENDING** | Dashboard, Profile, My Defenses, Defense Workspace (PDF Annotation, Scoring, RAP), My Advisees, E-Signatures, Repository, Announcements, Notifications |
+| **WP-5** | Faculty / Panelist Portal — All Pages & Collaborative Defense Workspace | **COMPLETED** | Dashboard, Profile, My Defenses, Defense Workspace (PDF Annotation, Scoring, RAP), My Advisees, E-Signatures, Repository, Announcements, Notifications |
 | **WP-6** | End-to-End QA, Guide Verification & Vercel Deployment Readiness | **PENDING** | Full `next build` check, link/route audit, responsive check, `vercel.json` / README instructions |
 
 ---
@@ -101,21 +101,21 @@
 ### WP-5: Faculty / Panelist Portal — All Pages & Collaborative Defense Workspace
 **Goal:** Port all Panelist (Faculty) pages and the full Collaborative Defense Workspace with zero backend/socket dependencies.
 
-- [ ] **5.1 Panelist Layout & Core Pages:**
+- [x] **5.1 Panelist Layout & Core Pages:**
   - `src/app/(portal)/panelist/layout.tsx` with `RoleSwitcherPill` and `[? Page Guide]` trigger.
   - `/panelist/dashboard` — Faculty workload summary, today's/upcoming defense sessions, pending adviser reviews, and signature requests.
   - `/panelist/profile` — Faculty profile, specialization tags, advisee capacity, and academic rank.
   - `/panelist/repository`, `/panelist/announcements`, `/panelist/notifications`.
-- [ ] **5.2 My Defenses & Collaborative Defense Workspace:**
+- [x] **5.2 My Defenses & Collaborative Defense Workspace:**
   - `/panelist/defenses` — Filterable defense assignments (Title, Proposal, Final; Chair vs. Panel Member; Scheduled, In Progress, Concluded) with Manuscript preview dialog and "Open Defense Workspace" CTA.
   - `/panelist/defense-workspace/[scheduleId]` — Full immersive split-screen workspace:
     - Left pane: Interactive PDF Manuscript Viewer with highlight/comment annotations.
     - Right pane tabs: **Rubric Evaluation & Scoring** (interactive criteria sliders/inputs + autosave indicator), **Official RAP Report Editor** (Tiptap rich text / official form preview for Chair), **Deliberation & Verdict** (Pass / Pass with Revisions / Re-defense + Committee E-Signature status).
   - Compatibility routes (`/panelist/scoring/[id]`, `/panelist/defense-lobby/[scheduleId]`, `/panelist/materials`) resolving cleanly.
-- [ ] **5.3 My Advisees & E-Signatures:**
+- [x] **5.3 My Advisees & E-Signatures:**
   - `/panelist/advisees` & `/panelist/advisees/[studentId]` — Manage incoming GS-020 Adviser Requests (Approve/Decline + E-Sign), review advisee manuscripts for Proposal/Final defense endorsement, and view advisee progress.
   - `/panelist/signatures` — Upload/draw faculty e-signature specimen and sign pending official defense/adviser documents.
-- [ ] **5.4 Wire Arrow Guides (`data-guide` attributes) for all Panelist pages.**
+- [x] **5.4 Wire Arrow Guides (`data-guide` attributes) for all Panelist pages.**
 
 ---
 

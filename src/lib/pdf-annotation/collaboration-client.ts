@@ -20,7 +20,11 @@ export const COLLAB_POLL_INTERVAL_MS = 15000 as const;
 export const MAX_COMMENT_LENGTH = 5000 as const;
 
 /** Roles that may create a manuscript annotation/highlight (backend authority). */
-export const ANNOTATION_WRITE_ROLES = ["CHAIRMAN", "PANELIST"] as const;
+export const ANNOTATION_WRITE_ROLES = [
+  "CHAIRMAN",
+  "PANELIST",
+  "RAPPORTEUR",
+] as const;
 
 /** Roles that may comment/reply on existing threads (backend authority). */
 export const COMMENT_WRITE_ROLES = ["CHAIRMAN", "PANELIST", "RAPPORTEUR"] as const;

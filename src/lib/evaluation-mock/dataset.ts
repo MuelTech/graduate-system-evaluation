@@ -1745,9 +1745,12 @@ export function buildDefenseWorkspace(
   workspaceScenario: string,
 ): DefenseWorkspace {
   const isConcluded =
+    workspaceScenario === "CONCLUDED_SESSION" ||
     workspaceScenario === "CONCLUDED_READONLY" ||
     scheduleId === "sched-final-02";
-  const isRapporteurMode = workspaceScenario === "PANELIST_ACTIVE";
+  const isRapporteurMode =
+    workspaceScenario === "PANEL_MEMBER_MODE" ||
+    workspaceScenario === "PANELIST_ACTIVE";
   const role = isRapporteurMode ? "RAPPORTEUR" : "CHAIRMAN";
 
   const studentMap: Record<
@@ -1815,7 +1818,7 @@ export function buildDefenseWorkspace(
       canFinalizeRapporteurNotes: !isConcluded,
       canRecordFormalResult: role === "CHAIRMAN" && !isConcluded,
       canViewFinalizedRapporteurNotes: true,
-      canStartDefense: role === "CHAIRMAN" && !isConcluded,
+      canStartDefense: false,
     },
     documents: [
       {
@@ -1833,13 +1836,13 @@ export function buildDefenseWorkspace(
     roster: [
       {
         userId: "panelist-eval-01",
-        name: "Dr. Maria Clara R. Santos, EdD",
+        name: "Dr. Roberto M. Santos, DIT",
         role: isRapporteurMode ? "RAPPORTEUR" : "CHAIRMAN",
         evaluationStatus: isConcluded ? "FINALIZED" : "DRAFT",
       },
       {
         userId: "panelist-eval-02",
-        name: "Dr. Roberto A. Villanueva, PhD",
+        name: "Dr. Maria Clara R. Villanueva, PhD",
         role: "PANELIST",
         evaluationStatus: "FINALIZED",
       },
@@ -1865,7 +1868,7 @@ export function buildDefenseWorkspace(
       finalizedEvaluations: isConcluded ? 3 : 2,
     },
     formalResult: isConcluded ? "PASSED" : null,
-    rapStatus: isConcluded ? "FINALIZED" : "FOR_SIGNATURE",
+    rapStatus: isConcluded ? "FINALIZED" : "DRAFT",
   };
 }
 
@@ -1873,29 +1876,35 @@ export function buildOralEvaluation(
   scheduleId: string,
   workspaceScenario: string,
 ): OralEvaluation {
-  const isConcluded = workspaceScenario === "CONCLUDED_READONLY";
+  const isConcluded =
+    workspaceScenario === "CONCLUDED_SESSION" ||
+    workspaceScenario === "CONCLUDED_READONLY" ||
+    scheduleId === "sched-final-02";
+  const isRapporteur =
+    workspaceScenario === "PANEL_MEMBER_MODE" ||
+    workspaceScenario === "PANELIST_ACTIVE";
   return {
     scheduleId,
     defenseType: "PROPOSAL_DEFENSE",
     panelAssignmentId: "assign-01",
-    assignmentRole:
-      workspaceScenario === "PANELIST_ACTIVE" ? "RAPPORTEUR" : "CHAIRMAN",
+    assignmentRole: isRapporteur ? "RAPPORTEUR" : "CHAIRMAN",
     status: isConcluded ? "FINALIZED" : "DRAFT",
     criteria: {
-      topic_clarity: 1.25,
-      literature_depth: 1.25,
-      methodology_rigor: 1.5,
-      organization_format: 1.25,
-      oral_presentation: 1.25,
-      ability_to_answer: 1.25,
-      mastery_of_subject: 1.25,
-      openness_to_suggestions: 1.0,
+      timelinessRelevance: 1.25,
+      organization: 1.25,
+      depthComprehensiveness: 1.5,
+      relevanceConclusions: 1.25,
+      evidenceOriginalThinking: 1.25,
+      presentation: 1.25,
+      masterySubject: 1.25,
+      communicationSkill: 1.25,
+      attitude: 1,
     },
-    groupIValue: 1.31,
+    groupIValue: 1.3,
     groupIIValue: 1.19,
     overallValue: 1.25,
     scoringVersion: "INSTITUTIONAL_MATRIX_V2",
-    rating: "1.25 — Very Satisfactory / Passed",
+    rating: "Outstanding",
     recommendations:
       "The candidate demonstrated strong command of the theoretical framework and statistical methodology. Incorporate the committee's refinement on the stratified random sampling table across the 32 public secondary schools in Manila.",
     signedAt: isConcluded ? "2026-03-24T11:15:00.000Z" : null,
@@ -1925,7 +1934,7 @@ export const INITIAL_ANNOTATIONS: CollaborationAnnotation[] = [
     author: {
       assignmentId: "assign-01",
       userId: "panelist-eval-01",
-      name: "Dr. Maria Clara R. Santos, EdD",
+      name: "Dr. Roberto M. Santos, DIT",
       role: "CHAIRMAN",
     },
     createdAt: "2026-03-24T09:20:00.000Z",
@@ -1939,7 +1948,7 @@ export const INITIAL_ANNOTATIONS: CollaborationAnnotation[] = [
         author: {
           assignmentId: "assign-01",
           userId: "panelist-eval-01",
-          name: "Dr. Maria Clara R. Santos, EdD",
+          name: "Dr. Roberto M. Santos, DIT",
           role: "CHAIRMAN",
         },
         createdAt: "2026-03-24T09:20:00.000Z",
@@ -1966,7 +1975,7 @@ export const INITIAL_ANNOTATIONS: CollaborationAnnotation[] = [
     author: {
       assignmentId: "assign-02",
       userId: "panelist-eval-02",
-      name: "Dr. Roberto A. Villanueva, PhD",
+      name: "Dr. Maria Clara R. Villanueva, PhD",
       role: "PANELIST",
     },
     createdAt: "2026-03-24T09:32:00.000Z",
@@ -1980,7 +1989,7 @@ export const INITIAL_ANNOTATIONS: CollaborationAnnotation[] = [
         author: {
           assignmentId: "assign-02",
           userId: "panelist-eval-02",
-          name: "Dr. Roberto A. Villanueva, PhD",
+          name: "Dr. Maria Clara R. Villanueva, PhD",
           role: "PANELIST",
         },
         createdAt: "2026-03-24T09:32:00.000Z",
@@ -2008,8 +2017,13 @@ export function buildCommitteeReport(
   scheduleId: string,
   workspaceScenario: string,
 ) {
-  const isConcluded = workspaceScenario === "CONCLUDED_READONLY";
-  const isRapporteur = workspaceScenario === "PANELIST_ACTIVE";
+  const isConcluded =
+    workspaceScenario === "CONCLUDED_SESSION" ||
+    workspaceScenario === "CONCLUDED_READONLY" ||
+    scheduleId === "sched-final-02";
+  const isRapporteur =
+    workspaceScenario === "PANEL_MEMBER_MODE" ||
+    workspaceScenario === "PANELIST_ACTIVE";
 
   return {
     scheduleId,
@@ -2030,60 +2044,85 @@ export function buildCommitteeReport(
         : "FOR_SIGNATURE",
     bodyVersion: 3,
     body: {
-      version: 1 as const,
-      blocks: [
+      type: "doc" as const,
+      content: [
         {
           type: "heading" as const,
-          level: 2 as const,
-          align: "left" as const,
-          indent: 0,
-          children: [
+          attrs: { level: 2 as const, textAlign: "left" as const, indent: 0 },
+          content: [
             {
+              type: "text" as const,
               text: "I. Summary of Committee Findings & Deliberation",
-              bold: true,
+              marks: [{ type: "bold" as const }],
             },
           ],
         },
         {
           type: "paragraph" as const,
-          align: "left" as const,
-          indent: 0,
-          children: [
+          attrs: { textAlign: "left" as const, indent: 0 },
+          content: [
             {
+              type: "text" as const,
               text: "The candidate, Mr. Juan M. Dela Cruz (MAEd-AS), presented the research proposal titled \"Data-Driven Instructional Supervision and Digital Readiness of Public Secondary School Heads in the Division of Manila\". The Oral Examination Committee found the conceptual model grounded in current DepEd supervisory standards and educational administration literature.",
             },
           ],
         },
         {
           type: "heading" as const,
-          level: 2 as const,
-          align: "left" as const,
-          indent: 0,
-          children: [
+          attrs: { level: 2 as const, textAlign: "left" as const, indent: 0 },
+          content: [
             {
+              type: "text" as const,
               text: "II. Required Revisions and Action Items",
-              bold: true,
+              marks: [{ type: "bold" as const }],
             },
           ],
         },
         {
           type: "bulletList" as const,
-          items: [
-            [
-              {
-                text: "Include the stratified proportional sampling distribution across all six (6) legislative districts of Manila in Table 2 (Chapter 3).",
-              },
-            ],
-            [
-              {
-                text: "Append the content validity index (CVI) evaluation sheet signed by five (5) educational administration experts in Appendix D.",
-              },
-            ],
-            [
-              {
-                text: "Ensure ethical informed consent clauses explicitly cite the Data Privacy Act of 2012 (RA 10173) prior to questionnaire distribution.",
-              },
-            ],
+          content: [
+            {
+              type: "listItem" as const,
+              content: [
+                {
+                  type: "paragraph" as const,
+                  content: [
+                    {
+                      type: "text" as const,
+                      text: "Include the stratified proportional sampling distribution across all six (6) legislative districts of Manila in Table 2 (Chapter 3).",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: "listItem" as const,
+              content: [
+                {
+                  type: "paragraph" as const,
+                  content: [
+                    {
+                      type: "text" as const,
+                      text: "Append the content validity index (CVI) evaluation sheet signed by five (5) educational administration experts in Appendix D.",
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              type: "listItem" as const,
+              content: [
+                {
+                  type: "paragraph" as const,
+                  content: [
+                    {
+                      type: "text" as const,
+                      text: "Ensure ethical informed consent clauses explicitly cite the Data Privacy Act of 2012 (RA 10173) prior to questionnaire distribution.",
+                    },
+                  ],
+                },
+              ],
+            },
           ],
         },
       ],
@@ -2102,15 +2141,17 @@ export function buildCommitteeReport(
     signatures: [
       {
         userId: "panelist-eval-01",
-        name: "Dr. Maria Clara R. Santos, EdD",
+        name: "Dr. Roberto M. Santos, DIT",
         roleAtDefense: "CHAIRMAN",
+        required: true,
         isSigned: isConcluded,
         signedAt: isConcluded ? "2026-03-24T11:20:00.000Z" : null,
       },
       {
         userId: "panelist-eval-02",
-        name: "Dr. Roberto A. Villanueva, PhD",
+        name: "Dr. Maria Clara R. Villanueva, PhD",
         roleAtDefense: "PANELIST",
+        required: true,
         isSigned: true,
         signedAt: "2026-03-24T11:05:00.000Z",
       },
@@ -2118,6 +2159,7 @@ export function buildCommitteeReport(
         userId: "panelist-eval-03",
         name: "Dr. Teresita M. Reyes, EdD",
         roleAtDefense: "RAPPORTEUR",
+        required: true,
         isSigned: true,
         signedAt: "2026-03-24T10:55:00.000Z",
       },
@@ -2128,8 +2170,9 @@ export function buildCommitteeReport(
     },
     mySignature: {
       userId: "panelist-eval-01",
-      name: "Dr. Maria Clara R. Santos, EdD",
+      name: "Dr. Roberto M. Santos, DIT",
       roleAtDefense: isRapporteur ? "RAPPORTEUR" : "CHAIRMAN",
+      required: true,
       isSigned: isConcluded,
       signedAt: isConcluded ? "2026-03-24T11:20:00.000Z" : null,
     },
@@ -2141,8 +2184,13 @@ export function buildConclusionReadiness(
   scheduleId: string,
   workspaceScenario: string,
 ) {
-  const isConcluded = workspaceScenario === "CONCLUDED_READONLY";
-  const isChairman = workspaceScenario !== "PANELIST_ACTIVE";
+  const isConcluded =
+    workspaceScenario === "CONCLUDED_SESSION" ||
+    workspaceScenario === "CONCLUDED_READONLY" ||
+    scheduleId === "sched-final-02";
+  const isChairman =
+    workspaceScenario !== "PANEL_MEMBER_MODE" &&
+    workspaceScenario !== "PANELIST_ACTIVE";
   return {
     scheduleId,
     isChairman,

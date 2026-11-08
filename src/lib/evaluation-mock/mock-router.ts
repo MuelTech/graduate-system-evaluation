@@ -397,7 +397,8 @@ export async function evaluationMockRouter(
     };
   }
 
-  const evalMatch = /^\/thesis\/defense\/([^/]+)\/evaluation$/.exec(pathname);
+  const evalMatch =
+    /^\/thesis\/defense\/([^/]+)\/evaluation(?:\/(?:me|draft))?$/.exec(pathname);
   if (evalMatch && method === "GET") {
     const scheduleId = decodeURIComponent(evalMatch[1]);
     const scenario = getScenario("defense-workspace");
@@ -437,7 +438,15 @@ export async function evaluationMockRouter(
       rating:
         typeof body.rating === "string"
           ? body.rating
-          : `${avg.toFixed(2)} — Passed`,
+          : avg <= 1.25
+            ? "Outstanding"
+            : avg <= 1.5
+              ? "Very Good"
+              : avg <= 1.75
+                ? "Good"
+                : avg <= 2.0
+                  ? "Fair"
+                  : "Failed",
       recommendations:
         typeof body.recommendations === "string"
           ? body.recommendations
@@ -509,7 +518,7 @@ export async function evaluationMockRouter(
       author: {
         assignmentId: "assign-01",
         userId: "panelist-eval-01",
-        name: "Dr. Maria Clara R. Santos, EdD",
+        name: "Dr. Roberto M. Santos, DIT",
         role: "CHAIRMAN",
       },
       createdAt: now,
@@ -524,7 +533,7 @@ export async function evaluationMockRouter(
               author: {
                 assignmentId: "assign-01",
                 userId: "panelist-eval-01",
-                name: "Dr. Maria Clara R. Santos, EdD",
+                name: "Dr. Roberto M. Santos, DIT",
                 role: "CHAIRMAN",
               },
               createdAt: now,
@@ -534,7 +543,7 @@ export async function evaluationMockRouter(
         : [],
     };
     annotationsState = [...annotationsState, newAnnotation];
-    return newAnnotation;
+    return { ...newAnnotation, annotation: newAnnotation };
   }
 
   const commentCreateMatch =
@@ -554,7 +563,7 @@ export async function evaluationMockRouter(
       author: {
         assignmentId: "assign-01",
         userId: "panelist-eval-01",
-        name: "Dr. Maria Clara R. Santos, EdD",
+        name: "Dr. Roberto M. Santos, DIT",
         role: "CHAIRMAN",
       },
       createdAt: now,
@@ -688,7 +697,7 @@ export async function evaluationMockRouter(
     };
   }
   if (conclusionMatch && method === "POST") {
-    setScenario("defense-workspace", "CONCLUDED_READONLY");
+    setScenario("defense-workspace", "CONCLUDED_SESSION");
     return {
       scheduleId: decodeURIComponent(conclusionMatch[1]),
       outcome: "PASSED",
@@ -717,7 +726,7 @@ export async function evaluationMockRouter(
   }
 
   const adviseeDetailMatch =
-    /^\/thesis\/adviser\/workspace\/advisees\/([^/]+)$/.exec(pathname);
+    /^\/thesis\/adviser\/(?:workspace\/)?advisees\/([^/]+)$/.exec(pathname);
   if (adviseeDetailMatch && method === "GET") {
     return buildAdviseeDetail(
       decodeURIComponent(adviseeDetailMatch[1]),
@@ -730,7 +739,7 @@ export async function evaluationMockRouter(
       pathname,
     );
   if (adviserReqResponseMatch && method === "POST") {
-    setScenario("advisees", "MANUSCRIPT_REVIEW");
+    setScenario("advisees", "PRE_DEFENSE_REVIEW");
     return {
       id: decodeURIComponent(adviserReqResponseMatch[1]),
       adviserStatus: "CONFORMED",

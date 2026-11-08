@@ -409,7 +409,7 @@ export default function PanelistDashboard() {
       />
 
       {/* 1. Summary KPIs */}
-      <section aria-label="Summary metrics">
+      <section aria-label="Summary metrics" data-guide="panelist-kpi-cards">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {kpiCards.map((kpi) => (
             <Card key={kpi.label}>
@@ -435,45 +435,47 @@ export default function PanelistDashboard() {
       </section>
 
       {/* 2. Needs Your Attention */}
-      <SectionCard
-        title="Needs Your Attention"
-        description="Your actionable academic responsibilities."
-        action={
-          needsAttention.length > 0 ? (
-            <Badge className="bg-(--earist-primary) text-white">
-              {needsAttention.length}{" "}
-              {needsAttention.length === 1 ? "task" : "tasks"}
-            </Badge>
-          ) : null
-        }
-      >
-        {needsAttention.length === 0 ? (
-          <EmptyState message="Nothing currently requires your action." />
-        ) : (
-          <div className="space-y-3">
-            <ul className="space-y-2">
-              {visibleTasks.map((task) => (
-                <TaskRow key={task.id} task={task} />
-              ))}
-            </ul>
-            {needsAttention.length > MAX_VISIBLE_TASKS ? (
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowAllTasks((v) => !v)}
-                aria-expanded={showAllTasks}
-              >
-                {showAllTasks
-                  ? "Show fewer tasks"
-                  : `Show ${hiddenTaskCount} more ${
-                      hiddenTaskCount === 1 ? "task" : "tasks"
-                    }`}
-              </Button>
-            ) : null}
-          </div>
-        )}
-      </SectionCard>
+      <div data-guide="panelist-attention-list">
+        <SectionCard
+          title="Needs Your Attention"
+          description="Your actionable academic responsibilities."
+          action={
+            needsAttention.length > 0 ? (
+              <Badge className="bg-(--earist-primary) text-white">
+                {needsAttention.length}{" "}
+                {needsAttention.length === 1 ? "task" : "tasks"}
+              </Badge>
+            ) : null
+          }
+        >
+          {needsAttention.length === 0 ? (
+            <EmptyState message="Nothing currently requires your action." />
+          ) : (
+            <div className="space-y-3">
+              <ul className="space-y-2">
+                {visibleTasks.map((task) => (
+                  <TaskRow key={task.id} task={task} />
+                ))}
+              </ul>
+              {needsAttention.length > MAX_VISIBLE_TASKS ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowAllTasks((v) => !v)}
+                  aria-expanded={showAllTasks}
+                >
+                  {showAllTasks
+                    ? "Show fewer tasks"
+                    : `Show ${hiddenTaskCount} more ${
+                        hiddenTaskCount === 1 ? "task" : "tasks"
+                      }`}
+                </Button>
+              ) : null}
+            </div>
+          )}
+        </SectionCard>
+      </div>
 
       {/* 3. Active Defense (conditional) */}
       {activeDefenses.length > 0 ? (
@@ -490,82 +492,84 @@ export default function PanelistDashboard() {
       ) : null}
 
       {/* 4. Upcoming Defense Sessions */}
-      <SectionCard
-        title="Upcoming Defense Sessions"
-        description="Your next scheduled assigned defenses."
-        action={
-          <Link
-            href="/panelist/defenses"
-            className="text-xs font-medium text-(--earist-secondary) hover:underline"
-          >
-            View All Defenses
-          </Link>
-        }
-      >
-        {!nextDefense ? (
-          <EmptyState message="No upcoming defenses are scheduled." />
-        ) : (
-          <div className="space-y-3">
-            <div className="rounded-xl border border-(--earist-border-gray) bg-white p-4">
-              <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                <Badge className="bg-(--earist-primary) text-white">
-                  Next Defense
-                </Badge>
-                <Badge className="bg-amber-100 text-amber-800">
-                  {nextDefense.sessionStatusLabel}
-                </Badge>
+      <div data-guide="panelist-upcoming-list">
+        <SectionCard
+          title="Upcoming Defense Sessions"
+          description="Your next scheduled assigned defenses."
+          action={
+            <Link
+              href="/panelist/defenses"
+              className="text-xs font-medium text-(--earist-secondary) hover:underline"
+            >
+              View All Defenses
+            </Link>
+          }
+        >
+          {!nextDefense ? (
+            <EmptyState message="No upcoming defenses are scheduled." />
+          ) : (
+            <div className="space-y-3">
+              <div className="rounded-xl border border-(--earist-border-gray) bg-white p-4">
+                <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                  <Badge className="bg-(--earist-primary) text-white">
+                    Next Defense
+                  </Badge>
+                  <Badge className="bg-amber-100 text-amber-800">
+                    {nextDefense.sessionStatusLabel}
+                  </Badge>
+                </div>
+                <p className="text-base font-semibold text-foreground">
+                  {nextDefense.studentName}
+                  {nextDefense.studentNumber
+                    ? ` · ${nextDefense.studentNumber}`
+                    : ""}
+                </p>
+                <p className="text-sm text-(--earist-body-text)">
+                  {nextDefense.stageLabel} · Your role: {nextDefense.roleLabel}
+                  {nextDefense.programName ? ` · ${nextDefense.programName}` : ""}
+                </p>
+                <div className="mt-3 grid gap-1 text-xs text-(--earist-body-text) sm:grid-cols-3">
+                  <p className="flex items-center gap-1.5">
+                    <CalendarClock
+                      className="h-3.5 w-3.5 shrink-0"
+                      aria-hidden="true"
+                    />
+                    {formatWallDate(nextDefense.defenseDate)}
+                  </p>
+                  <p className="flex items-center gap-1.5">
+                    <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                    {formatWallTime(nextDefense.defenseTime)}
+                  </p>
+                  <p className="flex items-center gap-1.5">
+                    <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                    <span className="truncate">
+                      {nextDefense.venueOrLink || "To be announced"}
+                    </span>
+                  </p>
+                </div>
+                <Link
+                  href={nextDefense.href}
+                  className={cn(
+                    buttonVariants({ size: "sm" }),
+                    "mt-3 w-full bg-(--earist-primary) hover:bg-(--earist-primary)/90 sm:w-auto",
+                  )}
+                >
+                  Open Defense Workspace
+                  <ChevronRight className="ml-2 h-4 w-4" aria-hidden="true" />
+                </Link>
               </div>
-              <p className="text-base font-semibold text-foreground">
-                {nextDefense.studentName}
-                {nextDefense.studentNumber
-                  ? ` · ${nextDefense.studentNumber}`
-                  : ""}
-              </p>
-              <p className="text-sm text-(--earist-body-text)">
-                {nextDefense.stageLabel} · Your role: {nextDefense.roleLabel}
-                {nextDefense.programName ? ` · ${nextDefense.programName}` : ""}
-              </p>
-              <div className="mt-3 grid gap-1 text-xs text-(--earist-body-text) sm:grid-cols-3">
-                <p className="flex items-center gap-1.5">
-                  <CalendarClock
-                    className="h-3.5 w-3.5 shrink-0"
-                    aria-hidden="true"
-                  />
-                  {formatWallDate(nextDefense.defenseDate)}
-                </p>
-                <p className="flex items-center gap-1.5">
-                  <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  {formatWallTime(nextDefense.defenseTime)}
-                </p>
-                <p className="flex items-center gap-1.5">
-                  <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  <span className="truncate">
-                    {nextDefense.venueOrLink || "To be announced"}
-                  </span>
-                </p>
-              </div>
-              <Link
-                href={nextDefense.href}
-                className={cn(
-                  buttonVariants({ size: "sm" }),
-                  "mt-3 w-full bg-(--earist-primary) hover:bg-(--earist-primary)/90 sm:w-auto",
-                )}
-              >
-                Open Defense Workspace
-                <ChevronRight className="ml-2 h-4 w-4" aria-hidden="true" />
-              </Link>
-            </div>
 
-            {otherUpcoming.length > 0 ? (
-              <ul className="space-y-2">
-                {otherUpcoming.map((item) => (
-                  <UpcomingDefenseSummary key={item.scheduleId} item={item} />
-                ))}
-              </ul>
-            ) : null}
-          </div>
-        )}
-      </SectionCard>
+              {otherUpcoming.length > 0 ? (
+                <ul className="space-y-2">
+                  {otherUpcoming.map((item) => (
+                    <UpcomingDefenseSummary key={item.scheduleId} item={item} />
+                  ))}
+                </ul>
+              ) : null}
+            </div>
+          )}
+        </SectionCard>
+      </div>
 
       {/* 5. Waiting on Others */}
       <SectionCard
