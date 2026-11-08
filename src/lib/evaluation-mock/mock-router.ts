@@ -200,11 +200,11 @@ export async function evaluationMockRouter(
   }
 
   if (pathname === "/thesis/adviser/request" && method === "POST") {
-    setScenario("adviser-request", "PENDING_SIGNATURES");
+    setScenario("adviser-request", "PENDING");
     return {
       id: "adv-req-01",
       status: "PENDING",
-      adviserStatus: "PENDING",
+      adviserStatus: "CONFORMED",
       deanStatus: "PENDING",
     };
   }
@@ -256,6 +256,14 @@ export async function evaluationMockRouter(
     return buildFinalAdviserReview("READY_TO_APPLY");
   }
 
+  if (pathname === "/thesis/strike/manuscript" && method === "POST") {
+    setScenario("strike", "WAITING");
+    return {
+      success: true,
+      status: "WAITING",
+    };
+  }
+
   if (pathname === "/thesis/adviser-certifications" && method === "GET") {
     const stageFilter = searchParams.get("stage");
     if (stageFilter === "PROPOSAL" || stageFilter === "FINAL") {
@@ -271,6 +279,7 @@ export async function evaluationMockRouter(
   if (eligibilityMatch && method === "GET") {
     return {
       eligible: true,
+      missing: [],
       missingRequirements: [],
     };
   }

@@ -48,7 +48,7 @@ const STEP_DESCRIPTIONS: Record<
   },
   ADVISER_REQUEST: {
     subtitle: "Official GS Form No. 020 Adviser Selection & Digital Signing",
-    scenariosCount: 3,
+    scenariosCount: 4,
     keyFeatures: [
       "Browse eligible Graduate Faculty advisers from your Title Defense panel",
       "Affix digital e-signature to submit Official GS Form No. 020",
@@ -57,7 +57,7 @@ const STEP_DESCRIPTIONS: Record<
   },
   PROPOSAL_DEFENSE: {
     subtitle: "Pre-Defense Adviser Certification, Proposal Application, & RAP",
-    scenariosCount: 4,
+    scenariosCount: 5,
     keyFeatures: [
       "Upload Proposal Manuscript (Chapters 1–3) for Adviser Pre-Defense Certification",
       "File Proposal Defense application once Adviser Certification is issued",
@@ -70,7 +70,7 @@ const STEP_DESCRIPTIONS: Record<
     keyFeatures: [
       "Submit revised manuscript PDF for Turnitin / STRIKE similarity verification",
       "Track verification queue status with the Graduate School Research Unit",
-      "View verified 8.4% similarity score and Official STRIKE Clearance Certificate PDF",
+      "View verified 9% similarity score and Official STRIKE Clearance Certificate PDF",
     ],
   },
   FINAL_DEFENSE: {

@@ -12,7 +12,7 @@
 | **WP-1** | Base Frontend Scaffolding, Mock API Layer & Public Entry | **COMPLETED** | Next.js App Router at repo root, EARIST theme, UI primitives, Public pages, Role Selector, Mock Session & API router |
 | **WP-2** | Evaluation UI Engine (Arrow Coach-Marks, Scenario Switcher & Sample PDFs) | **COMPLETED** | `PageGuideOverlay`, `ScenarioSwitcherBar`, `RoleSwitcherPill`, and `public/sample-docs/*.pdf` + PDF API routes |
 | **WP-3** | Student Portal — Layout & Core Pages + Guides | **COMPLETED** | Unlocked Sidebar, Dashboard, Profile, Curriculum, Academic Journey, Repository, Announcements, Notifications |
-| **WP-4** | Student Portal — Unlocked Thesis Journey Steps + Multi-State Scenarios | **PENDING** | Title Defense, Adviser Request, Proposal Defense, STRIKE / Plagiarism, Final Defense (all states unlocked) |
+| **WP-4** | Student Portal — Unlocked Thesis Journey Steps + Multi-State Scenarios | **COMPLETED** | Title Defense, Adviser Request, Proposal Defense, STRIKE / Plagiarism, Final Defense (all states unlocked) |
 | **WP-5** | Faculty / Panelist Portal — All Pages & Collaborative Defense Workspace | **PENDING** | Dashboard, Profile, My Defenses, Defense Workspace (PDF Annotation, Scoring, RAP), My Advisees, E-Signatures, Repository, Announcements, Notifications |
 | **WP-6** | End-to-End QA, Guide Verification & Vercel Deployment Readiness | **PENDING** | Full `next build` check, link/route audit, responsive check, `vercel.json` / README instructions |
 
@@ -82,19 +82,19 @@
 ---
 
 ### WP-4: Student Portal — Unlocked Thesis Journey Steps + Multi-State Scenarios
-**Goal:** Port all 5 previously restricted Thesis Journey pages with full interactive forms AND the `ScenarioSwitcherBar` so respondents can inspect every stage of each milestone.
+**Goal:** Port all 5 previously restricted Thesis Journey pages with full interactive forms AND the `ScenarioSwitcherBar` so respondents can inspect every workflow state.
 
-- [ ] **4.1 Title Defense (`/student/thesis/title-defense`):**
+- [x] **4.1 Title Defense (`/student/thesis/title-defense`):**
   - Scenarios: `NOT_SUBMITTED` (3-title proposal package upload form), `APPLICATION_UNDER_REVIEW`, `SCHEDULED` (committee & schedule details), `COMPLETED` (approved title + post-submission record + RAP summary), `REJECTED` (correction & resubmission view).
-- [ ] **4.2 Adviser Request (`/student/thesis/adviser-request`):**
-  - Scenarios: `SELECT_ADVISER` (browse faculty directory & submit GS-020 request), `PENDING_SIGNATURES` (GS-020 tracking across Adviser / Chair / Dean), `APPROVED` (signed official GS-020 PDF preview).
-- [ ] **4.3 Proposal Defense (`/student/thesis/proposal-defense`):**
-  - Scenarios: `ADVISER_REVIEW` (pre-defense manuscript submission & adviser endorsement panel), `READY_TO_APPLY` (official defense application form), `SCHEDULED` (defense schedule & committee), `COMPLETED` (Proposal Defense RAP report & verdict).
-- [ ] **4.4 STRIKE / Plagiarism (`/student/thesis/strike`):**
-  - Scenarios: `SUBMIT_MANUSCRIPT` (upload manuscript for similarity check), `UNDER_VERIFICATION`, `CLEARED` (similarity index report & STRIKE clearance certificate preview).
-- [ ] **4.5 Final Defense (`/student/thesis/final-defense`):**
+- [x] **4.2 Adviser Request (`/student/thesis/adviser-request`):**
+  - Scenarios: `READY` (browse faculty directory & submit GS-020 request with E-Signature), `PENDING` (GS-020 tracking across Adviser / Chair / Dean), `APPROVED` (signed official GS-020 PDF preview), `DECLINED_RETRY`.
+- [x] **4.3 Proposal Defense (`/student/thesis/proposal-defense`):**
+  - Scenarios: `ADVISER_REVIEW` (pre-defense manuscript submission & adviser endorsement panel), `READY_TO_APPLY` (official defense application form), `SCHEDULED` (defense schedule & committee), `COMPLETED` (Proposal Defense RAP report & verdict), `REVISION_REQUIRED`.
+- [x] **4.4 STRIKE / Plagiarism (`/student/thesis/strike`):**
+  - Scenarios: `SUBMIT_MANUSCRIPT` (upload manuscript for similarity check), `WAITING` (verification in progress), `COMPLETED` (9% similarity index report & STRIKE clearance certificate preview).
+- [x] **4.5 Final Defense (`/student/thesis/final-defense`):**
   - Scenarios: `FINAL_ADVISER_REVIEW` (final manuscript endorsement), `READY_TO_APPLY`, `SCHEDULED`, `COMPLETED` (Final Defense RAP report, final committee signatures, & proceed to Repository archival).
-- [ ] **4.6 Wire Arrow Guides (`data-guide` attributes) for all 5 Thesis Journey pages.**
+- [x] **4.6 Wire Arrow Guides (`data-guide` attributes) for all 5 Thesis Journey pages.**
 
 ---
 

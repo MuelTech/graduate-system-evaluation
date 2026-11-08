@@ -83,14 +83,14 @@ export const SCENARIO_DEFINITIONS: Record<ScenarioPageKey, ScenarioOption[]> = {
   ],
   "adviser-request": [
     {
-      id: "SELECT_ADVISER",
-      label: "1. Select & Request Adviser",
+      id: "READY",
+      label: "1. Select Adviser & Sign GS-020",
       badge: "GS-020 Form",
       description:
-        "Browse eligible Graduate Faculty candidates from the Title Defense panel and sign GS Form No. 020.",
+        "Browse eligible Graduate Faculty candidates from the Title Defense panel and sign Official GS Form No. 020.",
     },
     {
-      id: "PENDING_SIGNATURES",
+      id: "PENDING",
       label: "2. Awaiting Signatures",
       badge: "Routing",
       description:
@@ -98,10 +98,17 @@ export const SCENARIO_DEFINITIONS: Record<ScenarioPageKey, ScenarioOption[]> = {
     },
     {
       id: "APPROVED",
-      label: "3. Approved & Signed",
+      label: "3. Adviser Officially Assigned",
       badge: "Completed",
       description:
         "Adviser confirmed and Dean approved. Official signed GS-020 PDF record is available for preview and download.",
+    },
+    {
+      id: "DECLINED_RETRY",
+      label: "4. Declined / Re-select Adviser",
+      badge: "Retry",
+      description:
+        "Requested adviser declined or returned the request — student can select another eligible Title Defense panel member.",
     },
   ],
   "proposal-defense": [
@@ -114,7 +121,7 @@ export const SCENARIO_DEFINITIONS: Record<ScenarioPageKey, ScenarioOption[]> = {
     },
     {
       id: "READY_TO_APPLY",
-      label: "2. Ready to Apply",
+      label: "2. Submit Proposal Application",
       badge: "Certified",
       description:
         "Adviser Certification issued! Student can now submit COR and defense-fee receipt to apply for Proposal Defense.",
@@ -133,6 +140,13 @@ export const SCENARIO_DEFINITIONS: Record<ScenarioPageKey, ScenarioOption[]> = {
       description:
         "Proposal Defense passed with finalized RAP report and committee recommendations.",
     },
+    {
+      id: "REVISION_REQUIRED",
+      label: "5. Revisions Required",
+      badge: "Revisions",
+      description:
+        "Adviser or Committee requested manuscript revisions with detailed remarks before proceeding.",
+    },
   ],
   strike: [
     {
@@ -143,18 +157,18 @@ export const SCENARIO_DEFINITIONS: Record<ScenarioPageKey, ScenarioOption[]> = {
         "Submit revised manuscript for institutional STRIKE / Plagiarism & Similarity verification before Final Defense.",
     },
     {
-      id: "UNDER_VERIFICATION",
-      label: "2. Under Verification",
+      id: "WAITING",
+      label: "2. Verification in Progress",
       badge: "Scanning",
       description:
         "Manuscript is queued for Turnitin / STRIKE similarity analysis by the Graduate School Research Unit.",
     },
     {
-      id: "CLEARED",
-      label: "3. STRIKE Cleared",
-      badge: "8.4% Similarity",
+      id: "COMPLETED",
+      label: "3. Cleared (Similarity Index: 9%)",
+      badge: "9% Similarity",
       description:
-        "Manuscript passed institutional similarity threshold (<15%) with downloadable STRIKE Clearance Certificate.",
+        "Manuscript passed institutional similarity threshold (<15%) with downloadable Official STRIKE Clearance Certificate.",
     },
   ],
   "final-defense": [
@@ -167,14 +181,14 @@ export const SCENARIO_DEFINITIONS: Record<ScenarioPageKey, ScenarioOption[]> = {
     },
     {
       id: "READY_TO_APPLY",
-      label: "2. Ready to Apply",
+      label: "2. Submit Final Application",
       badge: "Certified",
       description:
         "Final Adviser Certification issued and STRIKE cleared. Student can submit Final Defense application.",
     },
     {
       id: "SCHEDULED",
-      label: "3. Defense Scheduled",
+      label: "3. Final Defense Scheduled",
       badge: "Scheduled",
       description:
         "Final Oral Defense scheduled with full Examination Committee and official Defense Application PDF.",
@@ -254,7 +268,7 @@ export const SCENARIO_DEFINITIONS: Record<ScenarioPageKey, ScenarioOption[]> = {
 const DEFAULT_SCENARIOS: Record<ScenarioPageKey, string> = {
   "student-dashboard": "PROPOSAL_SCHEDULED",
   "title-defense": "NOT_SUBMITTED",
-  "adviser-request": "SELECT_ADVISER",
+  "adviser-request": "READY",
   "proposal-defense": "ADVISER_REVIEW",
   strike: "SUBMIT_MANUSCRIPT",
   "final-defense": "FINAL_ADVISER_REVIEW",

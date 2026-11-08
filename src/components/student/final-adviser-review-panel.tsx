@@ -1,0 +1,355 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { apiClientRequest, ApiError } from "@/lib/api.client";
+import { studentThesisJourneyQueryKey } from "@/lib/student-thesis-journey";
+import {
+  createManuscriptSubmission,
+  MANUSCRIPT_TITLE_MAX_LENGTH,
+} from "@/lib/manuscript-submission";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { AdviserCertificationRecords } from "@/components/shared/adviser-certification-records";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  FileText,
+  Send,
+  Sparkles,
+  Upload,
+} from "lucide-react";
+
+type FinalReviewStatus =
+  | "NONE"
+  | "AWAITING_REVIEW"
+  | "CHANGES_REQUESTED"
+  | "ISSUED";
+
+type FinalAdviserReview = {
+  thesisId: string | null;
+  reviewStatus: FinalReviewStatus;
+  reviewRemarks: string | null;
+  manuscript: {
+    documentId: string;
+    manuscriptTitle: string | null;
+    originalFilename: string | null;
+    uploadedAt: string | null;
+  } | null;
+  certification: {
+    issued: boolean;
+    adviserName: string | null;
+    signedAt: string | null;
+  } | null;
+  strikeRequired: boolean;
+  strikeEligible: boolean;
+  proposalStageComplete: boolean;
+};
+
+const reviewQueryKey = ["student", "final-adviser-review"] as const;
+
+const SAMPLE_FINAL_TITLE =
+  "Data-Driven Instructional Supervision and Digital Readiness of Public Secondary School Heads in the Division of Manila";
+
+function statusLabel(status: FinalReviewStatus): string {
+  switch (status) {
+    case "AWAITING_REVIEW":
+      return "Final manuscript awaiting Adviser review";
+    case "CHANGES_REQUESTED":
+      return "Changes requested by Adviser";
+    case "ISSUED":
+      return "Final Adviser Certification issued";
+    default:
+      return "Ready to upload Final manuscript";
+  }
+}
+
+export function FinalAdviserReviewPanel() {
+  const queryClient = useQueryClient();
+  const [file, setFile] = useState<File | null>(null);
+  const [manuscriptTitle, setManuscriptTitle] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string | null>(null);
+  const prevStatusRef = useRef<FinalReviewStatus | null>(null);
+
+  const { data, isLoading } = useQuery({
+    queryKey: reviewQueryKey,
+    queryFn: async () =>
+      (await apiClientRequest("/thesis/final-adviser-review")) as FinalAdviserReview,
+    refetchInterval: (q) => {
+      const st = (q.state.data as FinalAdviserReview | undefined)?.reviewStatus;
+      return st === "AWAITING_REVIEW" || st === "CHANGES_REQUESTED" ? 30_000 : false;
+    },
+    refetchOnWindowFocus: true,
+  });
+
+  const currentStatus = data?.reviewStatus ?? null;
+  useEffect(() => {
+    const prev = prevStatusRef.current;
+    if (prev === currentStatus) return;
+    prevStatusRef.current = currentStatus;
+    if (currentStatus === "ISSUED" && prev !== null && prev !== "ISSUED") {
+      void queryClient.invalidateQueries({
+        queryKey: ["thesisEligibility", "FINAL_DEFENSE"],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: studentThesisJourneyQueryKey,
+      });
+    }
+  }, [currentStatus, queryClient]);
+
+  const handleAttachSampleManuscript = () => {
+    setManuscriptTitle(data?.manuscript?.manuscriptTitle || SAMPLE_FINAL_TITLE);
+    setFile(
+      new File(
+        ["%PDF-1.4 Sample Final Manuscript Chapters 1-5"],
+        "DelaCruz_MAEd_Final_Manuscript_Ch1-5.pdf",
+        { type: "application/pdf" },
+      ),
+    );
+    toast.success("Sample Final Manuscript (Ch. 1–5) attached!");
+  };
+
+  const submitManuscript = useMutation({
+    mutationFn: async () => {
+      const formData = createManuscriptSubmission(manuscriptTitle, file);
+      return apiClientRequest("/thesis/final-adviser-review/manuscript", {
+        method: "POST",
+        body: formData,
+      });
+    },
+    onSuccess: async () => {
+      setError(null);
+      setFile(null);
+      setManuscriptTitle("");
+      if (inputRef.current) inputRef.current.value = "";
+      toast.success("Final Manuscript submitted & Adviser Certification issued!", {
+        description:
+          "You can now submit your COR and Defense Fee Receipt below to file for Final Oral Defense.",
+      });
+      await queryClient.invalidateQueries({ queryKey: reviewQueryKey });
+      await queryClient.invalidateQueries({
+        queryKey: studentThesisJourneyQueryKey,
+      });
+    },
+    onError: (e: Error) => {
+      const extra =
+        e instanceof ApiError && e.missing?.length
+          ? ` ${e.missing.map((m) => m.message).join(" ")}`
+          : "";
+      setError((e.message || "Failed to submit Final manuscript") + extra);
+    },
+  });
+
+  if (isLoading && !data) {
+    return (
+      <Card>
+        <CardContent className="pt-6 text-sm text-(--earist-body-text)">
+          Loading Final Adviser review status…
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const status = data?.reviewStatus ?? "NONE";
+  const canUpload = status === "NONE" || status === "CHANGES_REQUESTED";
+  const blockedByProposal = data && !data.proposalStageComplete;
+  const blockedByStrike =
+    data?.strikeRequired === true && data.strikeEligible === false;
+
+  return (
+    <Card data-guide="final-adviser-panel">
+      <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2">
+        <CardTitle className="text-sm font-semibold text-(--earist-secondary)">
+          1. Final Manuscript / Adviser Review (Chapters 1–5)
+        </CardTitle>
+        {canUpload && !blockedByProposal && !blockedByStrike && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleAttachSampleManuscript}
+            className="border-(--earist-accent) bg-amber-50 text-xs font-semibold text-(--earist-primary) hover:bg-amber-100"
+          >
+            <Sparkles className="mr-1.5 h-3.5 w-3.5 text-(--earist-accent)" />
+            Attach Sample Final Manuscript PDF
+          </Button>
+        )}
+      </CardHeader>
+      <CardContent className="space-y-3 text-sm">
+        <div className="flex items-center gap-2">
+          {status === "ISSUED" ? (
+            <CheckCircle2 className="h-5 w-5 text-emerald-700" />
+          ) : (
+            <Clock className="h-5 w-5 text-amber-600" />
+          )}
+          <p className="font-medium text-(--earist-primary)">
+            {statusLabel(status)}
+          </p>
+        </div>
+
+        {blockedByProposal && (
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Proposal stage incomplete</AlertTitle>
+            <AlertDescription>
+              Proposal Defense must be formally PASSED with a finalized Proposal
+              RAP before Final manuscript review.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {blockedByStrike && (
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>STRIKE / plagiarism</AlertTitle>
+            <AlertDescription>
+              Required STRIKE / plagiarism clearance is still pending.{" "}
+              <a href="/student/thesis/strike" className="underline">
+                View STRIKE status
+              </a>
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {status === "CHANGES_REQUESTED" && data?.reviewRemarks && (
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Adviser remarks</AlertTitle>
+            <AlertDescription>{data.reviewRemarks}</AlertDescription>
+          </Alert>
+        )}
+
+        {status === "ISSUED" && data?.certification && (
+          <div className="space-y-1 rounded-lg border border-emerald-200 bg-emerald-50 p-3">
+            <p className="font-medium text-emerald-800">
+              Final Adviser Certification: Issued
+            </p>
+            <p className="text-xs text-emerald-800">
+              Certified by {data.certification.adviserName}
+              {data.certification.signedAt
+                ? ` on ${new Date(data.certification.signedAt).toLocaleDateString()}`
+                : ""}
+            </p>
+          </div>
+        )}
+
+        {status === "ISSUED" && data?.thesisId && (
+          <AdviserCertificationRecords thesisId={data.thesisId} stage="FINAL" />
+        )}
+
+        {status === "AWAITING_REVIEW" && (
+          <p className="text-(--earist-body-text)">
+            Final manuscript submitted for Adviser review. This is not the Final
+            application to Admin yet.
+          </p>
+        )}
+
+        {data?.manuscript && (
+          <div className="space-y-1 break-words">
+            <p className="font-medium text-(--earist-secondary)">
+              Thesis/Dissertation Title
+            </p>
+            <p>{data.manuscript.manuscriptTitle || "Title not recorded for this manuscript."}</p>
+            <p className="text-xs text-(--earist-body-text)">
+              {data.manuscript.originalFilename || "Filename unavailable"}
+            </p>
+            <p className="flex items-center gap-2 text-xs text-(--earist-body-text)">
+              <FileText className="h-4 w-4" />
+              Current Final manuscript uploaded
+              {data.manuscript.uploadedAt
+                ? ` ${new Date(data.manuscript.uploadedAt).toLocaleDateString()}`
+                : ""}
+            </p>
+          </div>
+        )}
+
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Submission failed</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
+        {canUpload && !blockedByProposal && !blockedByStrike && (
+          <div className="space-y-2">
+            <label
+              htmlFor="final-manuscript-title"
+              className="block font-medium text-(--earist-secondary)"
+            >
+              Thesis/Dissertation Title <span aria-hidden="true">*</span>
+            </label>
+            <Textarea
+              id="final-manuscript-title"
+              required
+              value={manuscriptTitle}
+              onChange={(event) => setManuscriptTitle(event.target.value)}
+              maxLength={MANUSCRIPT_TITLE_MAX_LENGTH}
+              disabled={submitManuscript.isPending}
+              aria-describedby="final-manuscript-title-help"
+              rows={3}
+              placeholder="Enter your approved thesis/dissertation title..."
+            />
+            <p id="final-manuscript-title-help" className="text-xs text-(--earist-body-text)">
+              Enter the title for this manuscript. Include the title again with each revision.
+            </p>
+            {!file ? (
+              <label className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-(--earist-border-gray) p-4 hover:border-(--earist-primary)">
+                <Upload className="mb-1 h-6 w-6 text-(--earist-body-text)/40" />
+                <p className="text-sm text-(--earist-primary)">
+                  Upload complete Final manuscript (Ch. 1–5)
+                </p>
+                <p className="text-xs text-(--earist-body-text)">PDF, DOC, DOCX</p>
+                <input
+                  ref={inputRef}
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) setFile(f);
+                  }}
+                />
+              </label>
+            ) : (
+              <div className="flex items-center justify-between rounded border border-(--earist-border-gray) p-2">
+                <span className="truncate text-xs font-medium text-(--earist-primary)">
+                  {file.name}
+                </span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setFile(null);
+                    if (inputRef.current) inputRef.current.value = "";
+                  }}
+                >
+                  Remove
+                </Button>
+              </div>
+            )}
+            <Button
+              type="button"
+              disabled={!file || !manuscriptTitle.trim() || submitManuscript.isPending}
+              onClick={() => submitManuscript.mutate()}
+              className="bg-(--earist-primary) hover:bg-(--earist-primary)/90"
+            >
+              <Send className="mr-2 h-4 w-4" />
+              {submitManuscript.isPending
+                ? "Submitting…"
+                : status === "CHANGES_REQUESTED"
+                  ? "Resubmit revised Final manuscript"
+                  : "Submit for Adviser review"}
+            </Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}

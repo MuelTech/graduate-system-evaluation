@@ -838,6 +838,7 @@ export function buildStudentThesisJourney(scenarios: {
   const advScenario = scenarios.adviserRequest;
   const adviserStep: StudentThesisJourney["steps"][number] = (() => {
     switch (advScenario) {
+      case "READY":
       case "SELECT_ADVISER":
         return {
           key: "ADVISER_REQUEST",
@@ -851,6 +852,20 @@ export function buildStudentThesisJourney(scenarios: {
           defenseStatus: null,
           defenseSession: null,
         };
+      case "DECLINED_RETRY":
+        return {
+          key: "ADVISER_REQUEST",
+          label: "Adviser Request",
+          state: "CURRENT",
+          lockReason: null,
+          nextAction:
+            "Select another eligible Title Defense panel member below and submit a new GS-020 Adviser Request.",
+          detail:
+            "Previous request declined due to faculty advising load capacity — please select another eligible panel member.",
+          defenseStatus: null,
+          defenseSession: null,
+        };
+      case "PENDING":
       case "PENDING_SIGNATURES":
         return {
           key: "ADVISER_REQUEST",
@@ -896,6 +911,19 @@ export function buildStudentThesisJourney(scenarios: {
           defenseStatus: "NOT_SUBMITTED",
           defenseSession: null,
         };
+      case "REVISION_REQUIRED":
+        return {
+          key: "PROPOSAL_DEFENSE",
+          label: "Proposal Defense",
+          state: "CURRENT",
+          lockReason: null,
+          nextAction:
+            "Address the Adviser / Committee revision remarks on Chapters 1–3 and upload your revised manuscript.",
+          detail:
+            "Revisions requested: Include the stratified proportional sampling computation per district in Chapter 3 and attach the expert validation matrix.",
+          defenseStatus: "NOT_SUBMITTED",
+          defenseSession: null,
+        };
       case "READY_TO_APPLY":
         return {
           key: "PROPOSAL_DEFENSE",
@@ -932,7 +960,7 @@ export function buildStudentThesisJourney(scenarios: {
           label: "Proposal Defense",
           state: "COMPLETED",
           lockReason: null,
-          nextAction: null,
+          nextAction: "Proceed to STRIKE / Plagiarism Similarity Clearance.",
           detail: "Proposal Defense Passed — Official RAP Report finalized.",
           defenseStatus: "COMPLETED",
           defenseSession: {
@@ -959,6 +987,7 @@ export function buildStudentThesisJourney(scenarios: {
           defenseStatus: null,
           defenseSession: null,
         };
+      case "WAITING":
       case "UNDER_VERIFICATION":
         return {
           key: "STRIKE",
@@ -971,6 +1000,7 @@ export function buildStudentThesisJourney(scenarios: {
           defenseStatus: null,
           defenseSession: null,
         };
+      case "COMPLETED":
       case "CLEARED":
       default:
         return {
@@ -978,9 +1008,9 @@ export function buildStudentThesisJourney(scenarios: {
           label: "STRIKE / Plagiarism",
           state: "COMPLETED",
           lockReason: null,
-          nextAction: null,
+          nextAction: "Proceed to Final Oral Defense endorsement and application.",
           detail:
-            "STRIKE Similarity Clearance Issued — 8.4% Overall Similarity Index (Passed).",
+            "STRIKE Similarity Clearance Issued — 9% Overall Similarity Index (Passed, <15% threshold).",
           defenseStatus: null,
           defenseSession: null,
         };
@@ -1037,7 +1067,8 @@ export function buildStudentThesisJourney(scenarios: {
           label: "Final Defense",
           state: "COMPLETED",
           lockReason: null,
-          nextAction: null,
+          nextAction:
+            "Submit your approved Final Manuscript package to the Graduate School Research Databank (DL-9).",
           detail:
             "Final Oral Defense Passed — Eligible for Research Databank archival.",
           defenseStatus: "COMPLETED",
@@ -1057,25 +1088,34 @@ export function buildStudentThesisJourney(scenarios: {
   else if (path.includes("/final-defense")) currentStep = "FINAL_DEFENSE";
 
   const adviserRequestObj =
-    advScenario === "SELECT_ADVISER"
+    advScenario === "READY" || advScenario === "SELECT_ADVISER"
       ? null
-      : advScenario === "PENDING_SIGNATURES"
+      : advScenario === "DECLINED_RETRY"
         ? {
-            id: "adv-req-01",
-            status: "PENDING",
-            adviserStatus: "CONFORMED",
+            id: "adv-req-declined-01",
+            status: "DECLINED",
+            adviserStatus: "DECLINED",
             deanStatus: "PENDING",
-            requestedAdviserId: "panelist-eval-01",
-            requestedAdviserName: "Dr. Maria Clara R. Santos, EdD",
+            requestedAdviserId: "panelist-eval-02",
+            requestedAdviserName: "Dr. Roberto A. Villanueva, PhD",
           }
-        : {
-            id: "adv-req-01",
-            status: "APPROVED",
-            adviserStatus: "CONFORMED",
-            deanStatus: "APPROVED",
-            requestedAdviserId: "panelist-eval-01",
-            requestedAdviserName: "Dr. Maria Clara R. Santos, EdD",
-          };
+        : advScenario === "PENDING" || advScenario === "PENDING_SIGNATURES"
+          ? {
+              id: "adv-req-01",
+              status: "PENDING",
+              adviserStatus: "CONFORMED",
+              deanStatus: "PENDING",
+              requestedAdviserId: "panelist-eval-01",
+              requestedAdviserName: "Dr. Maria Clara R. Santos, EdD",
+            }
+          : {
+              id: "adv-req-01",
+              status: "APPROVED",
+              adviserStatus: "CONFORMED",
+              deanStatus: "APPROVED",
+              requestedAdviserId: "panelist-eval-01",
+              requestedAdviserName: "Dr. Maria Clara R. Santos, EdD",
+            };
 
   const activeAdviserObj =
     path.includes("/adviser-request") && advScenario !== "APPROVED"
@@ -1231,6 +1271,7 @@ export function buildProposalAdviserReview(
     proposalScenario === "READY_TO_APPLY" ||
     proposalScenario === "SCHEDULED" ||
     proposalScenario === "COMPLETED";
+  const isChangesRequested = proposalScenario === "REVISION_REQUIRED";
 
   return {
     thesisId: "thesis-eval-01",
@@ -1244,10 +1285,16 @@ export function buildProposalAdviserReview(
       userId: "panelist-eval-01",
       name: "Dr. Maria Clara R. Santos, EdD",
     },
-    reviewStatus: isIssued ? "ISSUED" : "NONE",
+    reviewStatus: isIssued
+      ? "ISSUED"
+      : isChangesRequested
+        ? "CHANGES_REQUESTED"
+        : "NONE",
     reviewRemarks: isIssued
       ? "Chapters 1 to 3 are well-structured and aligned with the approved research instruments. Cleared and endorsed for Proposal Oral Defense."
-      : null,
+      : isChangesRequested
+        ? "Please include the stratified proportional sampling breakdown across the 6 legislative districts of Manila in Table 2 (Chapter 3) and attach the expert content validity index (CVI) sheet before pre-defense certification."
+        : null,
     manuscript: {
       documentId: "doc-prop-ms-01",
       manuscriptTitle: OFFICIAL_APPROVED_TITLE,

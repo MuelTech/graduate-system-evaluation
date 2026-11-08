@@ -230,12 +230,12 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
         targetSelector: '[data-guide="scenario-switcher"]',
         title: "Preview Adviser Request Stages",
         description:
-          "Toggle between (1) Selecting a Faculty Adviser & signing GS-020, (2) Awaiting Adviser CONFORME & Dean approval, and (3) Viewing the fully signed GS-020 PDF.",
+          "Toggle between (1) Selecting a Faculty Adviser & signing GS-020, (2) Awaiting Adviser CONFORME & Dean approval, (3) Adviser Officially Assigned, and (4) Declined / Re-select Adviser.",
         placement: "bottom",
       },
       {
         id: "adviser-selection",
-        targetSelector: '[data-guide="adviser-selection"]',
+        targetSelector: '[data-guide="adviser-selection"], [data-guide="gs020-preview"]',
         title: "Selecting a Qualified Graduate Faculty Adviser",
         description:
           "Students browse eligible faculty members from their Title Defense panel, review specializations and advisee load, and affix their digital signature to submit GS Form No. 020.",
@@ -262,12 +262,12 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
         targetSelector: '[data-guide="scenario-switcher"]',
         title: "Toggle Proposal Defense Workflow States",
         description:
-          "Switch between (1) Pre-Defense Adviser Review, (2) Ready to Apply with issued certification, (3) Defense Scheduled, and (4) Completed with Proposal RAP Report.",
+          "Switch between (1) Pre-Defense Adviser Review, (2) Submit Proposal Application, (3) Defense Scheduled, (4) Completed with Proposal RAP Report, and (5) Revisions Required.",
         placement: "bottom",
       },
       {
         id: "proposal-adviser-panel",
-        targetSelector: '[data-guide="proposal-adviser-panel"]',
+        targetSelector: '[data-guide="proposal-adviser-panel"], [data-guide="proposal-defense-record"]',
         title: "Pre-Defense Manuscript Review & Adviser Certification",
         description:
           "Before applying for Proposal Defense, the student uploads Chapters 1–3 for their Thesis Adviser to inspect and issue a signed Pre-Defense Certification PDF.",
@@ -294,7 +294,7 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
         targetSelector: '[data-guide="scenario-switcher"]',
         title: "Toggle STRIKE Plagiarism Stages",
         description:
-          "Switch between (1) Submitting the revised manuscript for scanning, (2) Verification in progress, and (3) STRIKE Cleared with certificate preview.",
+          "Switch between (1) Submitting the revised manuscript for scanning, (2) Verification in progress, and (3) Cleared (9% Similarity Index) with certificate preview.",
         placement: "bottom",
       },
       {
@@ -310,7 +310,7 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
         targetSelector: '[data-guide="strike-certificate"], [data-guide="strike-upload"]',
         title: "Similarity Score & Official STRIKE Certificate",
         description:
-          "Once cleared, the student can view their verified similarity percentage (8.4%) and preview/download the official STRIKE Plagiarism Clearance Certificate PDF.",
+          "Once cleared, the student can view their verified similarity percentage (9%) and preview/download the official STRIKE Plagiarism Clearance Certificate PDF.",
         placement: "top",
       },
     ],
@@ -326,12 +326,12 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
         targetSelector: '[data-guide="scenario-switcher"]',
         title: "Toggle Final Defense Workflow States",
         description:
-          "Preview (1) Final Adviser Endorsement, (2) Final Defense Application, (3) Scheduled Final Oral Defense, and (4) Completed & Passed with Repository archival link.",
+          "Preview (1) Final Adviser Endorsement, (2) Submit Final Defense Application, (3) Scheduled Final Oral Defense, and (4) Completed & Passed with Repository archival link.",
         placement: "bottom",
       },
       {
         id: "final-adviser-panel",
-        targetSelector: '[data-guide="final-adviser-panel"]',
+        targetSelector: '[data-guide="final-adviser-panel"], [data-guide="final-rap-panel"]',
         title: "Final Adviser Certification Before Oral Defense",
         description:
           "The Thesis Adviser reviews the complete Chapters 1–5 manuscript (with STRIKE clearance) and issues the signed Final Pre-Defense Certification.",

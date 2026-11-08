@@ -40,7 +40,7 @@ function RecordList({ viewerScope, audience }: { viewerScope: string; audience: 
     Adviser Request records could not be loaded. <Button size="sm" variant="outline" onClick={() => records.refetch()}>Try again</Button>
   </div>;
   if (!records.data?.length) return null;
-  return <section aria-label="Adviser Request" className="space-y-3">
+  return <section data-guide="gs020-preview" aria-label="Adviser Request" className="space-y-3">
     <h3 className="text-sm font-semibold text-(--earist-secondary)">Adviser Request</h3>
     <p className="text-sm text-(--earist-body-text)">{audience === "student"
       ? "This is the official record of your approved adviser request, including the Adviser’s confirmation and Graduate School approval."
