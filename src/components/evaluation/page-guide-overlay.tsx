@@ -246,13 +246,21 @@ export function PageGuideTrigger({
       onClick={() => openGuide()}
       data-guide="page-guide-trigger"
       aria-label="Open interactive page guide"
-      className={`group relative inline-flex items-center gap-1.5 rounded-full border-(--earist-accent)/70 bg-amber-50/90 px-3 py-1.5 text-xs font-semibold text-(--earist-primary) shadow-xs transition-all hover:border-(--earist-primary) hover:bg-(--earist-primary) hover:text-white ${
-        isOpen ? "ring-2 ring-(--earist-accent)" : ""
+      className={`guide-btn-highlight group relative inline-flex items-center gap-2 rounded-full border-2 border-[#f9a825] bg-linear-to-r from-amber-50 via-white to-amber-50 px-3.5 py-1.5 text-xs font-bold text-[#b71c1c] transition-all duration-300 hover:scale-105 hover:border-[#b71c1c] hover:bg-[#b71c1c] hover:text-white hover:shadow-[0_4px_20px_rgba(183,28,28,0.35)] active:scale-95 ${
+        isOpen
+          ? "ring-4 ring-[#f9a825] ring-offset-1"
+          : "ring-2 ring-[#f9a825]/40"
       } ${className}`}
     >
-      <HelpCircle className="h-3.5 w-3.5 text-(--earist-primary) transition-colors group-hover:text-(--earist-accent)" />
-      <span>{compact ? "Guide" : label}</span>
-      <span className="hidden rounded-full bg-(--earist-primary)/10 px-1.5 py-0.2 text-[10px] font-bold text-(--earist-primary) group-hover:bg-white/20 group-hover:text-white sm:inline-block">
+      {/* Live Animated Beacon / Pulsing Attention Ping */}
+      <span className="relative flex h-2.5 w-2.5 items-center justify-center">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#f9a825] opacity-85" />
+        <span className="relative inline-flex h-2 w-2 rounded-full bg-[#f9a825] shadow-xs" />
+      </span>
+
+      <Sparkles className="h-3.5 w-3.5 text-[#f9a825] transition-transform duration-300 group-hover:rotate-12 group-hover:scale-115 group-hover:text-amber-200" />
+      <span className="font-bold tracking-tight">{compact ? "Guide" : label}</span>
+      <span className="hidden rounded-full bg-[#b71c1c]/10 px-1.5 py-0.5 text-[10px] font-extrabold tracking-wider text-[#b71c1c] uppercase transition-colors group-hover:bg-white/20 group-hover:text-white sm:inline-block">
         Tour
       </span>
     </Button>
@@ -775,7 +783,7 @@ export function PageGuideOverlay() {
             refY="5"
             orient="auto"
           >
-            <path d="M 0 1 L 9 5 L 0 9 z" fill="#D4A548" />
+            <path d="M 0 1 L 9 5 L 0 9 z" fill="#f9a825" />
           </marker>
         </defs>
 
@@ -805,19 +813,20 @@ export function PageGuideOverlay() {
             <path
               d={`M ${arrowStart.x} ${arrowStart.y} Q ${arrowControl.x} ${arrowControl.y} ${arrowEnd.x} ${arrowEnd.y}`}
               fill="none"
-              stroke="#D4A548"
-              strokeWidth="3"
-              strokeDasharray="6 4"
+              stroke="#f9a825"
+              strokeWidth="3.5"
+              strokeDasharray="8 6"
               strokeLinecap="round"
               markerEnd={`url(#${arrowMarkerId})`}
+              className="guide-animated-dash"
             />
             <circle
               cx={arrowStart.x}
               cy={arrowStart.y}
-              r="4.5"
-              fill="#D4A548"
+              r="5"
+              fill="#f9a825"
               stroke="#7A1315"
-              strokeWidth="1.5"
+              strokeWidth="2"
             />
           </g>
         )}
@@ -826,7 +835,7 @@ export function PageGuideOverlay() {
       {/* Gold Spotlight Ring around Target Element */}
       {targetRect && cutoutW > 0 && cutoutH > 0 && (
         <div
-          className="fixed pointer-events-none rounded-xl ring-2 ring-(--earist-accent) shadow-[0_0_0_4px_rgba(212,165,72,0.28)] transition-all duration-200"
+          className="guide-spotlight-highlight fixed pointer-events-none rounded-xl ring-2 ring-[#f9a825] transition-all duration-300"
           style={{
             top: cutoutY,
             left: cutoutX,
@@ -834,7 +843,11 @@ export function PageGuideOverlay() {
             height: cutoutH,
           }}
         >
-          <span className="absolute -top-3 right-3 inline-flex items-center gap-1 rounded-full bg-(--earist-accent) px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-slate-950 shadow-xs">
+          <span className="absolute -top-3.5 right-3 inline-flex items-center gap-1.5 rounded-full bg-[#f9a825] px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-slate-950 shadow-md">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-slate-950 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-slate-950" />
+            </span>
             <Sparkles className="h-2.5 w-2.5" />
             Step {stepIndex + 1} Target
           </span>
@@ -843,7 +856,7 @@ export function PageGuideOverlay() {
 
       {/* Floating EARIST Coach-Mark Card */}
       <div
-        className="fixed z-[10000] w-[min(380px,calc(100vw-32px))] overflow-hidden rounded-xl border border-(--earist-accent)/60 bg-white shadow-2xl transition-all duration-200"
+        className="fixed z-[10000] w-[min(380px,calc(100vw-32px))] overflow-hidden rounded-xl border-2 border-[#f9a825] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.35)] transition-all duration-300 ease-out animate-in fade-in zoom-in-95"
         style={{
           top: cardTop,
           left: cardLeft,

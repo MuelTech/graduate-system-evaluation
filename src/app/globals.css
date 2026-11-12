@@ -154,3 +154,52 @@
     display: none !important;
   }
 }
+
+/* ==========================================================================
+   Interactive Page Guide & Tour Animations
+   ========================================================================== */
+@keyframes guide-btn-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(249, 168, 37, 0.7), 0 2px 10px rgba(249, 168, 37, 0.4);
+    transform: translateY(0);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(249, 168, 37, 0), 0 4px 18px rgba(249, 168, 37, 0.65);
+    transform: translateY(-1.5px);
+  }
+}
+
+@keyframes guide-dash-flow {
+  from {
+    stroke-dashoffset: 28;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes guide-spotlight-pulse {
+  0%, 100% {
+    box-shadow: 0 0 16px rgba(249, 168, 37, 0.6), 0 0 0 3px rgba(249, 168, 37, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 28px rgba(249, 168, 37, 0.85), 0 0 0 6px rgba(249, 168, 37, 0.5);
+  }
+}
+
+.guide-btn-highlight {
+  animation: guide-btn-glow 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.guide-btn-highlight:hover {
+  animation: none;
+}
+
+.guide-animated-dash {
+  animation: guide-dash-flow 1.2s linear infinite;
+}
+
+.guide-spotlight-highlight {
+  animation: guide-spotlight-pulse 2s ease-in-out infinite;
+}
+
