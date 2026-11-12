@@ -15,6 +15,11 @@
 | **WP-4** | Student Portal — Unlocked Thesis Journey Steps + Multi-State Scenarios | **COMPLETED** | Title Defense, Adviser Request, Proposal Defense, STRIKE / Plagiarism, Final Defense (all states unlocked) |
 | **WP-5** | Faculty / Panelist Portal — All Pages & Collaborative Defense Workspace | **COMPLETED** | Dashboard, Profile, My Defenses, Defense Workspace (PDF Annotation, Scoring, RAP), My Advisees, E-Signatures, Repository, Announcements, Notifications |
 | **WP-6** | End-to-End QA, Guide Verification & Vercel Deployment Readiness | **COMPLETED** | Full `next build` check, link/route audit, `pdf.worker.min.mjs` static bundle, and `README.md` instructions |
+| **WP-7** | V2 Design System Overhaul, Public Portal Redesign & Professional 3-Role Login | **COMPLETED** | V2 60-30-10 tokens (`#FFF8F0` / `#e02b20`), `Instrument_Sans`, shared V2 primitives, V2 Public Landing Page, 3-Role `/login`, and `/register` wizard |
+| **WP-8** | Full Applicant Portal (`/applicant/*`) & Interactive Entrance Examination Engine | **COMPLETED** | Applicant Portal 8 routes + 72-MCQ & Essay Entrance Exam |
+| **WP-9** | Student Portal V2 Alignment (`<ThesisJourneyShell>`, 2-Step Disclosure & Unified Defense Cards) | **COMPLETED** | V2 `#FFF8F0` / `#b71c1c` collapsible shell, `<ThesisJourneyShell>`, 2-step disclosure, unified 3-card `DefenseStatusPanel`, and plain-language labels |
+| **WP-10** | Faculty Portal V2 Alignment (`/faculty/*` Canonical Routes & Entrance Exam Essay Evaluations) | **COMPLETED** | `/faculty/*` canonical routes, V2 collapsible Faculty shell, Entrance Exam Essay Evaluations (`/faculty/essay-evaluations` & `[id]`), and V2 Faculty pages |
+| **WP-11** | Comprehensive Page Guide Audit, Plain-Language Naming & End-to-End V2 QA | **COMPLETED** | Complete `data-guide` coverage for Public/Applicant/Student/Faculty, plain-language naming (no `GS-020`/`RAP` jargon), and `npm run build` verification |
 
 ---
 
@@ -128,3 +133,73 @@
   - Verify all Student and Panelist routes render with populated data, working Scenario Switchers, working PDF previews, and accurate Arrow Guide targets.
 - [x] **6.3 README & Vercel Deployment Setup:**
   - Write a clear `README.md` with Vercel deployment instructions and respondent evaluation link guide.
+
+---
+
+### WP-7: V2 Design System Overhaul, Public Portal Redesign & Professional 3-Role Login
+**Goal:** Align global design tokens, shared UI primitives, the V2 Public Landing Page, and the `/login` + `/register` pages with `MuelTech/graduate-system` (PRs #50, #51, #52).
+> See [`docs/plans/WP7_WP11_V2_UI_ALIGNMENT_AND_APPLICANT_PORTAL_PLAN.md`](./plans/WP7_WP11_V2_UI_ALIGNMENT_AND_APPLICANT_PORTAL_PLAN.md) for full details.
+
+- [x] **7.1 Global 60-30-10 Design Tokens & Typography:**
+  - Update `src/app/globals.css`, `src/app/layout.tsx` (`Instrument_Sans`, `<Toaster position="top-center" />`, `EARIST - Graduate School` title), and `src/app/favicon.ico`.
+- [x] **7.2 Shared V2 UI & Layout Primitives:**
+  - Port `portal-breadcrumbs.tsx`, `filter-bar.tsx`, `stat-card.tsx`, `table-actions.tsx`, and updated `table.tsx` (`<TableCard>`), `button.tsx`, `badge.tsx`, `card.tsx`, `page-header.tsx`, `tabs.tsx`, `breadcrumb.tsx`, `sonner.tsx`, and `notification-bell.tsx`.
+- [x] **7.3 Public Portal V2 Redesign (Exact `graduate-system` Design):**
+  - Copy `public/images/landing/**`, `src/app/(public)/public-site.css`, and `src/content/public-site-content.ts`.
+  - Port V2 `<Navbar />` (removing role-switcher buttons and keeping official `Sign In` / `Create Account` + subtle `Page Guide` button), `<HeroSection />` (`100svh` 3-slide carousel), `<NewsSection />` (with photo lightbox), `<AboutSection />`, `<ProgramsSection />`, `<RepositorySection />`, `<ContactSection />`, `<Footer />`, and V2 `/about`, `/programs`, `/repository`, `/faq`.
+- [x] **7.4 Professional 3-Role Login (`/login`) & Registration (`/register`):**
+  - Redesign `/login` with the V2 `#FFF8F0` card layout, professional **System Evaluation & Testing Mode** notice, and 3 participant roles (**Applicant**, **Graduate Student**, **Faculty**).
+  - Port `/register` 2-step Applicant Registration wizard wired to mock program alignment and `/applicant/dashboard`.
+
+---
+
+### WP-8: Full Applicant Portal (`/applicant/*`) & Interactive Entrance Examination Engine
+**Goal:** Implement the complete Applicant Portal with realistic mock data for all 8 routes, Scenario Switchers, and a fully functional Entrance Examination (MCQ + Essay).
+
+- [x] **8.1 Applicant Persona & Exam Engine Mock API:**
+  - Add `"applicant"` role (`Maria Lourdes G. Villanueva`) to `src/lib/evaluation-session.ts` and `src/lib/evaluation-mock/`.
+  - Implement mock API handlers for `/applicant/profile`, `/waivers/me`, `/exam/status`, `/exam/slots/available`, `/exam/schedule`, `/exam-engine/**` (execution, start, questions, drafts, submit, finalization), `/exam/result`, and `/cor/**`.
+- [x] **8.2 Applicant Layout & Core Pages:**
+  - Create `src/app/(portal)/applicant/layout.tsx` (`#b71c1c` collapsible sidebar, `<PortalBreadcrumbs portal="applicant" />`, `<PageGuideTrigger />`, no `RoleSwitcherPill`).
+  - Implement `/applicant/dashboard`, `/applicant/profile` (populated with full mock profile data), `/applicant/alignment`, `/applicant/schedule`, `/applicant/results`, `/applicant/cor-upload`, and `/applicant/notifications` (populated with mock notifications).
+- [x] **8.3 Interactive Entrance Examination (`/applicant/exam`):**
+  - Implement full state machine (`READY`, `ACTIVE`, `TERMINAL`, `BLOCKED` appeal gate) + `ScenarioSwitcherBar`.
+  - Support answering all **72 Entrance Exam MCQ items** (ported from `MuelTech/graduate-system` with stimulus passages/figures) + the Graduate Essay question with live word count, Question Navigator grid, draft auto-save, and interactive exam submission.
+
+---
+
+### WP-9: Student Portal V2 Alignment (`<ThesisJourneyShell>`, 2-Step Disclosure & Unified Defense Cards)
+**Goal:** Upgrade the Student Portal to the V2 `#FFF8F0` / `#b71c1c` shell, remove `RoleSwitcherPill` from the top header, and port `<ThesisJourneyShell>`, 2-step defense disclosure, and unified 3-card `DefenseStatusPanel`.
+
+- [x] **9.1 Student Layout & Header Cleanup:**
+  - Update `src/app/(portal)/student/layout.tsx` to V2 collapsible sidebar + `<PortalBreadcrumbs portal="student" />`, remove `RoleSwitcherPill`, and keep all 5 Thesis Journey steps unlocked.
+- [x] **9.2 Shared V2 Student Thesis Components:**
+  - Port `thesis-journey-shell.tsx`, `defense-status-panel.tsx`, `title-defense-post-submission.tsx`, `student-rap-panel.tsx` (`"Rapporteur Report"` wording), and `student-thesis-journey.ts`.
+- [x] **9.3 Student Thesis Journey & Core Pages Update:**
+  - Update `title-defense`, `adviser-request`, `proposal-defense` (2-step progressive disclosure), `strike`, and `final-defense` (2-step progressive disclosure) to use `<ThesisJourneyShell>` and plain-language scenario labels.
+
+---
+
+### WP-10: Faculty Portal V2 Alignment (`/faculty/*` Canonical Routes & Entrance Exam Essay Evaluations)
+**Goal:** Align the Faculty Portal with PRs #49 & #50, add `/faculty/*` canonical route rewrites, remove `RoleSwitcherPill`, and implement the Entrance Exam Essay Evaluations workflow.
+
+- [x] **10.1 `/faculty/*` Rewrites & Faculty Layout:**
+  - Add `/faculty/:path*` → `/panelist/:path*` rewrite in `next.config.ts`.
+  - Update `src/app/(portal)/panelist/layout.tsx` to `"Faculty Portal"` branding, `<PortalBreadcrumbs portal="faculty" />`, `/faculty/*` navigation links, and remove `RoleSwitcherPill`.
+- [x] **10.2 Entrance Exam Essay Evaluations (`/faculty/essay-evaluations` & `[id]`):**
+  - Port `essay-evaluation-panel.tsx`, `panelist/essay-evaluations/page.tsx`, and `panelist/essay-evaluations/[id]/page.tsx` with interactive essay scoring (`POST /exam/scores/:id/grade`) and `<ResultBreakdown />`.
+- [x] **10.3 Faculty Dashboard, Profile, Advisees, Signatures & Workspace V2 Alignment:**
+  - Update `/faculty/dashboard` (with `Pending Essay Evaluations` KPI), `/faculty/profile` (with `Classification & Academic Access` badges), `/faculty/signatures` (`"Rapporteur Report"` copy), `/faculty/advisees`, `/faculty/defenses`, and `/faculty/defense-workspace/[scheduleId]`.
+
+---
+
+### WP-11: Comprehensive Page Guide Audit, Plain-Language Naming & End-to-End V2 QA
+**Goal:** Audit every page across Public, Applicant, Student, and Faculty portals so all visible sections are covered by `PageGuideOverlay` with plain-language descriptions, and verify a clean production build.
+
+- [x] **11.1 Plain-Language Guide & Scenario Naming Overhaul:**
+  - Replace all jargon (`GS-020`/`GS-20`, `RAP`, `STRIKE`, `DL-9`) in `guide-definitions.ts` and `ScenarioSwitcherBar` options with clear, self-explanatory respondent labels.
+- [x] **11.2 Complete Section Coverage Audit (`data-guide`):**
+  - Verify every visible section across Public, Applicant, Student, and Faculty pages has a working `data-guide` target and accurate guide step.
+- [x] **11.3 Production Build & Verification:**
+  - Run `npm run build` and verify zero TypeScript or Next.js build errors.
+

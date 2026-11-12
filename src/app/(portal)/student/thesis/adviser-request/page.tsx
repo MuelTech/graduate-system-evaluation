@@ -26,6 +26,10 @@ import {
   roleLabel,
 } from "@/lib/adviser-request-ui-state";
 import {
+  ThesisJourneyShell,
+  JourneyStepStatusCard,
+} from "@/components/student/thesis-journey-shell";
+import {
   Card,
   CardContent,
   CardHeader,
@@ -47,7 +51,6 @@ import {
   AlertCircle,
   CheckCircle2,
   Clock,
-  Lock,
   Send,
   Sparkles,
   UserCheck,
@@ -72,7 +75,6 @@ type OdpCandidate = {
 
 type CandidatesResponse = {
   sourceDefenseScheduleId: string;
-  /** Historical context only — nullable; not required to list candidates. */
   selectedTitle: { id: string; titleText: string } | null;
   candidates: OdpCandidate[];
   student: Omit<
@@ -143,9 +145,9 @@ function AdviserRequestContent({ viewerScope }: { viewerScope: string }) {
       setSignature("");
       setSelectedUserId("");
       setRemarks("");
-      toast.success("Official GS-020 Adviser Request signed & submitted!", {
+      toast.success("Official Thesis Adviser Request Form signed & submitted!", {
         description:
-          "Your request has been routed to the requested Adviser (CONFORME) and the Graduate School Dean.",
+          "Your request has been routed to the requested Adviser and the Graduate School Dean.",
       });
       await queryClient.invalidateQueries({
         queryKey: studentThesisJourneyQueryKey,
@@ -158,7 +160,9 @@ function AdviserRequestContent({ viewerScope }: { viewerScope: string }) {
       });
     },
     onError: (error: Error) => {
-      setSubmitError(error.message || "Unable to send adviser request.");
+      const msg = error.message || "Unable to send adviser request.";
+      setSubmitError(msg);
+      toast.error(msg);
       setConfirmOpen(false);
       setReview(null);
       setSignature("");
@@ -217,416 +221,388 @@ function AdviserRequestContent({ viewerScope }: { viewerScope: string }) {
       setRemarks(
         "Dr. Santos served as Committee Chairperson during my Title Defense and her specialization in Educational Leadership & Supervision directly aligns with my approved thesis topic.",
       );
-      toast.success("Selected Dr. Maria Clara R. Santos & populated GS-020 reason!");
+      toast.success("Selected Dr. Maria Clara R. Santos & populated request reason!");
     }
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-4 pb-10">
+    <div className="w-full space-y-6 pb-10">
       <ScenarioSwitcherBar pageKey="adviser-request" />
 
-      <div>
-        <h2 className="text-2xl font-bold text-(--earist-primary)">
-          Adviser Request (Official GS Form No. 020)
-        </h2>
-        <p className="text-sm text-(--earist-body-text)">
-          Choose an eligible adviser from your Title Defense panel and sign GS Form No. 020 digitally.
-        </p>
-      </div>
-
-      {officialTitle && (
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-xs font-medium uppercase tracking-wide text-(--earist-body-text)">
-              Approved Thesis Title (Historical Record)
-            </p>
-            <p className="mt-1 text-sm font-semibold text-(--earist-primary)">
-              {officialTitle}
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
-      {submitError && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Request failed</AlertTitle>
-          <AlertDescription>{submitError}</AlertDescription>
-        </Alert>
-      )}
-
-      {uiState === "LOADING" && (
-        <Card data-guide="adviser-selection">
-          <CardContent className="pt-6 text-sm text-(--earist-body-text)">
-            Loading Adviser Request status…
-          </CardContent>
-        </Card>
-      )}
-
-      {uiState === "ERROR" && (
-        <Card data-guide="adviser-selection">
-          <CardContent className="space-y-3 pt-6">
-            <p className="text-sm text-red-600">
-              Unable to load Adviser Request status.
-            </p>
-            <Link
-              href="/student/thesis"
-              className={buttonVariants({ variant: "outline" })}
-            >
-              Retry from Thesis Journey
-            </Link>
-          </CardContent>
-        </Card>
-      )}
-
-      {uiState === "LOCKED" && (
-        <Card data-guide="adviser-selection">
-          <CardContent className="space-y-3 pt-6">
-            <div className="flex items-center gap-2">
-              <Lock className="h-5 w-5 text-(--earist-secondary)" />
-              <p className="font-semibold">Adviser Request is locked</p>
-            </div>
-            <p className="text-sm text-(--earist-body-text)">
-              {adviserStep?.lockReason || "This step is currently unavailable."}
-            </p>
-            <Link
-              href="/student/thesis"
-              className={buttonVariants({ variant: "outline" })}
-            >
-              Continue in Thesis Journey
-            </Link>
-          </CardContent>
-        </Card>
-      )}
-
-      {uiState === "APPROVED_ACTIVE" && (
-        <Card data-guide="adviser-selection">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <UserCheck className="h-5 w-5 text-emerald-600" />
-              Adviser Officially Assigned (GS Form No. 020 Approved)
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <p className="text-(--earist-body-text)">
-              Your Adviser Request process is complete. Both the Adviser CONFORME and Graduate School Dean approval have been recorded.
-            </p>
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50/70 p-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-800">
-                Active Thesis Adviser
-              </p>
-              <p className="mt-0.5 text-base font-bold text-(--earist-primary)">
-                {activeAdviser?.name ?? "Dr. Maria Clara R. Santos, EdD"}
-              </p>
-            </div>
-            <Link
-              href="/student/thesis/proposal-defense"
-              className={buttonVariants()}
-            >
-              Continue to Proposal Defense
-            </Link>
-          </CardContent>
-        </Card>
-      )}
-
-      {uiState === "WAITING_ADVISER" && (
-        <Card data-guide="adviser-selection">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <Clock className="h-5 w-5 text-amber-600" />
-              Waiting for Adviser Response
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm">
-            <p className="text-(--earist-body-text)">
-              Your adviser request has been sent to{" "}
-              <span className="font-semibold text-(--earist-primary)">
-                {req?.requestedAdviserName || "the selected adviser"}
-              </span>
-              . The requested adviser must respond before the request can
-              proceed to Dean review.
-            </p>
-            <p className="text-xs text-(--earist-body-text)">
-              This is not yet an active adviser assignment.
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
-      {uiState === "WAITING_DEAN" && (
-        <Card data-guide="adviser-selection">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-sm">
-              <Clock className="h-5 w-5 text-amber-600" />
-              Awaiting Signatures — Adviser CONFORME Recorded
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <p className="text-(--earist-body-text)">
-              Your requested adviser has accepted the request and affixed their CONFORME signature. The GS-020 form is now routing for Graduate School Dean approval.
-            </p>
-            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-(--earist-border-gray) bg-(--earist-surface-gray) p-3 text-xs">
-              <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">
-                <CheckCircle2 className="mr-1 h-3 w-3" />
-                Student: Signed
-              </Badge>
-              <span className="text-slate-400">→</span>
-              <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200">
-                <CheckCircle2 className="mr-1 h-3 w-3" />
-                Adviser ({req?.requestedAdviserName || "Dr. Maria Clara R. Santos"}): CONFORME Approved
-              </Badge>
-              <span className="text-slate-400">→</span>
-              <Badge className="bg-amber-100 text-amber-800 border-amber-200">
-                <Clock className="mr-1 h-3 w-3" />
-                Dean: Pending Sign-Off
-              </Badge>
-            </div>
-            <p className="text-xs text-(--earist-body-text)">
-              No active adviser assignment exists until Dean approval is
-              completed.
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
-      {(uiState === "DECLINED_RETRY" || uiState === "DEAN_REJECTED_RETRY") && (
-        <Alert>
-          {uiState === "DECLINED_RETRY" ? (
-            <XCircle className="h-4 w-4" />
-          ) : (
+      <ThesisJourneyShell
+        activeStep="ADVISER_REQUEST"
+        title="Adviser Request"
+        description="Choose an eligible thesis adviser from your Title Defense panel."
+        journey={journey}
+        officialTitleOverride={officialTitle}
+      >
+        {submitError && (
+          <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-          )}
-          <AlertTitle>
-            {uiState === "DECLINED_RETRY"
-              ? "Previous Adviser Request Declined"
-              : "Dean Review Returned Request"}
-          </AlertTitle>
-          <AlertDescription>
-            {uiState === "DECLINED_RETRY"
-              ? `The previously requested adviser (${req?.requestedAdviserName || "Dr. Roberto A. Villanueva, PhD"}) declined due to maximum advising load capacity. You may select another eligible Title Defense panel member below.`
-              : "Dean review rejected this request. You may select another eligible Title Defense panel member below."}
-          </AlertDescription>
-        </Alert>
-      )}
+            <AlertTitle>Request failed</AlertTitle>
+            <AlertDescription>{submitError}</AlertDescription>
+          </Alert>
+        )}
 
-      {uiState === "UNEXPECTED" && (
-        <Card data-guide="adviser-selection">
-          <CardContent className="pt-6 text-sm text-(--earist-body-text)">
-            Adviser Request status is unavailable. Open Thesis Journey to
-            refresh.
-          </CardContent>
-        </Card>
-      )}
+        {uiState === "LOADING" && (
+          <Card data-guide="adviser-selection">
+            <CardContent className="pt-6 text-sm text-gray-500">
+              Loading Adviser Request status…
+            </CardContent>
+          </Card>
+        )}
 
-      {needCandidates && (
-        <Card data-guide="adviser-selection">
-          <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2">
-            <CardTitle className="text-sm font-semibold text-(--earist-secondary)">
-              Eligible Graduate Faculty Adviser Candidates
-            </CardTitle>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleQuickSelectSample}
-              className="border-(--earist-accent) bg-amber-50 text-xs font-semibold text-(--earist-primary) hover:bg-amber-100"
-            >
-              <Sparkles className="mr-1.5 h-3.5 w-3.5 text-(--earist-accent)" />
-              Auto-Select Sample Adviser
-            </Button>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-xs text-(--earist-body-text)">
-              These candidates come from your Title Defense panel (Chairman and
-              Panelists). Select your preferred Thesis Adviser and sign Official Form GS-020.
-            </p>
-
-            {candidatesLoading && (
-              <p className="text-sm text-(--earist-body-text)">
-                Loading eligible candidates…
+        {uiState === "ERROR" && (
+          <Card data-guide="adviser-selection">
+            <CardContent className="space-y-3 pt-6">
+              <p className="text-sm text-red-600">
+                Unable to load Adviser Request status.
               </p>
-            )}
+              <Link
+                href="/student/thesis"
+                className={buttonVariants({ variant: "outline" })}
+              >
+                Back to Thesis Journey
+              </Link>
+            </CardContent>
+          </Card>
+        )}
 
-            {candidatesError && (
-              <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Candidate load failed</AlertTitle>
-                <AlertDescription>
-                  Unable to load Title Defense panel candidates.
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    className="ml-2"
-                    onClick={() => refetchCandidates()}
-                  >
-                    Try again
-                  </Button>
-                </AlertDescription>
-              </Alert>
-            )}
+        {uiState === "LOCKED" && (
+          <div data-guide="adviser-selection">
+            <JourneyStepStatusCard
+              variant="locked"
+              title="Adviser Request is Locked"
+              badgeText="Locked"
+              description={
+                adviserStep?.lockReason || "This step is currently unavailable."
+              }
+              nextStepHref="/student/thesis"
+              nextStepLabel="Back to Thesis Journey"
+            />
+          </div>
+        )}
 
-            {!candidatesLoading &&
-              !candidatesError &&
-              (candidatesData?.candidates.length ?? 0) === 0 && (
-                <p className="text-sm text-(--earist-body-text)">
-                  No eligible Title Defense panel member is currently available
-                  for adviser selection.
+        {uiState === "APPROVED_ACTIVE" && (
+          <div data-guide="adviser-selection">
+            <JourneyStepStatusCard
+              variant="completed"
+              title="Adviser Officially Assigned"
+              badgeText="Completed"
+              description="Your official thesis adviser has been approved by the Dean. You may now proceed to Proposal Defense."
+              nextStepHref="/student/thesis/proposal-defense"
+              nextStepLabel="Continue to Proposal Defense"
+            >
+              <div className="inline-flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50/70 px-3.5 py-2 text-sm">
+                <UserCheck className="h-4 w-4 text-emerald-600" />
+                <span className="text-gray-600">Active adviser:</span>
+                <span className="font-semibold text-emerald-950">
+                  {activeAdviser?.name ?? "Assigned adviser"}
+                </span>
+              </div>
+            </JourneyStepStatusCard>
+          </div>
+        )}
+
+        {uiState === "WAITING_ADVISER" && (
+          <Card data-guide="adviser-selection">
+            <CardHeader className="border-b border-gray-100 pb-3">
+              <CardTitle className="flex items-center gap-2 text-base font-bold text-[#333333]">
+                <Clock className="h-4 w-4 text-[#f9a825]" />
+                Waiting for Adviser Response
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 pt-4 text-sm text-[#333333]">
+              <p className="text-gray-600">
+                Your adviser request has been sent to{" "}
+                <span className="font-semibold text-[#333333]">
+                  {req?.requestedAdviserName || "the selected adviser"}
+                </span>
+                . The requested adviser must respond before the request can
+                proceed to Dean review.
+              </p>
+              <p className="text-xs text-gray-500">
+                This is not yet an active adviser assignment.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
+        {uiState === "WAITING_DEAN" && (
+          <Card data-guide="adviser-selection">
+            <CardHeader className="border-b border-gray-100 pb-3">
+              <CardTitle className="flex items-center gap-2 text-base font-bold text-[#333333]">
+                <Clock className="h-4 w-4 text-[#f9a825]" />
+                Adviser Confirmation Recorded
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 pt-4 text-sm text-[#333333]">
+              <p className="text-gray-600">
+                Your requested adviser has accepted the request. The Thesis Adviser Request Form is now waiting for Graduate School Dean approval.
+              </p>
+              <div className="flex flex-wrap items-center gap-2 rounded-lg border border-gray-100 bg-gray-50/80 p-3 text-xs">
+                <Badge className="border-emerald-200 bg-emerald-100 text-emerald-800">
+                  <CheckCircle2 className="mr-1 h-3 w-3" />
+                  Student: Signed
+                </Badge>
+                <span className="text-slate-400">→</span>
+                <Badge className="border-emerald-200 bg-emerald-100 text-emerald-800">
+                  <CheckCircle2 className="mr-1 h-3 w-3" />
+                  Adviser ({req?.requestedAdviserName || "Dr. Maria Clara R. Santos"}): Confirmed
+                </Badge>
+                <span className="text-slate-400">→</span>
+                <Badge className="border-amber-200 bg-amber-100 text-amber-800">
+                  <Clock className="mr-1 h-3 w-3" />
+                  Dean: Pending Sign-Off
+                </Badge>
+              </div>
+              <p className="text-xs text-gray-500">
+                No active adviser assignment exists until Dean approval is
+                completed.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
+        {(uiState === "DECLINED_RETRY" || uiState === "DEAN_REJECTED_RETRY") && (
+          <Alert>
+            {uiState === "DECLINED_RETRY" ? (
+              <XCircle className="h-4 w-4" />
+            ) : (
+              <AlertCircle className="h-4 w-4" />
+            )}
+            <AlertTitle>
+              {uiState === "DECLINED_RETRY"
+                ? "Adviser declined"
+                : "Dean rejected"}
+            </AlertTitle>
+            <AlertDescription>
+              {uiState === "DECLINED_RETRY"
+                ? `The requested adviser (${req?.requestedAdviserName || "Dr. Roberto A. Villanueva, PhD"}) declined this request due to maximum advising load capacity. You may select another eligible Title Defense panel member below.`
+                : "Dean review rejected this request. You may select another eligible Title Defense panel member below."}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {uiState === "UNEXPECTED" && (
+          <Card data-guide="adviser-selection">
+            <CardContent className="pt-6 text-sm text-gray-500">
+              Adviser Request status is unavailable. Open Thesis Journey to
+              refresh.
+            </CardContent>
+          </Card>
+        )}
+
+        {needCandidates && (
+          <Card data-guide="adviser-selection">
+            <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-3">
+              <div>
+                <CardTitle className="text-base font-bold text-[#333333]">
+                  Eligible Adviser Candidates
+                </CardTitle>
+                <p className="text-xs text-gray-500">
+                  These candidates come from your Title Defense panel (Chairman and
+                  Panelists).
+                </p>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleQuickSelectSample}
+                className="border-[#f9a825] bg-amber-50 text-xs font-semibold text-[#b71c1c] hover:bg-amber-100"
+              >
+                <Sparkles className="mr-1.5 h-3.5 w-3.5 text-[#f9a825]" />
+                Auto-Select Sample Adviser
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-4 pt-4">
+              {candidatesLoading && (
+                <p className="text-sm text-gray-500">
+                  Loading eligible candidates…
                 </p>
               )}
 
-            <div className="grid gap-3 sm:grid-cols-2">
-              {(candidatesData?.candidates ?? []).map((c) => {
-                const selected = selectedUserId === c.userId;
-                return (
-                  <button
-                    key={c.userId}
-                    type="button"
-                    aria-pressed={selected}
-                    onClick={() => setSelectedUserId(c.userId)}
-                    className={`rounded-lg border p-4 text-left transition-colors focus-visible:outline-2 focus-visible:outline-(--earist-primary) ${
-                      selected
-                        ? "border-(--earist-primary) bg-(--earist-surface-light-red) ring-1 ring-(--earist-primary)"
-                        : "border-(--earist-border-gray) hover:bg-(--earist-surface-gray)"
-                    }`}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <p className="font-semibold text-(--earist-primary)">
-                          {c.name}
-                        </p>
-                        <p className="text-xs text-(--earist-body-text)">
-                          {roleLabel(c.defenseRole)} — Title Defense
-                        </p>
+              {candidatesError && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Candidate load failed</AlertTitle>
+                  <AlertDescription>
+                    Unable to load Title Defense panel candidates.
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="ml-2"
+                      onClick={() => refetchCandidates()}
+                    >
+                      Try again
+                    </Button>
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {!candidatesLoading &&
+                !candidatesError &&
+                (candidatesData?.candidates.length ?? 0) === 0 && (
+                  <p className="text-sm text-gray-500">
+                    No eligible Title Defense panel member is currently available
+                    for adviser selection.
+                  </p>
+                )}
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                {(candidatesData?.candidates ?? []).map((c) => {
+                  const selected = selectedUserId === c.userId;
+                  return (
+                    <button
+                      key={c.userId}
+                      type="button"
+                      aria-pressed={selected}
+                      onClick={() => setSelectedUserId(c.userId)}
+                      className={`rounded-xl border p-4 text-left transition-all focus-visible:outline-2 focus-visible:outline-[#e02b20] ${
+                        selected
+                          ? "border-[#e02b20] bg-red-50/40 ring-1 ring-[#e02b20]"
+                          : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/60"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <p className="font-bold text-[#333333]">{c.name}</p>
+                          <p className="text-xs text-gray-500">
+                            {roleLabel(c.defenseRole)} — Title Defense
+                          </p>
+                        </div>
+                        <Badge variant={selected ? "default" : "outline"}>
+                          {selected ? "Selected" : "Select"}
+                        </Badge>
                       </div>
-                      <Badge variant={selected ? "default" : "outline"}>
-                        {selected ? "Selected" : "Select"}
-                      </Badge>
-                    </div>
-                    <div className="mt-2 space-y-1 text-xs text-(--earist-body-text)">
-                      <p>Specialization: {c.specialization || "—"}</p>
-                      <p>Office: {c.officeAffiliation || "—"}</p>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+                      <div className="mt-2.5 space-y-1 text-xs text-gray-600">
+                        <p>Specialization: {c.specialization || "—"}</p>
+                        <p>Office: {c.officeAffiliation || "—"}</p>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
 
-            <div className="space-y-2">
-              <label
-                className="text-xs font-medium text-(--earist-body-text)"
-                htmlFor="request-remarks"
+              <div className="space-y-2">
+                <label
+                  className="text-xs font-medium text-gray-700"
+                  htmlFor="request-remarks"
+                >
+                  Request Reason (Optional)
+                </label>
+                <Textarea
+                  id="request-remarks"
+                  value={remarks}
+                  onChange={(e) => setRemarks(e.target.value)}
+                  placeholder="Brief note for the requested adviser"
+                  rows={3}
+                />
+              </div>
+
+              <Button
+                type="button"
+                disabled={!selectedUserId || createRequest.isPending}
+                onClick={openSigning}
+                className="w-full sm:w-auto"
               >
-                Request Reason (Optional)
-              </label>
-              <Textarea
-                id="request-remarks"
-                value={remarks}
-                onChange={(e) => setRemarks(e.target.value)}
-                placeholder="Brief note for the requested adviser"
-                rows={3}
+                <Send className="mr-2 h-4 w-4" />
+                Review &amp; Sign Adviser Request
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
+        {uiState !== "LOADING" && uiState !== "ERROR" && (
+          <AdviserRequestRecords audience="student" />
+        )}
+
+        <Dialog
+          open={confirmOpen}
+          onOpenChange={(open) => {
+            if (!open) closeSigning();
+          }}
+        >
+          <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-xl">
+            <DialogHeader>
+              <DialogTitle>Review &amp; Sign Thesis Adviser Request Form</DialogTitle>
+              <DialogDescription>
+                Your signature confirms this exact adviser request. Once submitted,
+                these details cannot be changed.
+              </DialogDescription>
+            </DialogHeader>
+            {review && (
+              <div className="space-y-2 rounded-lg border border-gray-100 bg-gray-50/70 p-3.5 text-sm">
+                <p>
+                  <span className="text-gray-500">Student: </span>
+                  <span className="font-semibold text-[#333333]">
+                    {review.reviewedContext.studentName}
+                  </span>
+                </p>
+                <p>
+                  <span className="text-gray-500">Student Number: </span>
+                  <span className="font-medium text-[#333333]">
+                    {review.reviewedContext.studentNumber}
+                  </span>
+                </p>
+                <p>
+                  <span className="text-gray-500">Program: </span>
+                  <span className="font-medium text-[#333333]">
+                    {review.reviewedContext.programName}
+                  </span>
+                </p>
+                <p>
+                  <span className="text-gray-500">Requested Adviser: </span>
+                  <span className="font-semibold text-[#333333]">
+                    {review.reviewedContext.requestedAdviserName}
+                  </span>
+                </p>
+                <p className="whitespace-pre-wrap break-words">
+                  <span className="text-gray-500">Reason: </span>
+                  <span className="text-[#333333]">
+                    {review.reason || "No reason provided."}
+                  </span>
+                </p>
+              </div>
+            )}
+            {confirmOpen && review && (
+              <ESignaturePad
+                value={signature}
+                onChange={setSignature}
+                disabled={createRequest.isPending}
+                autoFocus
+                readyText="Signature ready for this adviser request."
+                requiredText="Sign before submitting your adviser request."
               />
-            </div>
-
-            <Button
-              type="button"
-              disabled={!selectedUserId || createRequest.isPending}
-              onClick={openSigning}
-              className="w-full bg-(--earist-primary) hover:bg-(--earist-primary)/90 sm:w-auto"
-            >
-              <Send className="mr-2 h-4 w-4" />
-              Review &amp; Sign Adviser Request
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
-      {uiState !== "LOADING" && uiState !== "ERROR" && (
-        <AdviserRequestRecords audience="student" />
-      )}
-
-      <Dialog
-        open={confirmOpen}
-        onOpenChange={(open) => {
-          if (!open) closeSigning();
-        }}
-      >
-        <DialogContent className="max-h-[90dvh] overflow-y-auto sm:max-w-xl">
-          <DialogHeader>
-            <DialogTitle>Review &amp; Sign Adviser Request (GS-020)</DialogTitle>
-            <DialogDescription>
-              Your signature confirms this exact adviser request. Once submitted,
-              these details cannot be changed.
-            </DialogDescription>
-          </DialogHeader>
-          {review && (
-            <div className="space-y-2 text-sm">
-              <p>
-                <span className="text-(--earist-body-text)">Student: </span>
-                <span className="font-medium">
-                  {review.reviewedContext.studentName}
-                </span>
-              </p>
-              <p>
-                <span className="text-(--earist-body-text)">
-                  Student Number:{" "}
-                </span>
-                {review.reviewedContext.studentNumber}
-              </p>
-              <p>
-                <span className="text-(--earist-body-text)">Program: </span>
-                {review.reviewedContext.programName}
-              </p>
-              <p>
-                <span className="text-(--earist-body-text)">
-                  Requested Adviser:{" "}
-                </span>
-                <span className="font-medium">
-                  {review.reviewedContext.requestedAdviserName}
-                </span>
-              </p>
-              <p className="whitespace-pre-wrap break-words">
-                <span className="text-(--earist-body-text)">Reason: </span>
-                {review.reason || "No reason provided."}
-              </p>
-            </div>
-          )}
-          {confirmOpen && review && (
-            <ESignaturePad
-              value={signature}
-              onChange={setSignature}
-              disabled={createRequest.isPending}
-              autoFocus
-              readyText="Signature ready for this adviser request."
-              requiredText="Sign before submitting your adviser request."
-            />
-          )}
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={closeSigning}
-              disabled={createRequest.isPending}
-            >
-              Go Back
-            </Button>
-            <Button
-              type="button"
-              disabled={
-                createRequest.isPending ||
-                !adviserRequestSigningReady(review, signature)
-              }
-              onClick={() => createRequest.mutate()}
-              className="bg-(--earist-primary) hover:bg-(--earist-primary)/90"
-            >
-              <Send className="mr-2 h-4 w-4" />
-              {createRequest.isPending
-                ? "Submitting…"
-                : "Sign & Submit Adviser Request"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            )}
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={closeSigning}
+                disabled={createRequest.isPending}
+              >
+                Go Back
+              </Button>
+              <Button
+                type="button"
+                disabled={
+                  createRequest.isPending ||
+                  !adviserRequestSigningReady(review, signature)
+                }
+                onClick={() => createRequest.mutate()}
+              >
+                <Send className="mr-2 h-4 w-4" />
+                {createRequest.isPending
+                  ? "Submitting…"
+                  : "Sign & Submit Adviser Request"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </ThesisJourneyShell>
     </div>
   );
 }

@@ -146,7 +146,7 @@ export default function FAQPage() {
       </section>
 
       {/* Search */}
-      <section className="bg-(--earist-surface-gray) py-8">
+      <section className="bg-(--earist-surface-gray) py-8" data-guide="faq-search">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-xl">
             <div className="relative">
@@ -162,7 +162,7 @@ export default function FAQPage() {
       </section>
 
       {/* FAQ Categories */}
-      <section className="bg-white py-12">
+      <section className="bg-white py-12" data-guide="faq-categories">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl space-y-10">
             {faqCategories.map((category) => (

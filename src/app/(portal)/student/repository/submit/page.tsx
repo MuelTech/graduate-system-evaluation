@@ -62,9 +62,9 @@ interface DatabankArchiveContext {
 
 const REASON_MESSAGES: Record<string, string> = {
   FINAL_DEFENSE_NOT_PASSED:
-    "Final Defense is not yet formally PASSED and concluded.",
+    "Final Defense is not yet formally Passed and concluded.",
   FINAL_RAP_NOT_FINALIZED:
-    "The Final Defense RAP is not yet FINALIZED (all signatures complete).",
+    "The Final Defense Rapporteur Report is not yet finalized and signed.",
   OFFICIAL_TITLE_MISSING:
     "The official research title is not yet recorded from the Title Defense.",
   RESEARCH_CONTEXT_MISSING:
@@ -290,31 +290,28 @@ export default function DatabankSubmitPage() {
       setCertificationsFile(null);
       setInstrumentsFile(null);
       setRespondentDataFile(null);
-      toast.success("Research Databank archival package submitted!");
       queryClient.invalidateQueries({ queryKey: ["databank-archive-context"] });
+      toast.success("Research package submitted to the Databank archive.");
     },
     onError: (error: Error) => {
-      alert(error.message || "Databank registration could not be completed.");
+      toast.error(error.message || "Databank registration could not be completed.");
     },
   });
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <div className="space-y-6">
       <div>
         <Link
           href="/student/repository"
-          className="mb-2 inline-flex items-center text-xs text-(--earist-secondary) hover:underline"
+          className="mb-2 inline-flex items-center text-xs font-medium text-gray-500 hover:text-[#333333] hover:underline"
         >
           <ArrowLeft className="mr-1 h-3 w-3" /> Back to Research Repository
         </Link>
-        <h2
-          className="text-3xl font-bold text-(--earist-primary)"
-          style={{ fontFamily: '"Calibri", sans-serif' }}
-        >
+        <h1 className="text-2xl font-bold tracking-tight text-[#333333]">
           Research Databank Archive
-        </h2>
-        <p className="mt-2 text-sm text-(--earist-body-text)">
-          Submit your post-defense revised research package to the controlled Graduate School Databank (DL-9).
+        </h1>
+        <p className="mt-1 text-sm text-gray-500">
+          Submit your post-defense revised research package (Final Thesis Archival Documents) to the controlled Graduate School Databank.
           All archival records are private by default and subject to administrator curation.
         </p>
       </div>
@@ -356,7 +353,7 @@ export default function DatabankSubmitPage() {
             </p>
             <ul className="space-y-1">
               <li className="flex items-start gap-2">
-                <Badge variant="outline">Final Defense — PASSED</Badge>
+                <Badge variant="outline">Final Defense — Passed</Badge>
                 <span className="text-xs text-(--earist-body-text)">
                   {data.reasons.includes("FINAL_DEFENSE_NOT_PASSED")
                     ? "Not yet recorded."
@@ -364,10 +361,10 @@ export default function DatabankSubmitPage() {
                 </span>
               </li>
               <li className="flex items-start gap-2">
-                <Badge variant="outline">Final RAP — FINALIZED</Badge>
+                <Badge variant="outline">Final Rapporteur Report — Finalized</Badge>
                 <span className="text-xs text-(--earist-body-text)">
                   {data.reasons.includes("FINAL_RAP_NOT_FINALIZED")
-                    ? "Not yet finalized (pending panelist/adviser signatures)."
+                    ? "Not yet finalized (pending committee signatures)."
                     : "Finalized."}
                 </span>
               </li>
@@ -408,13 +405,13 @@ export default function DatabankSubmitPage() {
                   <CheckCircle2 className="mr-1 h-3 w-3" /> Final Defense — Passed
                 </Badge>
                 <Badge className="bg-green-100 text-green-800 border-green-300">
-                  <CheckCircle2 className="mr-1 h-3 w-3" /> Final RAP — Finalized
+                  <CheckCircle2 className="mr-1 h-3 w-3" /> Final Rapporteur Report — Finalized
                 </Badge>
               </div>
               <p className="text-xs text-(--earist-body-text)">
                 Final Defense concluded{" "}
                 {formatDate(data.researchContext?.finalDefenseConcludedAt ?? null)} ·
-                Final RAP finalized{" "}
+                Final Rapporteur Report finalized{" "}
                 {formatDate(data.researchContext?.finalRapFinalizedAt ?? null)}
               </p>
             </CardContent>
@@ -626,7 +623,7 @@ export default function DatabankSubmitPage() {
                 Databank Archive Submitted
               </CardTitle>
               <Badge className="bg-blue-100 text-blue-800 border-blue-200">
-                Private Databank (DL-9)
+                Private Databank
               </Badge>
             </div>
             <CardDescription>

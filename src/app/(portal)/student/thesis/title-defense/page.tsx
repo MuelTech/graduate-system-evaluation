@@ -17,10 +17,12 @@ import {
   DefenseScheduleSummary,
   DefenseStatusPanel,
 } from "@/components/student/defense-status-panel";
-import { TitleDefensePostSubmission } from "@/components/student/title-defense-post-submission";
 import { LocalFilePreviewDialog } from "@/components/student/local-file-preview-dialog";
-import { PageHeader } from "@/components/ui/page-header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  ThesisJourneyShell,
+  JourneyStepStatusCard,
+  DocumentUploadSlot,
+} from "@/components/student/thesis-journey-shell";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -31,16 +33,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 import {
-  Upload,
-  FileText,
-  X,
   Send,
   AlertCircle,
   CheckCircle2,
-  Lock,
-  Eye,
   Loader2,
   Sparkles,
 } from "lucide-react";
@@ -53,11 +49,8 @@ interface DocConfig {
   label: string;
   helper: string[];
   accept: string;
-  /** Optional in-container requirement guidance (package only). */
   guidance?: ReactNode;
-  /** Optional short format note shown above the picker. */
   formatNote?: string;
-  /** Optional concise reminder shown next to this item in the confirm dialog. */
   dialogNote?: string;
   sampleUrl: string;
   sampleFilename: string;
@@ -79,8 +72,8 @@ const DOCUMENTS: DocConfig[] = [
     sampleUrl: "/sample-docs/sample-manuscript.pdf",
     sampleFilename: "DelaCruz_MAEd_Title_Proposal_Package.pdf",
     guidance: (
-      <div className="mt-2 rounded-lg border border-(--earist-border-gray) bg-(--earist-surface-gray) p-3 text-xs text-(--earist-body-text)">
-        <p className="font-medium text-(--earist-secondary)">
+      <div className="mt-2 rounded-lg border border-gray-200 bg-gray-50/70 p-3 text-xs text-gray-600">
+        <p className="font-semibold text-[#333333]">
           What should be included?
         </p>
         <p className="mt-1">
@@ -94,7 +87,7 @@ const DOCUMENTS: DocConfig[] = [
           <li>Research Locale</li>
           <li>
             Student Profile with picture
-            <span className="mt-0.5 block text-[11px] text-(--earist-body-text)/80">
+            <span className="mt-0.5 block text-[11px] text-gray-500">
               Name · Degree Program &amp; Major · Occupation / Position ·
               School / Office Address · Subject Taught &amp; Grade Level
             </span>
@@ -127,151 +120,6 @@ function formatSize(bytes: number): string {
   return `${Math.max(0.01, bytes / 1024 / 1024).toFixed(2)} MB`;
 }
 
-function DocumentSlot({
-  config,
-  file,
-  disabled,
-  onTriggerPick,
-  registerInput,
-  onPick,
-  onRemove,
-  onView,
-}: {
-  config: DocConfig;
-  file: File | null;
-  disabled: boolean;
-  onTriggerPick: () => void;
-  registerInput: (el: HTMLInputElement | null) => void;
-  onPick: (f: File) => void;
-  onRemove: () => void;
-  onView: () => void;
-}) {
-  return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-semibold text-(--earist-secondary)">
-          {config.label}
-        </CardTitle>
-        {config.helper.map((line) => (
-          <p key={line} className="text-sm text-(--earist-body-text)">
-            {line}
-          </p>
-        ))}
-        {config.guidance}
-      </CardHeader>
-      <CardContent>
-        {config.formatNote && (
-          <p className="mb-3 text-xs text-(--earist-body-text)">
-            {config.formatNote}
-          </p>
-        )}
-        {!file ? (
-          <div className="space-y-3">
-            <button
-              type="button"
-              onClick={onTriggerPick}
-              disabled={disabled}
-              aria-label={`Select ${config.label}`}
-              className="flex w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-(--earist-border-gray) p-6 transition-colors hover:border-(--earist-primary) hover:bg-(--earist-surface-gray) focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--earist-primary) focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              <Upload className="mb-2 h-8 w-8 text-(--earist-body-text)/40" />
-              <span className="text-center text-sm font-medium text-(--earist-primary)">
-                Select file
-              </span>
-              <span className="text-xs text-(--earist-body-text)">
-                {config.accept.replace(/\./g, "").toUpperCase()} · No file selected
-              </span>
-            </button>
-            <input
-              ref={registerInput}
-              type="file"
-              accept={config.accept}
-              disabled={disabled}
-              aria-label={config.label}
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) onPick(f);
-              }}
-              className="hidden"
-            />
-          </div>
-        ) : (
-          <div className="flex flex-col gap-3 rounded-lg border border-(--earist-border-gray) p-3">
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded bg-(--earist-surface-gray)">
-                <FileText className="h-4 w-4 text-(--earist-primary)" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-(--earist-primary)">
-                  {file.name}
-                </p>
-                <p className="text-xs text-(--earist-body-text)">
-                  {formatSize(file.size)}
-                  {file.type ? ` · ${file.type}` : ""}
-                </p>
-              </div>
-              <Badge className="bg-(--earist-surface-light-red) text-(--earist-primary)">
-                Selected · Ready to upload
-              </Badge>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={onView}
-                disabled={disabled}
-                aria-label={`View ${config.label}`}
-              >
-                <Eye className="mr-1 h-4 w-4" /> View
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={onTriggerPick}
-                disabled={disabled}
-                aria-label={`Replace ${config.label}`}
-              >
-                <Upload className="mr-1 h-4 w-4" /> Replace
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={onRemove}
-                disabled={disabled}
-                aria-label={`Remove ${config.label}`}
-                className="text-red-600 hover:bg-red-50"
-              >
-                <X className="mr-1 h-4 w-4" /> Remove
-              </Button>
-              <input
-                ref={registerInput}
-                type="file"
-                accept={config.accept}
-                disabled={disabled}
-                aria-label={config.label}
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) onPick(f);
-                }}
-                className="hidden"
-              />
-            </div>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
-
-/**
- * WP11 / UIUX-4B (FIX-1) — Title Defense application.
- * Academic progression comes only from GET /thesis/journey.
- * Confirmed Title scope (2026-10-15): ONE combined Title Defense
- * Proposal Package + Current Semester COR + Defense-fee Proof of Payment.
- */
 export default function TitleDefensePage() {
   const queryClient = useQueryClient();
   const {
@@ -285,7 +133,6 @@ export default function TitleDefensePage() {
 
   const titleStep = journeyStepFor(journey, "TITLE_DEFENSE");
   const state = titleStep?.state;
-  const selectedTitle = journey?.selectedTitle ?? null;
 
   const [files, setFiles] = useState<Record<DocKey, File | null>>({
     package: null,
@@ -303,7 +150,6 @@ export default function TitleDefensePage() {
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  // Revoke any live local preview object URL on change and unmount.
   useEffect(() => {
     return () => {
       if (previewUrl && previewUrl.startsWith("blob:")) {
@@ -437,18 +283,18 @@ export default function TitleDefensePage() {
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-3xl space-y-4">
+      <div className="w-full space-y-4">
         <ScenarioSwitcherBar pageKey="title-defense" />
-        <div className="h-8 w-64 animate-pulse rounded bg-muted" />
-        <div className="h-40 w-full animate-pulse rounded-lg bg-muted" />
-        <div className="h-40 w-full animate-pulse rounded-lg bg-muted" />
+        <div className="h-8 w-64 animate-pulse rounded-lg bg-gray-200" />
+        <div className="h-24 w-full animate-pulse rounded-xl bg-gray-200" />
+        <div className="h-44 w-full animate-pulse rounded-xl bg-gray-200" />
       </div>
     );
   }
 
   if (isError || !journey) {
     return (
-      <div className="mx-auto max-w-3xl space-y-4">
+      <div className="w-full space-y-4">
         <ScenarioSwitcherBar pageKey="title-defense" />
         <div className="mx-auto max-w-md space-y-3 p-8 text-center">
           <p className="text-sm text-red-600">Unable to load Title Defense status.</p>
@@ -462,290 +308,298 @@ export default function TitleDefensePage() {
 
   if (state === "LOCKED") {
     return (
-      <div className="mx-auto max-w-3xl space-y-4 py-4">
+      <div className="w-full space-y-6 pb-10">
         <ScenarioSwitcherBar pageKey="title-defense" />
-        <PageHeader title="Title Defense" />
-        <Card data-guide="title-status-panel">
-          <CardContent className="space-y-3 pt-6">
-            <div className="flex items-center gap-2">
-              <Lock className="h-5 w-5 text-(--earist-secondary)" />
-              <p className="font-semibold">Title Defense is locked</p>
-            </div>
-            <p className="text-sm text-(--earist-body-text)">
-              {titleStep?.lockReason || "This step is currently unavailable."}
-            </p>
-          </CardContent>
-        </Card>
+        <ThesisJourneyShell
+          activeStep="TITLE_DEFENSE"
+          title="Title Defense"
+          description="Step 1 of your Graduate Thesis Journey."
+          journey={journey}
+        >
+          <div data-guide="title-status-panel">
+            <JourneyStepStatusCard
+              variant="locked"
+              title="Title Defense is Locked"
+              badgeText="Locked"
+              description={
+                titleStep?.lockReason || "This step is currently unavailable."
+              }
+              nextStepHref="/student/thesis"
+              nextStepLabel="Back to Thesis Journey"
+            />
+          </div>
+        </ThesisJourneyShell>
       </div>
     );
   }
 
   if (state === "COMPLETED") {
     return (
-      <div className="mx-auto max-w-3xl space-y-4 pb-10">
+      <div className="w-full space-y-6 pb-10">
         <ScenarioSwitcherBar pageKey="title-defense" />
-        <PageHeader
+        <ThesisJourneyShell
+          activeStep="TITLE_DEFENSE"
           title="Title Defense"
           description="Formal Title Defense is complete."
-        />
-        <Card data-guide="title-doc-slots">
-          <CardContent className="space-y-4 pt-6">
-            <div className="flex items-center gap-2 text-emerald-700">
-              <CheckCircle2 className="h-5 w-5" />
-              <p className="font-semibold">Title Defense completed &amp; Title Approved</p>
-            </div>
-            {selectedTitle?.titleText && (
-              <div>
-                <p className="text-xs uppercase tracking-wide text-(--earist-body-text)">
-                  Official Approved Thesis Title
-                </p>
-                <p className="mt-1 font-medium text-(--earist-primary)">
-                  {selectedTitle.titleText}
-                </p>
-              </div>
-            )}
-            {titleStep?.nextAction && (
-              <p className="text-sm text-(--earist-body-text)">
-                {titleStep.nextAction}
-              </p>
-            )}
-            <Link
-              href={journeyRouteFor("ADVISER_REQUEST")}
-              className={buttonVariants()}
-            >
-              Continue to Adviser Request
-            </Link>
-          </CardContent>
-        </Card>
-        <div data-guide="title-status-panel">
-          <DefenseScheduleSummary session={titleStep?.defenseSession} />
-        </div>
+          journey={journey}
+        >
+          <div data-guide="title-doc-slots">
+            <JourneyStepStatusCard
+              variant="completed"
+              title="Title Defense Completed"
+              badgeText="Completed"
+              description={
+                titleStep?.nextAction ||
+                "Your Title Defense has been officially passed and finalized."
+              }
+              nextStepHref={journeyRouteFor("ADVISER_REQUEST")}
+              nextStepLabel="Continue to Adviser Request"
+            />
+          </div>
+          <div data-guide="title-status-panel">
+            <DefenseScheduleSummary session={titleStep?.defenseSession} />
+          </div>
+        </ThesisJourneyShell>
       </div>
     );
   }
 
   if (state === "WAITING") {
-    // UIUX-4C: Title post-submission status — Under Review / Approved / Scheduled.
-    const ds = titleStep?.defenseStatus;
-    if (
-      ds === "APPLICATION_UNDER_REVIEW" ||
-      ds === "APPROVED_WAITING_SCHEDULE" ||
-      ds === "SCHEDULED"
-    ) {
-      return (
-        <div className="mx-auto max-w-3xl space-y-4 pb-10">
-          <ScenarioSwitcherBar pageKey="title-defense" />
-          <TitleDefensePostSubmission
-            defenseStatus={ds}
-            session={titleStep?.defenseSession}
-          />
-        </div>
-      );
-    }
     return (
-      <div className="mx-auto max-w-3xl space-y-4 pb-10">
+      <div className="w-full space-y-6 pb-10">
         <ScenarioSwitcherBar pageKey="title-defense" />
-        <PageHeader title="Title Defense" />
-        <div data-guide="title-status-panel">
-          <DefenseStatusPanel
-            kind="Title"
-            step={titleStep}
-            onRefresh={refreshStatus}
-            isRefreshing={isRefreshing}
-            extra={
-              <Link
-                href="/student/thesis"
-                className={buttonVariants({ variant: "outline" })}
-              >
-                Continue in Thesis Journey
-              </Link>
-            }
-          />
-        </div>
+        <ThesisJourneyShell
+          activeStep="TITLE_DEFENSE"
+          title="Title Defense"
+          description="Track your Title Defense application, schedule, and official records."
+          journey={journey}
+        >
+          <div data-guide="title-status-panel">
+            <DefenseStatusPanel
+              kind="Title"
+              step={titleStep}
+              onRefresh={refreshStatus}
+              isRefreshing={isRefreshing}
+              extra={
+                <Link
+                  href="/student/thesis"
+                  className={buttonVariants({ variant: "outline", size: "sm" })}
+                >
+                  Back to Thesis Journey
+                </Link>
+              }
+            />
+          </div>
+        </ThesisJourneyShell>
       </div>
     );
   }
 
-  // CURRENT / AVAILABLE — but rejected applications must not start a duplicate.
   const rejectedHint =
     titleStep?.defenseStatus === "REJECTED" ||
     (titleStep?.detail || "").toLowerCase().includes("reject") ||
     (titleStep?.detail || "").toLowerCase().includes("clearer scan");
   if (rejectedHint) {
     return (
-      <div className="mx-auto max-w-3xl space-y-4 pb-10">
+      <div className="w-full space-y-6 pb-10">
         <ScenarioSwitcherBar pageKey="title-defense" />
-        <PageHeader title="Title Defense" />
-        <RejectedApplicationCorrection stage="TITLE" reason={titleStep?.detail} />
+        <ThesisJourneyShell
+          activeStep="TITLE_DEFENSE"
+          title="Title Defense"
+          description="Review feedback and resubmit your Title Defense application."
+          journey={journey}
+        >
+          <div data-guide="title-status-panel">
+            <RejectedApplicationCorrection stage="TITLE" reason={titleStep?.detail} />
+          </div>
+        </ThesisJourneyShell>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 pb-10">
+    <div className="w-full space-y-6 pb-10">
       <ScenarioSwitcherBar pageKey="title-defense" />
 
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <PageHeader
-          title="Title Defense Application"
-          description="Upload your Title Defense Proposal Package and the required documents. No adviser is required for Title Defense."
-        />
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => void handleAttachSamplePdfs()}
-          className="border-(--earist-accent) bg-amber-50 text-xs font-semibold text-(--earist-primary) hover:bg-amber-100"
-        >
-          <Sparkles className="mr-1.5 h-3.5 w-3.5 text-(--earist-accent)" />
-          Attach Sample Evaluation PDFs
-        </Button>
-      </div>
-
-      {submitError && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Submission failed</AlertTitle>
-          <AlertDescription>{submitError}</AlertDescription>
-        </Alert>
-      )}
-      {submitSuccess && (
-        <Alert>
-          <CheckCircle2 className="h-4 w-4" />
-          <AlertTitle>Application submitted</AlertTitle>
-          <AlertDescription>
-            Your Title Defense application was submitted and is now under
-            Graduate School review.
-          </AlertDescription>
-        </Alert>
-      )}
-
-      <form
-        className="space-y-6"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (!canSubmit || submitTitle.isPending) return;
-          setConfirmOpen(true);
-        }}
-      >
-        <div data-guide="title-doc-slots" className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="text-lg font-semibold text-(--earist-secondary)">
-              Required Documents
-            </h2>
-            <span className="text-xs text-(--earist-body-text)">
-              Select local PDFs or click &ldquo;Attach Sample Evaluation PDFs&rdquo; above
-            </span>
-          </div>
-          {DOCUMENTS.map((config) => (
-            <DocumentSlot
-              key={config.key}
-              config={config}
-              file={files[config.key]}
-              disabled={submitTitle.isPending || submitSuccess}
-              onTriggerPick={() => inputRefs.current[config.key]?.click()}
-              registerInput={(el) => {
-                inputRefs.current[config.key] = el;
-              }}
-              onPick={(f) => setSlot(config.key, f)}
-              onRemove={() => setSlot(config.key, null)}
-              onView={() => openPreview(config.key, files[config.key])}
-            />
-          ))}
-        </div>
-
-        <div data-guide="title-status-panel" className="rounded-lg border border-(--earist-border-gray) bg-(--earist-surface-gray)/60 p-4 space-y-3">
-          <p className="text-xs text-(--earist-body-text)">
-            Once all 3 required documents are attached, click below to review and submit your Title Defense application. Submitting automatically advances the scenario to <strong>2. Under Admin Review</strong>.
-          </p>
+      <ThesisJourneyShell
+        activeStep="TITLE_DEFENSE"
+        title="Title Defense Application"
+        description="Upload your Title Defense Proposal Package and the required documents. No adviser is required for Title Defense."
+        journey={journey}
+        actions={
           <Button
-            type="submit"
-            disabled={!canSubmit || submitTitle.isPending}
-            className="w-full bg-(--earist-primary) hover:bg-(--earist-primary)/90 sm:w-auto"
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => void handleAttachSamplePdfs()}
+            className="border-[#f9a825] bg-amber-50 text-xs font-semibold text-[#b71c1c] hover:bg-amber-100"
           >
-            <Send className="mr-2 h-4 w-4" />
-            Submit Title Defense Application
+            <Sparkles className="mr-1.5 h-3.5 w-3.5 text-[#f9a825]" />
+            Attach Sample Evaluation PDFs
           </Button>
-        </div>
-      </form>
+        }
+      >
+        {submitError && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Submission failed</AlertTitle>
+            <AlertDescription>{submitError}</AlertDescription>
+          </Alert>
+        )}
+        {submitSuccess && (
+          <Alert>
+            <CheckCircle2 className="h-4 w-4" />
+            <AlertTitle>Application submitted</AlertTitle>
+            <AlertDescription>
+              Your Title Defense application was submitted and is now under
+              Graduate School review.
+            </AlertDescription>
+          </Alert>
+        )}
 
-      <LocalFilePreviewDialog
-        open={previewFile !== null}
-        onOpenChange={handlePreviewOpenChange}
-        objectUrl={previewUrl}
-        file={previewFile}
-        title="Document preview"
-      />
-
-      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <DialogContent className="sm:max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Confirm Title Defense Application</DialogTitle>
-            <DialogDescription>
-              Please verify that the documents below are the correct files before
-              submitting your Title Defense application.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4 text-sm">
-            <div>
-              <p className="mb-1 font-medium text-(--earist-secondary)">
-                Documents
-              </p>
-              <ul className="space-y-1.5 text-(--earist-body-text)">
-                {DOCUMENTS.map((config) => {
-                  const f = files[config.key];
-                  return (
-                    <li key={config.key} className="space-y-0.5">
-                      <div className="flex flex-wrap gap-x-1">
-                        <span className="font-medium">{config.label}:</span>
-                        <span className="min-w-0 break-all">
-                          {f ? `${f.name} · ${formatSize(f.size)}` : "—"}
-                        </span>
-                      </div>
-                      {config.dialogNote && (
-                        <p className="text-xs text-(--earist-body-text)">
-                          {config.dialogNote}
-                        </p>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
+        <form
+          className="space-y-6"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!canSubmit || submitTitle.isPending) return;
+            setConfirmOpen(true);
+          }}
+        >
+          <div data-guide="title-doc-slots" className="space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-base font-bold text-[#333333]">
+                Required Documents
+              </h2>
+              <span className="text-xs text-gray-500">
+                Select local PDFs or click &ldquo;Attach Sample Evaluation PDFs&rdquo; above
+              </span>
             </div>
-            <p className="rounded-lg border border-(--earist-border-gray) bg-(--earist-surface-gray) p-3 text-xs text-(--earist-body-text)">
-              Review all selected documents before submitting. Once submitted,
-              the application will be placed under Graduate School review.
-            </p>
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+              {DOCUMENTS.map((config) => (
+                <div
+                  key={config.key}
+                  className={
+                    config.key === "package" ? "lg:col-span-3" : "lg:col-span-1"
+                  }
+                >
+                  <DocumentUploadSlot
+                    label={config.label}
+                    helper={config.helper}
+                    accept={config.accept}
+                    formatNote={config.formatNote}
+                    guidance={config.guidance}
+                    file={files[config.key]}
+                    disabled={submitTitle.isPending || submitSuccess}
+                    onTriggerPick={() => inputRefs.current[config.key]?.click()}
+                    registerInput={(el) => {
+                      inputRefs.current[config.key] = el;
+                    }}
+                    onPick={(f) => setSlot(config.key, f)}
+                    onRemove={() => setSlot(config.key, null)}
+                    onView={() => openPreview(config.key, files[config.key])}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
 
-          <DialogFooter>
+          <div
+            data-guide="title-status-panel"
+            className="space-y-3 rounded-xl border border-gray-200 bg-white p-4 shadow-2xs"
+          >
+            <p className="text-xs text-gray-600">
+              Once all 3 required documents are attached, click below to review and submit your Title Defense application. Submitting automatically advances the scenario to <strong>2. Under Graduate School Review</strong>.
+            </p>
             <Button
-              type="button"
-              variant="outline"
-              onClick={() => setConfirmOpen(false)}
-              disabled={submitTitle.isPending}
+              type="submit"
+              disabled={!canSubmit || submitTitle.isPending}
+              className="w-full sm:w-auto"
             >
-              Go Back
+              <Send className="mr-2 h-4 w-4" />
+              Submit Title Defense Application
             </Button>
-            <Button
-              type="button"
-              onClick={() => submitTitle.mutate()}
-              disabled={submitTitle.isPending}
-              className="bg-(--earist-primary) hover:bg-(--earist-primary)/90"
-            >
-              {submitTitle.isPending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Uploading documents and submitting…
-                </>
-              ) : (
-                "Confirm & Submit"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        </form>
+
+        <LocalFilePreviewDialog
+          open={previewFile !== null}
+          onOpenChange={handlePreviewOpenChange}
+          objectUrl={previewUrl}
+          file={previewFile}
+          title="Document preview"
+        />
+
+        <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+          <DialogContent className="sm:max-w-lg">
+            <DialogHeader>
+              <DialogTitle>Confirm Title Defense Application</DialogTitle>
+              <DialogDescription>
+                Please verify that the documents below are the correct files before
+                submitting your Title Defense application.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4 text-sm">
+              <div>
+                <p className="mb-1.5 font-semibold text-[#333333]">
+                  Documents
+                </p>
+                <ul className="space-y-2 text-gray-600">
+                  {DOCUMENTS.map((config) => {
+                    const f = files[config.key];
+                    return (
+                      <li key={config.key} className="space-y-0.5">
+                        <div className="flex flex-wrap gap-x-1">
+                          <span className="font-semibold text-[#333333]">
+                            {config.label}:
+                          </span>
+                          <span className="min-w-0 break-all">
+                            {f ? `${f.name} · ${formatSize(f.size)}` : "—"}
+                          </span>
+                        </div>
+                        {config.dialogNote && (
+                          <p className="text-xs text-gray-500">
+                            {config.dialogNote}
+                          </p>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+              <p className="rounded-lg border border-gray-100 bg-gray-50 p-3 text-xs text-gray-600">
+                Review all selected documents before submitting. Once submitted,
+                the application will be placed under Graduate School review.
+              </p>
+            </div>
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setConfirmOpen(false)}
+                disabled={submitTitle.isPending}
+              >
+                Go Back
+              </Button>
+              <Button
+                type="button"
+                onClick={() => submitTitle.mutate()}
+                disabled={submitTitle.isPending}
+              >
+                {submitTitle.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Uploading documents and submitting…
+                  </>
+                ) : (
+                  "Confirm & Submit"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </ThesisJourneyShell>
     </div>
   );
 }

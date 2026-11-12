@@ -12,6 +12,14 @@ const allowedDevOrigins = (process.env.ALLOWED_DEV_ORIGINS ?? "")
 
 const nextConfig: NextConfig = {
   ...(allowedDevOrigins.length > 0 ? { allowedDevOrigins } : {}),
+  async rewrites() {
+    return [
+      {
+        source: "/faculty/:path*",
+        destination: "/panelist/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;

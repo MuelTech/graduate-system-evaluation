@@ -40,7 +40,6 @@ import { Button } from "@/components/ui/button";
 import { IconTooltipButton } from "@/components/ui/tooltip";
 import { ScenarioSwitcherBar } from "@/components/evaluation/scenario-switcher-bar";
 import { PageGuideTrigger } from "@/components/evaluation/page-guide-overlay";
-import { RoleSwitcherPill } from "@/components/evaluation/role-switcher-pill";
 import { cn } from "@/lib/utils";
 import type { DefenseWorkspace } from "@/types/defense-workspace";
 
@@ -127,7 +126,6 @@ export function WorkspaceShell({
           />
           <div className="flex items-center gap-2">
             <PageGuideTrigger />
-            <RoleSwitcherPill currentRole="panelist" />
           </div>
         </div>
 

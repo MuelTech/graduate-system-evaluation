@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { apiClientRequest, ApiError } from "@/lib/api.client";
 import {
   adviserAdviseeDetailQueryKey,
@@ -134,6 +135,7 @@ export function AdviserReviewActionPanel({
     onSuccess: async () => {
       setError(null);
       setRemarks("");
+      toast.success("Revision remarks sent to the student.");
       await invalidate();
     },
     onError: (mutationError: Error) =>
@@ -166,6 +168,7 @@ export function AdviserReviewActionPanel({
       setSignature("");
       setRemarks("");
       setConfirmCertify(false);
+      toast.success("Adviser certification issued and signed.");
       await invalidate();
       // Certification removes the task from the open-review queue; close the
       // action surface so the URL cannot remain pointing at a completed task.

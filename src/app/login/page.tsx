@@ -1,316 +1,337 @@
 "use client";
 
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import {
   GraduationCap,
-  Presentation,
+  Info,
   ArrowRight,
+  UserCheck,
+  BookOpen,
+  Award,
   CheckCircle2,
-  Compass,
-  Sparkles,
-  ArrowLeft,
-  Eye,
-  FileCheck2,
 } from "lucide-react";
 import {
   EVALUATION_PERSONAS,
   setActiveEvaluationRole,
   type EvaluationRole,
 } from "@/lib/evaluation-session";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { PageGuideTrigger } from "@/components/evaluation/page-guide-overlay";
 
-export default function RespondentEvaluationLoginPage() {
-  const router = useRouter();
-  const student = EVALUATION_PERSONAS.student;
-  const panelist = EVALUATION_PERSONAS.panelist;
+type SelectablePortalRole = "applicant" | "student" | "faculty";
 
-  const handleEnterRole = (role: EvaluationRole) => {
-    setActiveEvaluationRole(role);
-    router.push(
-      role === "panelist" ? "/panelist/dashboard" : "/student/dashboard",
-    );
+const ROLE_OPTIONS: {
+  value: SelectablePortalRole;
+  evalRole: EvaluationRole;
+  label: string;
+  badge: string;
+  targetPath: string;
+  icon: typeof UserCheck;
+  credentialLabel: string;
+  credentialValue: string;
+  name: string;
+  subtitle: string;
+  highlights: string[];
+  guideAttr: string;
+}[] = [
+  {
+    value: "applicant",
+    evalRole: "applicant",
+    label: "Applicant",
+    badge: "Admissions & Entrance Exam",
+    targetPath: "/applicant/dashboard",
+    icon: UserCheck,
+    credentialLabel: "Applicant ID",
+    credentialValue: EVALUATION_PERSONAS.applicant.applicantId ?? "APP-2026-0142",
+    name: EVALUATION_PERSONAS.applicant.name,
+    subtitle:
+      EVALUATION_PERSONAS.applicant.program ??
+      "Master of Arts in Education major in Administration and Supervision",
+    highlights: [
+      "Program Alignment & Bridging Course Waiver status",
+      "Entrance Examination Slot Booking & Interactive Exam (MCQ + Essay)",
+      "Entrance Exam Score Breakdown & Certificate of Registration (COR) Upload",
+    ],
+    guideAttr: "login-applicant-card",
+  },
+  {
+    value: "student",
+    evalRole: "student",
+    label: "Graduate Student",
+    badge: "5-Step Thesis Journey",
+    targetPath: "/student/dashboard",
+    icon: BookOpen,
+    credentialLabel: "Student Number",
+    credentialValue:
+      EVALUATION_PERSONAS.student.studentNumber ?? "2025-GS-00142",
+    name: EVALUATION_PERSONAS.student.name,
+    subtitle:
+      EVALUATION_PERSONAS.student.program ??
+      "MAEd Major in Administration and Supervision",
+    highlights: [
+      "All 5 Thesis Journey stages unlocked (Title, Adviser Request, Proposal, Plagiarism Check, Final)",
+      "Interactive Scenario Switcher to inspect Form, Review, Scheduled, & Completed states",
+      "Academic Curriculum, Official Defense Records, & Research Repository Archival",
+    ],
+    guideAttr: "login-student-card",
+  },
+  {
+    value: "faculty",
+    evalRole: "panelist",
+    label: "Faculty",
+    badge: "Adviser, Panelist & Evaluator",
+    targetPath: "/faculty/dashboard",
+    icon: Award,
+    credentialLabel: "Institutional Email",
+    credentialValue: EVALUATION_PERSONAS.panelist.email,
+    name: EVALUATION_PERSONAS.panelist.name,
+    subtitle: `${EVALUATION_PERSONAS.panelist.academicRank} · ${EVALUATION_PERSONAS.panelist.officeAffiliation}`,
+    highlights: [
+      "Collaborative Defense Workspace (PDF Manuscript Annotation, Rubric Scoring & Rapporteur Report)",
+      "My Advisees (Thesis Adviser Requests & Pre-Defense Manuscript Endorsements)",
+      "Entrance Exam Essay Evaluations & Digital E-Signatures",
+    ],
+    guideAttr: "login-panelist-card",
+  },
+];
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#FFF8F0]" />}>
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+function LoginContent() {
+  const router = useRouter();
+  const [selectedRole, setSelectedRole] =
+    useState<SelectablePortalRole>("student");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const activeConfig =
+    ROLE_OPTIONS.find((opt) => opt.value === selectedRole) ?? ROLE_OPTIONS[1];
+
+  const handleSignIn = (roleOption = activeConfig) => {
+    setIsLoading(true);
+    setActiveEvaluationRole(roleOption.evalRole);
+    router.push(roleOption.targetPath);
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-(--earist-surface-gray)">
-      {/* Top Institutional Bar */}
-      <header className="border-b border-(--earist-border-gray) bg-(--earist-primary) text-white">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-2.5">
-            <GraduationCap className="h-8 w-8 text-(--earist-accent)" />
-            <div className="flex flex-col">
-              <span className="text-base leading-tight font-bold tracking-wide text-white">
-                EARIST Graduate School
-              </span>
-              <span className="text-xs leading-tight text-white/80">
-                Information System — UI/UX Evaluation Edition
-              </span>
+    <div className="flex min-h-screen flex-col justify-between bg-[#FFF8F0] px-4 py-8 text-[#333333]">
+      {/* Top Bar */}
+      <div className="mx-auto flex w-full max-w-2xl items-center justify-between">
+        <Link
+          href="/"
+          className="text-sm font-medium text-gray-600 transition-colors hover:text-[#e02b20]"
+        >
+          ← Back to Home
+        </Link>
+        <PageGuideTrigger label="Page Guide" />
+      </div>
+
+      {/* Main Sign-In Card */}
+      <div className="mx-auto my-6 w-full max-w-2xl">
+        <Card className="border-gray-200/80 bg-white shadow-xl">
+          <CardHeader className="pb-4 text-center">
+            <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e02b20]/10">
+              <GraduationCap className="h-9 w-9 text-[#e02b20]" />
             </div>
-          </Link>
-          <div className="flex items-center gap-2.5">
-            <PageGuideTrigger />
+            <CardTitle className="text-xl font-bold text-[#333333]">
+              Sign In to Your Portal
+            </CardTitle>
+            <CardDescription className="text-sm text-gray-500">
+              EARIST Graduate School Management System
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="space-y-6">
+            {/* System Evaluation & Testing Environment Notice */}
+            <Alert
+              data-guide="login-eval-notice"
+              className="border-amber-200 bg-[#FFF8F0] text-[#333333]"
+            >
+              <Info className="h-4 w-4 text-[#e02b20]" />
+              <AlertDescription className="text-xs leading-relaxed text-gray-700">
+                <strong className="font-semibold text-[#333333]">
+                  System Evaluation &amp; Testing Mode:
+                </strong>{" "}
+                This environment is pre-configured with sample academic records
+                for evaluation purposes. Select your participant role below (
+                <strong>Applicant</strong>, <strong>Graduate Student</strong>, or{" "}
+                <strong>Faculty</strong>) to sign in immediately—no password is
+                required.
+              </AlertDescription>
+            </Alert>
+
+            {/* Role Selector Tabs / Cards */}
+            <div data-guide="login-role-selector" className="space-y-3">
+              <label className="block text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                Select Your Participant Role
+              </label>
+
+              <div className="grid gap-3 sm:grid-cols-3">
+                {ROLE_OPTIONS.map((option) => {
+                  const Icon = option.icon;
+                  const isSelected = selectedRole === option.value;
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      data-guide={option.guideAttr}
+                      onClick={() => setSelectedRole(option.value)}
+                      className={`flex flex-col items-start rounded-xl border p-3.5 text-left transition-all ${
+                        isSelected
+                          ? "border-[#e02b20] bg-[#e02b20]/5 ring-2 ring-[#e02b20]/20"
+                          : "border-gray-200 bg-white hover:border-[#e02b20]/40 hover:bg-gray-50/70"
+                      }`}
+                    >
+                      <div className="mb-2 flex w-full items-center justify-between">
+                        <span
+                          className={`flex h-9 w-9 items-center justify-center rounded-lg ${
+                            isSelected
+                              ? "bg-[#e02b20] text-white"
+                              : "bg-gray-100 text-gray-600"
+                          }`}
+                        >
+                          <Icon className="h-4 w-4" />
+                        </span>
+                        {isSelected && (
+                          <Badge className="bg-[#e02b20] text-[10px] text-white">
+                            Selected
+                          </Badge>
+                        )}
+                      </div>
+                      <span className="text-sm font-bold text-[#333333]">
+                        {option.label}
+                      </span>
+                      <span className="mt-0.5 text-[11px] text-gray-500">
+                        {option.badge}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Selected Role Pre-filled Account Summary */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSignIn(activeConfig);
+              }}
+              className="space-y-5"
+            >
+              <div
+                data-guide="login-eval-tips"
+                className="rounded-xl border border-gray-200 bg-gray-50/70 p-4 space-y-3"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-200/80 pb-3">
+                  <div>
+                    <p className="text-xs font-semibold tracking-wider text-gray-400 uppercase">
+                      Pre-Configured Evaluation Account
+                    </p>
+                    <p className="mt-0.5 text-sm font-bold text-[#333333]">
+                      {activeConfig.name}
+                    </p>
+                    <p className="text-xs text-gray-600">
+                      {activeConfig.subtitle}
+                    </p>
+                  </div>
+                  <Badge variant="outline" className="border-gray-300 bg-white text-xs">
+                    {activeConfig.label} Portal
+                  </Badge>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-[11px] font-semibold tracking-wider text-gray-500 uppercase">
+                      {activeConfig.credentialLabel}
+                    </label>
+                    <Input
+                      type="text"
+                      value={activeConfig.credentialValue}
+                      readOnly
+                      className="bg-white text-xs font-medium text-[#333333]"
+                    />
+                  </div>
+                  <div>
+                    <label className="mb-1 block text-[11px] font-semibold tracking-wider text-gray-500 uppercase">
+                      Authentication Status
+                    </label>
+                    <Input
+                      type="text"
+                      value="Pre-Authenticated (No Password Required)"
+                      readOnly
+                      className="bg-emerald-50/70 text-xs font-medium text-emerald-800 border-emerald-200"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-1">
+                  <p className="mb-1.5 text-[11px] font-semibold tracking-wider text-gray-500 uppercase">
+                    Included Workflows for {activeConfig.label}:
+                  </p>
+                  <ul className="space-y-1">
+                    {activeConfig.highlights.map((item) => (
+                      <li
+                        key={item}
+                        className="flex items-start gap-2 text-xs text-gray-600"
+                      >
+                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <Button
+                type="submit"
+                size="lg"
+                disabled={isLoading}
+                className="w-full bg-[#e02b20] font-semibold text-white hover:bg-[#c62828]"
+              >
+                {isLoading
+                  ? "Signing In..."
+                  : `Sign In as ${activeConfig.label}`}
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </form>
+
+            <div className="my-4 flex items-center gap-3">
+              <div className="h-px flex-1 bg-gray-200" />
+              <span className="text-xs text-gray-400">or</span>
+              <div className="h-px flex-1 bg-gray-200" />
+            </div>
+
             <Link
-              href="/"
-              className="inline-flex items-center gap-1.5 rounded-lg border border-white/30 px-3.5 py-1.5 text-xs font-medium text-white transition-colors hover:bg-white/10"
+              href="/register"
+              className="inline-flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white py-2.5 text-sm font-semibold text-[#333333] transition-colors hover:border-[#e02b20]/40 hover:bg-[#e02b20]/5 hover:text-[#e02b20]"
             >
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Back to Landing Page
+              New applicant? Create an Applicant Account
             </Link>
-          </div>
-        </div>
-      </header>
+          </CardContent>
+        </Card>
+      </div>
 
-      {/* Main Content */}
-      <main className="container mx-auto flex flex-1 flex-col justify-center px-4 py-10 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-5xl space-y-8">
-          {/* Heading Banner */}
-          <div className="space-y-3 text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-(--earist-accent) bg-amber-50 px-4 py-1 text-xs font-semibold text-(--earist-primary)">
-              <Sparkles className="h-3.5 w-3.5 text-(--earist-secondary)" />
-              Instant Respondent Sign-In · Zero Password Friction
-            </div>
-            <h1
-              className="text-3xl font-bold text-(--earist-primary) sm:text-4xl"
-              style={{ fontFamily: '"Calibri", sans-serif' }}
-            >
-              Select Your Evaluation Role
-            </h1>
-            <p className="mx-auto max-w-2xl text-sm text-(--earist-body-text) sm:text-base">
-              Choose a pre-configured EARIST persona below to enter the portal
-              immediately. You can switch between{" "}
-              <strong className="font-semibold text-(--earist-primary)">
-                Graduate Student
-              </strong>{" "}
-              and{" "}
-              <strong className="font-semibold text-(--earist-primary)">
-                Faculty / Panelist
-              </strong>{" "}
-              views at any time from the top navigation bar.
-            </p>
-          </div>
-
-          {/* Two Role Cards */}
-          <div className="grid gap-6 md:grid-cols-2">
-            {/* Card 1: Graduate Student */}
-            <Card
-              data-guide="login-student-card"
-              className="flex flex-col justify-between border-t-4 border-t-(--earist-primary) bg-white shadow-md transition-all hover:shadow-xl"
-            >
-              <CardHeader className="space-y-3">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-(--earist-surface-light-red) text-(--earist-primary)">
-                    <GraduationCap className="h-7 w-7" />
-                  </div>
-                  <Badge className="bg-(--earist-primary) text-white">
-                    Respondent Role 1
-                  </Badge>
-                </div>
-                <div>
-                  <CardTitle className="text-xl text-(--earist-primary)">
-                    Evaluate as Graduate Student
-                  </CardTitle>
-                  <CardDescription className="mt-1 text-xs font-medium text-(--earist-secondary)">
-                    Pre-loaded Persona: {student.name} ({student.studentNumber})
-                  </CardDescription>
-                </div>
-              </CardHeader>
-
-              <CardContent className="flex flex-1 flex-col justify-between space-y-6">
-                <div className="space-y-4 text-sm text-(--earist-body-text)">
-                  <div className="rounded-lg border border-(--earist-border-gray) bg-(--earist-surface-gray)/60 p-3 text-xs">
-                    <p className="font-semibold text-(--earist-primary)">
-                      {student.program}
-                    </p>
-                    <p className="mt-0.5 text-(--earist-body-text)">
-                      Email: {student.email} · Adviser: Dr. Maria Clara R.
-                      Santos, EdD
-                    </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="text-xs font-semibold tracking-wider text-(--earist-secondary) uppercase">
-                      Unlocked Features to Evaluate:
-                    </p>
-                    <ul className="space-y-1.5 text-xs">
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" />
-                        <span>
-                          <strong>All 5 Thesis Journey Steps Unlocked:</strong>{" "}
-                          Freely inspect Title Defense, GS-020 Adviser Request,
-                          Proposal Defense, STRIKE Plagiarism, and Final
-                          Defense.
-                        </span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" />
-                        <span>
-                          <strong>Interactive Scenario Switcher:</strong> Toggle
-                          each page between <em>Submit Form</em>,{" "}
-                          <em>Under Review</em>, <em>Scheduled</em>,{" "}
-                          <em>Completed &amp; RAP</em>, and{" "}
-                          <em>Returned for Correction</em>.
-                        </span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" />
-                        <span>
-                          <strong>Curriculum, Academic Journey &amp; Databank:</strong>{" "}
-                          Review completed coursework, official PDF records, and
-                          archival submission.
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-
-                <Button
-                  size="lg"
-                  onClick={() => handleEnterRole("student")}
-                  className="w-full bg-(--earist-primary) font-semibold text-white hover:bg-(--earist-primary)/90"
-                >
-                  Enter Student Portal
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Card 2: Faculty / Panelist */}
-            <Card
-              data-guide="login-panelist-card"
-              className="flex flex-col justify-between border-t-4 border-t-(--earist-accent) bg-white shadow-md transition-all hover:shadow-xl"
-            >
-              <CardHeader className="space-y-3">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 text-(--earist-primary)">
-                    <Presentation className="h-7 w-7" />
-                  </div>
-                  <Badge className="bg-(--earist-accent) text-(--earist-primary)">
-                    Respondent Role 2
-                  </Badge>
-                </div>
-                <div>
-                  <CardTitle className="text-xl text-(--earist-primary)">
-                    Evaluate as Faculty / Panelist
-                  </CardTitle>
-                  <CardDescription className="mt-1 text-xs font-medium text-(--earist-secondary)">
-                    Pre-loaded Persona: {panelist.name} ({panelist.facultyId})
-                  </CardDescription>
-                </div>
-              </CardHeader>
-
-              <CardContent className="flex flex-1 flex-col justify-between space-y-6">
-                <div className="space-y-4 text-sm text-(--earist-body-text)">
-                  <div className="rounded-lg border border-(--earist-border-gray) bg-(--earist-surface-gray)/60 p-3 text-xs">
-                    <p className="font-semibold text-(--earist-primary)">
-                      {panelist.academicRank} · {panelist.officeAffiliation}
-                    </p>
-                    <p className="mt-0.5 text-(--earist-body-text)">
-                      Specialization: {panelist.specialization}
-                    </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <p className="text-xs font-semibold tracking-wider text-(--earist-secondary) uppercase">
-                      Unlocked Features to Evaluate:
-                    </p>
-                    <ul className="space-y-1.5 text-xs">
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" />
-                        <span>
-                          <strong>Collaborative Defense Workspace:</strong>{" "}
-                          Split-screen Manuscript PDF Annotation, 1.00–2.50
-                          Institutional Rubric Matrix, Rich-Text RAP Editor, and
-                          Chairman Verdict panel.
-                        </span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" />
-                        <span>
-                          <strong>My Advisees &amp; Pre-Defense Review:</strong>{" "}
-                          Respond to incoming GS-020 Adviser Requests and issue
-                          signed Proposal/Final Pre-Defense Certifications.
-                        </span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-600" />
-                        <span>
-                          <strong>Digital Signatures &amp; Workload:</strong>{" "}
-                          Sign pending RAP reports and filter unified defense
-                          assignments across Title, Proposal, and Final stages.
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-
-                <Button
-                  size="lg"
-                  onClick={() => handleEnterRole("panelist")}
-                  className="w-full bg-(--earist-accent) font-semibold text-(--earist-primary) hover:bg-(--earist-accent)/90"
-                >
-                  Enter Faculty / Panelist Portal
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Evaluation Tips Footer Card */}
-          <div
-            data-guide="login-eval-tips"
-            className="grid gap-4 rounded-xl border border-(--earist-border-gray) bg-white p-5 sm:grid-cols-3"
-          >
-            <div className="flex items-start gap-3">
-              <Compass className="mt-0.5 h-5 w-5 shrink-0 text-(--earist-primary)" />
-              <div className="text-xs">
-                <p className="font-semibold text-(--earist-primary)">
-                  Interactive Arrow Guides
-                </p>
-                <p className="mt-0.5 text-(--earist-body-text)">
-                  Click the <strong>? Page Guide</strong> button in the header
-                  on any screen to see spotlight callouts and directional arrows
-                  explaining each feature.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <Eye className="mt-0.5 h-5 w-5 shrink-0 text-(--earist-primary)" />
-              <div className="text-xs">
-                <p className="font-semibold text-(--earist-primary)">
-                  Scenario Switcher Bar
-                </p>
-                <p className="mt-0.5 text-(--earist-body-text)">
-                  Multi-stage pages include a top Scenario Switcher bar so you
-                  can preview every workflow status in one click.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <FileCheck2 className="mt-0.5 h-5 w-5 shrink-0 text-(--earist-primary)" />
-              <div className="text-xs">
-                <p className="font-semibold text-(--earist-primary)">
-                  Built-In Sample PDFs
-                </p>
-                <p className="mt-0.5 text-(--earist-body-text)">
-                  All document viewers, GS-020 forms, certifications, and
-                  manuscript annotation tools come pre-loaded with sample
-                  institutional PDFs.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
+      {/* Footer */}
+      <div className="text-center text-xs text-gray-500">
+        Eulogio &ldquo;Amang&rdquo; Rodriguez Institute of Science and Technology · Graduate School
+      </div>
     </div>
   );
 }

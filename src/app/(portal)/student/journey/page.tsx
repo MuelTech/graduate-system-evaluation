@@ -6,9 +6,11 @@ import { apiClientRequest } from "@/lib/api.client";
 import { useStudentThesisJourney } from "@/hooks/use-student-thesis-journey";
 import {
   JOURNEY_STEP_ORDER,
+  formatJourneyCopy,
   journeyLabelFor,
   journeyRouteFor,
 } from "@/lib/student-thesis-journey";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   Card,
   CardContent,
@@ -59,15 +61,15 @@ const PHASES = [
     icon: FileCheck2,
     href: "/student/thesis",
     actionLabel: "Open Thesis Journey",
-    blurb: "Open Thesis Journey for Title, Adviser Request, Proposal, STRIKE, and Final Defense.",
+    blurb: "Open Thesis Journey for Title Defense, Adviser Request Form, Proposal Defense, Plagiarism Check, and Final Defense.",
     statusBadge: "Active Stage",
   },
   {
-    label: "Research Completion & Databank Archival",
+    label: "Research Completion & Archival Submission",
     icon: Library,
     href: "/student/repository/submit",
-    actionLabel: "Open Databank Archive",
-    blurb: "Final manuscript completion and Controlled Research Databank (DL-9) submission.",
+    actionLabel: "Open Final Thesis Archival Documents",
+    blurb: "Final manuscript completion and Graduate School Research Databank submission.",
     statusBadge: "Unlocked Preview",
   },
   {
@@ -103,21 +105,14 @@ export default function StudentAcademicJourneyPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2
-          className="text-2xl font-bold text-(--earist-primary)"
-          style={{ fontFamily: '"Calibri", sans-serif' }}
-        >
-          Academic Journey
-        </h2>
-        <p className="text-sm text-(--earist-body-text)">
-          End-to-end graduate lifecycle progress from Admission and Coursework through Thesis Defense and Graduation.
-        </p>
-      </div>
+      <PageHeader
+        title="Academic Journey"
+        description="High-level graduate progress. Detailed defense steps are under Thesis Journey."
+      />
 
       {loadFailed && (
         <Card>
-          <CardContent className="pt-6 text-sm text-(--earist-body-text)">
+          <CardContent className="pt-6 text-sm text-gray-500">
             Unable to load your Academic Journey. Please try again later.
           </CardContent>
         </Card>
@@ -126,9 +121,9 @@ export default function StudentAcademicJourneyPage() {
       {/* High-Level Program Progress Stepper */}
       <Card data-guide="journey-stepper">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base text-(--earist-primary)">
-            <Milestone className="h-4 w-4 text-(--earist-secondary)" />
-            Graduate Program Lifecycle
+          <CardTitle className="flex items-center gap-2 text-base font-bold text-[#333333]">
+            <Milestone className="h-4 w-4 text-[#e02b20]" />
+            Program progress
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -136,36 +131,38 @@ export default function StudentAcademicJourneyPage() {
             {PHASES.map((phase, idx) => (
               <li
                 key={phase.label}
-                className="flex flex-wrap items-start justify-between gap-3 rounded-lg border border-(--earist-border-gray) bg-white p-3.5 transition-colors hover:border-(--earist-primary)/40"
+                className="flex flex-wrap items-start justify-between gap-3.5 rounded-xl border border-gray-100 bg-gray-50/40 p-4 transition-colors hover:bg-gray-50"
               >
-                <div className="flex items-start gap-3 min-w-0 flex-1">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-(--earist-surface-light-red) text-(--earist-primary)">
-                    <phase.icon className="h-4 w-4" />
+                <div className="flex items-start gap-3.5 min-w-0 flex-1">
+                  <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#e02b20]/10 text-[#e02b20]">
+                    <phase.icon className="h-5 w-5" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-xs font-bold uppercase tracking-wider text-(--earist-secondary)">
+                      <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
                         Phase {idx + 1}
                       </span>
-                      <p className="font-semibold text-(--earist-primary)">
+                      <p className="font-semibold text-[#333333]">
                         {phase.label}
                       </p>
                       <Badge
                         variant="outline"
-                        className="text-[11px] bg-(--earist-surface-gray) border-(--earist-border-gray)"
+                        className="text-[11px] bg-white border-gray-200 text-gray-600"
                       >
                         {phase.statusBadge}
                       </Badge>
                     </div>
-                    <p className="mt-0.5 text-xs text-(--earist-body-text)">
+                    <p className="mt-0.5 text-xs text-gray-500">
                       {phase.blurb}
                     </p>
                     {phase.label === "Comprehensive Examination" && (
-                      <p className="mt-1 text-xs font-medium text-emerald-700">
+                      <p className="mt-1.5 text-xs font-medium text-[#333333]">
                         Status:{" "}
-                        {loadFailed
-                          ? "Unavailable"
-                          : compExamLabel(compExamStatus)}
+                        <span className="text-emerald-700">
+                          {loadFailed
+                            ? "Unavailable"
+                            : compExamLabel(compExamStatus)}
+                        </span>
                       </p>
                     )}
                   </div>
@@ -189,11 +186,11 @@ export default function StudentAcademicJourneyPage() {
         <CardHeader>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <CardTitle className="flex items-center gap-2 text-base text-(--earist-primary)">
-                <FileCheck2 className="h-4 w-4 text-(--earist-secondary)" />
+              <CardTitle className="flex items-center gap-2 text-base font-bold text-[#333333]">
+                <FileCheck2 className="h-4 w-4 text-[#e02b20]" />
                 Unlocked 5-Step Thesis Journey Workspaces
               </CardTitle>
-              <p className="mt-1 text-xs text-(--earist-body-text)">
+              <p className="mt-1 text-xs text-gray-500">
                 Click any milestone below to jump directly into its interactive forms, schedules, and official EARIST PDF records.
               </p>
             </div>
@@ -212,29 +209,31 @@ export default function StudentAcademicJourneyPage() {
               const step = thesisJourney?.steps.find((s) => s.key === key);
               const label = journeyLabelFor(key, step?.label);
               const href = journeyRouteFor(key);
+              const detailText =
+                formatJourneyCopy(step?.detail) ||
+                formatJourneyCopy(step?.nextAction) ||
+                "Interactive forms, schedule, & official PDFs";
               return (
                 <Link
                   key={key}
                   href={href}
-                  className="group flex flex-col justify-between rounded-lg border border-(--earist-border-gray) bg-white p-3.5 transition-all hover:border-(--earist-primary) hover:shadow-sm"
+                  className="group flex flex-col justify-between rounded-lg border border-gray-200 bg-white p-3.5 transition-all hover:border-[#e02b20] hover:shadow-sm"
                 >
                   <div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-(--earist-secondary)">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
                         Step {index + 1}
                       </span>
                       <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
                     </div>
-                    <p className="mt-1 text-sm font-bold text-(--earist-primary) group-hover:underline">
+                    <p className="mt-1 text-sm font-bold text-[#333333] group-hover:text-[#e02b20] group-hover:underline">
                       {label}
                     </p>
-                    <p className="mt-1 text-xs text-(--earist-body-text) line-clamp-2">
-                      {step?.detail ||
-                        step?.nextAction ||
-                        "Interactive forms, schedule, & official PDFs"}
+                    <p className="mt-1 text-xs text-gray-500 line-clamp-2">
+                      {detailText}
                     </p>
                   </div>
-                  <span className="mt-3 inline-flex items-center text-xs font-semibold text-(--earist-primary)">
+                  <span className="mt-3 inline-flex items-center text-xs font-semibold text-[#e02b20]">
                     Evaluate Step {index + 1}
                     <ArrowRight className="ml-1 h-3 w-3 transition-transform group-hover:translate-x-0.5" />
                   </span>

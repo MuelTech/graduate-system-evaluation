@@ -325,6 +325,19 @@ export interface Panelist {
   firstName: string;
   lastName: string;
   department: string;
+  isExternal?: boolean;
+  canAdvise?: boolean;
+  canEvaluateEssays?: boolean;
+  specialization?: string | null;
+  officeAffiliation?: string | null;
+  user?: {
+    id?: string;
+    title?: string | null;
+    firstName: string;
+    lastName: string;
+    suffix?: string | null;
+    email: string;
+  };
 }
 
 export interface PanelistResponse {
@@ -341,13 +354,35 @@ export interface PanelistResponse {
     updatedAt: string;
     createdBy?: { firstName: string; lastName: string } | null;
     updatedBy?: { firstName: string; lastName: string } | null;
+    _count?: {
+      adviserAssignments?: number;
+      panelAssignments?: number;
+    };
   };
   isExternal: boolean;
   highestEducationalAttainment: string;
   officeAffiliation: string;
   specialization: string;
   isAvailableAsAdviser: boolean;
+  canEvaluateEssays: boolean;
   createdAt: string;
+}
+
+export interface AdministratorResponse {
+  id: string;
+  title?: string | null;
+  firstName: string;
+  lastName: string;
+  suffix?: string | null;
+  email: string;
+  isActive: boolean;
+  mustChangePassword?: boolean;
+  adminAccessLevel: "FULL" | "RESTRICTED" | null;
+  adminCapabilities: string[] | null;
+  createdAt: string;
+  updatedAt: string;
+  createdBy?: { firstName: string; lastName: string } | null;
+  updatedBy?: { firstName: string; lastName: string } | null;
 }
 
 // ADMIN THESIS INTERFACES
@@ -836,7 +871,7 @@ export interface ExamRecordDetail {
     targetSlot: { id: string; examDate: string; examTime: string } | null;
   } | null;
   reconsideration: { decision: "PASSED_RECONSIDERED"; decidedAt: string; reason: string; decidedBy: { id: string; firstName: string; lastName: string } } | null;
-  result: unknown | null;
+  result: import("@/components/exam-content/result-breakdown").ExamResult | null;
   resultEmailEligible: boolean;
   essayEvaluation: EssayEvaluation;
   id: string;

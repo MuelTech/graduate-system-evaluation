@@ -31,8 +31,38 @@ interface StudentRapAccess {
   message: string;
 }
 
+const OUTCOME_LABELS: Record<string, string> = {
+  PASSED: "Passed",
+  REDEFENSE_REQUIRED: "Re-defense Required",
+  REVISION_REQUIRED: "Revision Required",
+  FAILED: "Failed",
+};
+
+const RAP_STATUS_LABELS: Record<string, string> = {
+  FINALIZED: "Finalized",
+  ALL_SIGNED: "Signed",
+  DISTRIBUTED: "Finalized",
+  FOR_SIGNATURE: "Awaiting Signatures",
+  PARTIALLY_SIGNED: "Awaiting Signatures",
+  DRAFT: "In Preparation",
+};
+
+const ROLE_LABELS: Record<string, string> = {
+  CHAIRMAN: "Chairman",
+  PANELIST: "Panelist",
+  RAPPORTEUR: "Rapporteur",
+  ADVISER: "Adviser",
+  FACILITATOR: "Facilitator",
+  DEAN: "Dean",
+};
+
+function formatRole(role: string | null): string | null {
+  if (!role) return null;
+  return ROLE_LABELS[role] ?? role.replace(/_/g, " ");
+}
+
 /**
- * Student-safe RAP status/access.
+ * Student-safe Rapporteur Report status/access.
  * Never shows live Rapporteur draft notes or private evaluator score sheets.
  */
 export function StudentRapPanel({ scheduleId }: { scheduleId: string }) {
@@ -56,64 +86,90 @@ export function StudentRapPanel({ scheduleId }: { scheduleId: string }) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-sm">
-          <FileText className="h-4 w-4 text-(--earist-primary)" />
-          Defense RAP (Report of Action Taken)
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-3 text-sm">
-        <p className="text-(--earist-body-text)">{data.message}</p>
-        <div className="flex flex-wrap gap-2">
-          {data.formalOutcome && (
-            <Badge
-              className={
-                data.formalOutcome === "PASSED"
-                  ? "bg-emerald-100 text-emerald-800"
-                  : data.formalOutcome === "FAILED"
-                    ? "bg-red-100 text-red-800"
-                    : "bg-amber-100 text-amber-800"
-              }
-            >
-              {data.formalOutcome}
-            </Badge>
-          )}
-          {data.rapStatus && (
-            <Badge variant="outline">RAP: {data.rapStatus}</Badge>
-          )}
+      <CardHeader className="border-b border-gray-100 pb-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <CardTitle className="flex items-center gap-2 text-base font-bold text-[#333333]">
+            <FileText className="h-4 w-4 text-[#e02b20]" />
+            Rapporteur Report
+          </CardTitle>
+          <div className="flex flex-wrap gap-2">
+            {data.formalOutcome && (
+              <Badge
+                className={
+                  data.formalOutcome === "PASSED"
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                    : data.formalOutcome === "FAILED"
+                      ? "border-red-200 bg-red-50 text-red-700"
+                      : "border-amber-200 bg-amber-50 text-amber-700"
+                }
+              >
+                {OUTCOME_LABELS[data.formalOutcome] ??
+                  data.formalOutcome.replace(/_/g, " ")}
+              </Badge>
+            )}
+            {data.rapStatus && (
+              <Badge variant="outline">
+                {RAP_STATUS_LABELS[data.rapStatus] ?? "In Progress"}
+              </Badge>
+            )}
+          </div>
         </div>
+      </CardHeader>
+      <CardContent className="space-y-4 pt-4 text-sm text-[#333333]">
+        <p className="text-gray-600">{data.message}</p>
 
         {finalized && data.officialContent ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {data.officialContent.selectedTitle && (
-              <p>
-                <span className="font-medium">Official title:</span>{" "}
-                {data.officialContent.selectedTitle}
-              </p>
+              <div className="rounded-lg border border-gray-100 bg-gray-50/70 p-3">
+                <p className="text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                  Official Approved Title
+                </p>
+                <p className="mt-1 font-semibold text-[#333333]">
+                  {data.officialContent.selectedTitle}
+                </p>
+              </div>
             )}
             {data.officialContent.decisionsAndRecommendations && (
-              <div className="rounded border border-(--earist-border-gray) p-3">
-                <p className="mb-2 text-xs font-semibold uppercase text-(--earist-body-text)">
-                  Official RAP Content
+              <div className="rounded-lg border border-gray-100 bg-gray-50/70 p-3.5">
+                <p className="mb-2 text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                  Decisions &amp; Recommendations
                 </p>
-                <pre className="whitespace-pre-wrap font-sans text-xs">
+                <pre className="whitespace-pre-wrap font-sans text-xs leading-relaxed text-[#333333]">
                   {data.officialContent.decisionsAndRecommendations}
                 </pre>
               </div>
             )}
             <div>
-              <p className="mb-1 text-xs font-semibold uppercase text-(--earist-body-text)">
-                Signatories
+              <p className="mb-2 text-xs font-semibold tracking-wider text-gray-500 uppercase">
+                Defense Committee Signatories
               </p>
-              <ul className="space-y-1 text-xs">
+              <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 bg-white text-xs">
                 {data.officialContent.signatories.map((s, i) => (
-                  <li key={i} className="flex justify-between">
-                    <span>
-                      {s.name} {s.roleAtDefense ? `(${s.roleAtDefense})` : ""}
+                  <li
+                    key={i}
+                    className="flex items-center justify-between px-3.5 py-2.5"
+                  >
+                    <span className="font-medium text-[#333333]">
+                      {s.name}{" "}
+                      {s.roleAtDefense ? (
+                        <span className="text-gray-500">
+                          ({formatRole(s.roleAtDefense)})
+                        </span>
+                      ) : (
+                        ""
+                      )}
                     </span>
-                    <span className="font-medium text-emerald-700">
+                    <Badge
+                      variant="outline"
+                      className={
+                        s.isSigned
+                          ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                          : "border-amber-200 bg-amber-50 text-amber-700"
+                      }
+                    >
                       {s.isSigned ? "Signed" : "Pending"}
-                    </span>
+                    </Badge>
                   </li>
                 ))}
               </ul>
@@ -125,7 +181,7 @@ export function StudentRapPanel({ scheduleId }: { scheduleId: string }) {
                 onClick={() => setPreviewOpen(true)}
               >
                 <Eye className="mr-1.5 h-4 w-4" />
-                Preview Official RAP PDF
+                Preview Rapporteur Report PDF
               </Button>
               <Button
                 size="sm"
@@ -136,7 +192,7 @@ export function StudentRapPanel({ scheduleId }: { scheduleId: string }) {
                   try {
                     await downloadOfficialDefensePdf(
                       `/thesis/student/defense/${encodeURIComponent(scheduleId)}/rap/pdf`,
-                      "Official-RAP-Report.pdf",
+                      "Official-Rapporteur-Report.pdf",
                     );
                   } finally {
                     setDownloading(false);
@@ -144,23 +200,22 @@ export function StudentRapPanel({ scheduleId }: { scheduleId: string }) {
                 }}
               >
                 <Download className="mr-1.5 h-4 w-4" />
-                {downloading ? "Downloading…" : "Download RAP PDF"}
+                {downloading ? "Downloading…" : "Download Rapporteur Report"}
               </Button>
               <Button
                 size="sm"
-                variant="ghost"
+                variant="outline"
                 onClick={() => window.print()}
               >
-                <Printer className="mr-1.5 h-4 w-4" />
-                Print
+                <Printer className="mr-2 h-4 w-4" />
+                Print / Download Rapporteur Report
               </Button>
             </div>
           </div>
         ) : (
-          <p className="text-xs text-(--earist-body-text)">
-            Official RAP content becomes available after the RAP is finalized.
-            Internal draft notes and private evaluator score sheets are not
-            shared.
+          <p className="text-xs text-gray-500">
+            The official Rapporteur Report will be available here once finalized
+            and signed by the defense committee.
           </p>
         )}
 
@@ -169,7 +224,7 @@ export function StudentRapPanel({ scheduleId }: { scheduleId: string }) {
             open={previewOpen}
             onOpenChange={setPreviewOpen}
             fetchUrl="/sample-docs/sample-rap-report.pdf"
-            title="Official Report of Action Taken (RAP)"
+            title="Official Rapporteur Report"
           />
         )}
       </CardContent>

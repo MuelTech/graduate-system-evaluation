@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { apiClientRequest, ApiError } from "@/lib/api.client";
 import {
   panelistAdviserRequestsQueryKey,
@@ -25,9 +26,7 @@ import { AlertCircle, CheckCircle2, XCircle } from "lucide-react";
 export type AdviserRequestDecision = "CONFORMED" | "DECLINED";
 
 /**
- * ADV-6 — one shared GS-020 response surface for My Advisees and future
- * compatibility refactors. The existing adviser-response endpoint remains the
- * only transition authority; CONFORME never creates an active advisee locally.
+ * ADV-6 — one shared Thesis Adviser Request response surface for My Advisees.
  */
 export function AdviserRequestActionDialog({
   request,
@@ -59,6 +58,11 @@ export function AdviserRequestActionDialog({
     },
     onSuccess: async () => {
       setError(null);
+      toast.success(
+        decision === "CONFORMED"
+          ? "Adviser request accepted and forwarded for Dean approval."
+          : "Adviser request declined.",
+      );
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: adviserWorkspaceQueryKey }),
         queryClient.invalidateQueries({
@@ -69,7 +73,9 @@ export function AdviserRequestActionDialog({
       onClose();
     },
     onError: async (mutationError: Error) => {
-      setError(mutationError.message || "Unable to record your response.");
+      const msg = mutationError.message || "Unable to record your response.";
+      setError(msg);
+      toast.error(msg);
       // Authoritative refresh only; never auto-retry the transition.
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: adviserWorkspaceQueryKey }),
@@ -94,7 +100,7 @@ export function AdviserRequestActionDialog({
         <DialogHeader>
           <DialogTitle>
             {decision === "CONFORMED"
-              ? "Record CONFORME?"
+              ? "Accept Adviser Request?"
               : "Decline Adviser Request?"}
           </DialogTitle>
           <DialogDescription>
@@ -113,7 +119,7 @@ export function AdviserRequestActionDialog({
 
         <div className="space-y-2">
           <label
-            className="text-xs font-medium text-(--earist-body-text)"
+            className="text-xs font-medium text-[#333333]"
             htmlFor="adviser-response-remarks"
           >
             Response Remarks (Optional)
@@ -144,7 +150,7 @@ export function AdviserRequestActionDialog({
             className={
               decision === "DECLINED"
                 ? "bg-red-600 text-white hover:bg-red-700"
-                : "bg-(--earist-primary) hover:bg-(--earist-primary)/90"
+                : "bg-[#e02b20] text-white hover:bg-[#e02b20]/90"
             }
           >
             {decision === "CONFORMED" ? (
@@ -155,7 +161,7 @@ export function AdviserRequestActionDialog({
             {respond.isPending
               ? "Saving…"
               : decision === "CONFORMED"
-                ? "Record CONFORME"
+                ? "Accept Request"
                 : "Decline Request"}
           </Button>
         </DialogFooter>

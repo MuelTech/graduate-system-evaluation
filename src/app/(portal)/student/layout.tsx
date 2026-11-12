@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { ChatbotWidget } from "@/components/chatbot/chatbot-widget";
 import { signOut, useSession } from "next-auth/react";
 import { NotificationBell } from "@/components/layout/notification-bell";
-import { RoleSwitcherPill } from "@/components/evaluation/role-switcher-pill";
+import { PortalBreadcrumbs } from "@/components/layout/portal-breadcrumbs";
 import { PageGuideTrigger } from "@/components/evaluation/page-guide-overlay";
 import {
   LayoutDashboard,
@@ -19,7 +19,7 @@ import {
   Menu,
   X,
   LogOut,
-  ChevronLeft,
+  PanelLeft,
   ChevronDown,
   Megaphone,
   Library,
@@ -128,30 +128,32 @@ export default function StudentLayout({
   );
 
   return (
-    <div className="flex min-h-screen bg-(--earist-surface-gray)">
+    <div className="flex min-h-screen bg-[#FFF8F0]">
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex flex-col bg-(--earist-primary) transition-all duration-300 ${
-          collapsed ? "w-17" : "w-65"
+        className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r border-black/10 bg-[#b71c1c] text-white shadow-xl transition-all duration-300 ${
+          collapsed ? "w-[72px]" : "w-64"
         } ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
-        <div className="flex h-16 items-center justify-between border-b border-white/10 px-4">
-          <Link href="/student/dashboard" className="flex items-center gap-2">
-            <GraduationCap className="h-7 w-7 text-(--earist-accent)" />
+        <div className="flex h-16 items-center justify-between border-b border-white/15 px-4">
+          <Link href="/student/dashboard" className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15 text-[#f9a825] shadow-inner">
+              <GraduationCap className="h-6 w-6 shrink-0" />
+            </div>
             {!collapsed && (
               <div className="flex flex-col">
-                <span className="text-sm leading-tight font-bold text-white">
+                <span className="text-base leading-tight font-bold tracking-wide text-white">
                   EARIST
                 </span>
-                <span className="text-[10px] leading-tight text-white/80">
+                <span className="text-[11px] leading-tight font-medium tracking-wider text-white/75 uppercase">
                   Student Portal
                 </span>
               </div>
@@ -159,7 +161,8 @@ export default function StudentLayout({
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="text-white hover:text-(--earist-accent) lg:hidden"
+            aria-label="Close navigation"
+            className="rounded-md p-1 text-white/80 hover:bg-white/10 hover:text-white lg:hidden"
           >
             <X className="h-5 w-5" />
           </button>
@@ -167,7 +170,7 @@ export default function StudentLayout({
 
         <nav
           data-guide="student-sidebar-nav"
-          className="flex-1 overflow-y-auto px-2 py-4"
+          className="flex-1 overflow-y-auto px-3 py-4"
         >
           <ul className="space-y-1">
             {topNavItems.map((item) => {
@@ -177,10 +180,10 @@ export default function StudentLayout({
                   <Link
                     href={item.href}
                     onClick={() => setSidebarOpen(false)}
-                    className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                    className={`group flex items-center gap-3 px-3.5 py-2.5 text-sm transition-all ${
                       isActive
-                        ? "bg-(--earist-accent) text-(--earist-primary)"
-                        : "text-white hover:bg-white/10 hover:text-(--earist-accent)"
+                        ? "rounded-r-lg border-l-4 border-white bg-white/20 font-semibold text-white shadow-2xs"
+                        : "rounded-lg font-medium text-white/80 hover:bg-white/10 hover:text-white"
                     }`}
                     title={collapsed ? item.label : undefined}
                   >
@@ -197,12 +200,16 @@ export default function StudentLayout({
                 <Link
                   href="/student/thesis"
                   onClick={() => setSidebarOpen(false)}
-                  className={`flex flex-1 items-center gap-3 rounded-l-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                  className={`group flex flex-1 items-center gap-3 px-3.5 py-2.5 text-sm transition-all ${
                     pathname === "/student/thesis"
-                      ? "bg-(--earist-accent) text-(--earist-primary)"
+                      ? collapsed
+                        ? "rounded-r-lg border-l-4 border-white bg-white/20 font-semibold text-white"
+                        : "rounded-l-lg border-l-4 border-white bg-white/20 font-semibold text-white shadow-2xs"
                       : pathname.startsWith("/student/thesis/")
-                        ? "bg-white/15 text-(--earist-accent)"
-                        : "text-white hover:bg-white/10 hover:text-(--earist-accent)"
+                        ? collapsed
+                          ? "rounded-r-lg border-l-4 border-white bg-white/20 font-semibold text-white"
+                          : "rounded-l-lg bg-white/15 font-semibold text-white"
+                        : "rounded-l-lg font-medium text-white/80 hover:bg-white/10 hover:text-white"
                   }`}
                   title={collapsed ? "Thesis Journey" : undefined}
                 >
@@ -217,14 +224,16 @@ export default function StudentLayout({
                     aria-expanded={thesisOpen}
                     aria-label="Toggle Thesis Journey submenu"
                     onClick={() => setThesisOpen((v) => !v)}
-                    className={`rounded-r-lg px-2.5 py-2.5 text-sm transition-colors ${
+                    className={`rounded-r-lg px-2.5 py-2.5 text-sm transition-all ${
                       pathname === "/student/thesis"
-                        ? "bg-(--earist-accent) text-(--earist-primary)"
-                        : "text-white hover:bg-white/10 hover:text-(--earist-accent)"
+                        ? "bg-white/20 text-white"
+                        : pathname.startsWith("/student/thesis/")
+                          ? "bg-white/15 text-white"
+                          : "text-white/80 hover:bg-white/10 hover:text-white"
                     }`}
                   >
                     <ChevronDown
-                      className={`h-4 w-4 transition-transform ${
+                      className={`h-4 w-4 text-white/70 transition-transform ${
                         thesisOpen ? "rotate-180" : ""
                       }`}
                     />
@@ -233,7 +242,7 @@ export default function StudentLayout({
               </div>
 
               {!collapsed && thesisOpen && (
-                <ul className="mt-1 ml-6 space-y-1 border-l border-white/10 pl-3">
+                <ul className="mt-1 ml-4 space-y-1 border-l border-white/20 pl-3">
                   {JOURNEY_STEP_ORDER.map((key) => {
                     const step = stepByKey.get(key);
                     const href = journeyRouteFor(key);
@@ -257,12 +266,12 @@ export default function StudentLayout({
                           href={href}
                           title={tip}
                           onClick={() => setSidebarOpen(false)}
-                          className={`block rounded-lg px-3 py-2 text-sm transition-colors ${
+                          className={`block rounded-lg px-3 py-2 text-sm transition-all ${
                             isChildActive
-                              ? "bg-(--earist-accent) font-medium text-(--earist-primary)"
+                              ? "bg-white/20 font-semibold text-white shadow-2xs"
                               : isCurrent
                                 ? "bg-white/10 font-medium text-white"
-                                : "text-white/85 hover:bg-white/10 hover:text-(--earist-accent)"
+                                : "text-white/75 hover:bg-white/10 hover:text-white"
                           }`}
                         >
                           <span className="flex items-center justify-between gap-2">
@@ -270,6 +279,7 @@ export default function StudentLayout({
                             <span
                               title={tip}
                               aria-label={tip}
+                              tabIndex={0}
                               role="img"
                               className="rounded p-0.5"
                             >
@@ -291,10 +301,10 @@ export default function StudentLayout({
                   <Link
                     href={item.href}
                     onClick={() => setSidebarOpen(false)}
-                    className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                    className={`group flex items-center gap-3 px-3.5 py-2.5 text-sm transition-all ${
                       isActive
-                        ? "bg-(--earist-accent) text-(--earist-primary)"
-                        : "text-white hover:bg-white/10 hover:text-(--earist-accent)"
+                        ? "rounded-r-lg border-l-4 border-white bg-white/20 font-semibold text-white shadow-2xs"
+                        : "rounded-lg font-medium text-white/80 hover:bg-white/10 hover:text-white"
                     }`}
                     title={collapsed ? item.label : undefined}
                   >
@@ -307,62 +317,64 @@ export default function StudentLayout({
           </ul>
         </nav>
 
-        <div className="hidden border-t border-white/10 p-2 lg:block">
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="flex w-full items-center justify-center rounded-lg p-2 text-white transition-colors hover:bg-white/10 hover:text-(--earist-accent)"
-          >
-            <ChevronLeft
-              className={`h-5 w-5 transition-transform ${collapsed ? "rotate-180" : ""}`}
-            />
-          </button>
-        </div>
-
-        <div className="border-t border-white/10 p-2">
+        <div className="border-t border-white/15 p-3">
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/10 hover:text-(--earist-accent)"
+            className="flex w-full items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium text-white/85 transition-colors hover:bg-white/10 hover:text-white"
+            title={collapsed ? "Sign Out" : undefined}
           >
             <LogOut className="h-5 w-5 shrink-0" />
-            {!collapsed && <span>Switch Respondent Role</span>}
+            {!collapsed && <span>Sign Out</span>}
           </button>
         </div>
       </aside>
 
       <div
-        className={`flex flex-1 flex-col transition-all duration-300 ${
-          collapsed ? "lg:ml-17" : "lg:ml-65"
+        className={`flex min-w-0 flex-1 flex-col transition-all duration-300 ${
+          collapsed ? "lg:ml-[72px]" : "lg:ml-64"
         }`}
       >
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-(--earist-border-gray) bg-white px-4 sm:px-6">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-100 bg-white px-4 shadow-2xs sm:px-6">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="text-(--earist-body-text) lg:hidden"
+              aria-label="Open navigation"
+              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#333333] lg:hidden"
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="h-5 w-5" />
             </button>
-            <h1
-              className="text-lg font-bold text-(--earist-primary)"
-              style={{ fontFamily: '"Calibri", sans-serif' }}
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+              className="hidden rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-[#333333] lg:inline-flex"
+              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
-              Student Portal
-            </h1>
+              <PanelLeft className="h-5 w-5" />
+            </button>
+            <div className="hidden h-5 w-px bg-gray-200 sm:block" />
+            <PortalBreadcrumbs portal="student" />
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-3">
             <PageGuideTrigger />
-            <RoleSwitcherPill currentRole="student" />
+            <div className="hidden flex-col items-end sm:flex">
+              <span className="text-xs font-semibold text-[#333333]">
+                {session?.user?.name || session?.user?.email || "Student"}
+              </span>
+              <span className="text-[11px] font-medium text-gray-500">
+                Student Portal
+              </span>
+            </div>
             <NotificationBell role="STUDENT" />
             <div
-              className="flex h-8 w-8 items-center justify-center rounded-full bg-(--earist-primary) text-sm font-bold text-white uppercase"
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-[#e02b20] text-sm font-bold text-white uppercase shadow-xs"
               title={session?.user?.email || "Student"}
             >
-              {session?.user?.email?.charAt(0).toUpperCase() || "J"}
+              {session?.user?.email?.charAt(0).toUpperCase() || "S"}
             </div>
           </div>
         </header>
 
-        <main className="flex-1 p-4 sm:p-6">{children}</main>
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
 
       <ChatbotWidget />

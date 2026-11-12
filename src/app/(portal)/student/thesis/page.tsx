@@ -8,6 +8,7 @@ import {
   journeyRouteFor,
 } from "@/lib/student-thesis-journey";
 import { milestoneStateLabel } from "@/lib/student-dashboard";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   Card,
   CardContent,
@@ -38,39 +39,39 @@ const STEP_DESCRIPTIONS: Record<
   }
 > = {
   TITLE_DEFENSE: {
-    subtitle: "3-Title Proposal Package, Schedule, & Official RAP Result",
+    subtitle: "3-Title Proposal Package, Schedule, & Official Rapporteur Report",
     scenariosCount: 5,
     keyFeatures: [
       "Upload 3 proposed titles, Proposal Package PDF, COR, and Official Receipt",
       "Inspect Defense Schedule, Committee Roster, and Official Defense Application PDF",
-      "View finalized Title Defense RAP Report andReturned-for-Correction workflow",
+      "View finalized Title Defense Rapporteur Report and Returned-for-Correction workflow",
     ],
   },
   ADVISER_REQUEST: {
-    subtitle: "Official GS Form No. 020 Adviser Selection & Digital Signing",
+    subtitle: "Official Adviser Request Form Selection & Digital Signing",
     scenariosCount: 4,
     keyFeatures: [
       "Browse eligible Graduate Faculty advisers from your Title Defense panel",
-      "Affix digital e-signature to submit Official GS Form No. 020",
-      "Track Adviser CONFORME & Dean sign-off and preview the signed GS-020 PDF",
+      "Affix digital e-signature to submit the Official Adviser Request Form",
+      "Track Adviser acceptance & Dean sign-off and preview the signed Adviser Request Form PDF",
     ],
   },
   PROPOSAL_DEFENSE: {
-    subtitle: "Pre-Defense Adviser Certification, Proposal Application, & RAP",
+    subtitle: "Pre-Defense Adviser Certification, Proposal Application, & Rapporteur Report",
     scenariosCount: 5,
     keyFeatures: [
       "Upload Proposal Manuscript (Chapters 1–3) for Adviser Pre-Defense Certification",
       "File Proposal Defense application once Adviser Certification is issued",
-      "Review Proposal Defense schedule, committee, and finalized RAP Report",
+      "Review Proposal Defense schedule, committee, and finalized Rapporteur Report",
     ],
   },
   STRIKE: {
-    subtitle: "Institutional Similarity & Plagiarism Clearance (<15% Limit)",
+    subtitle: "Institutional Similarity & Plagiarism Check (<15% Limit)",
     scenariosCount: 3,
     keyFeatures: [
-      "Submit revised manuscript PDF for Turnitin / STRIKE similarity verification",
+      "Submit revised manuscript PDF for institutional plagiarism similarity verification",
       "Track verification queue status with the Graduate School Research Unit",
-      "View verified 9% similarity score and Official STRIKE Clearance Certificate PDF",
+      "View verified 9% similarity score and Official Plagiarism Clearance Certificate PDF",
     ],
   },
   FINAL_DEFENSE: {
@@ -79,7 +80,7 @@ const STEP_DESCRIPTIONS: Record<
     keyFeatures: [
       "Upload complete Final Manuscript (Chapters 1–5) for Final Adviser Certification",
       "Submit Final Oral Defense application and inspect Examination Committee schedule",
-      "View signed Final Defense RAP Report and proceed to Research Databank archival",
+      "View signed Final Defense Rapporteur Report and proceed to Final Thesis Archival Documents",
     ],
   },
 };
@@ -115,24 +116,16 @@ export default function StudentThesisIndexPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header + Unlocked Evaluation Notice */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2
-            className="text-2xl font-bold text-(--earist-primary)"
-            style={{ fontFamily: '"Calibri", sans-serif' }}
-          >
-            Thesis Journey Hub
-          </h2>
-          <p className="text-sm text-(--earist-body-text)">
-            Explore and evaluate all 5 institutional Thesis Defense milestones from Title Defense to Final Oral Defense.
-          </p>
-        </div>
-        <Badge className="w-fit bg-amber-100 text-amber-900 border-amber-300 gap-1.5 px-3 py-1">
-          <LockOpen className="h-3.5 w-3.5 text-(--earist-primary)" />
-          All 5 Steps Unlocked for Evaluation
-        </Badge>
-      </div>
+      <PageHeader
+        title="Thesis Journey Hub"
+        description="Explore and evaluate all 5 institutional Thesis Defense milestones from Title Defense to Final Oral Defense."
+        actions={
+          <Badge className="w-fit bg-amber-100 text-amber-900 border-amber-300 gap-1.5 px-3 py-1">
+            <LockOpen className="h-3.5 w-3.5 text-(--earist-primary)" />
+            All 5 Steps Unlocked for Evaluation
+          </Badge>
+        }
+      />
 
       {/* Overview Summary Card */}
       <Card
@@ -140,8 +133,8 @@ export default function StudentThesisIndexPage() {
         className="border-t-4 border-t-(--earist-primary) shadow-xs"
       >
         <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-base text-(--earist-primary)">
-            <GraduationCap className="h-5 w-5 text-(--earist-secondary)" />
+          <CardTitle className="flex items-center gap-2 text-base font-bold text-[#333333]">
+            <GraduationCap className="h-5 w-5 text-[#e02b20]" />
             Active Thesis Research Context
           </CardTitle>
         </CardHeader>
@@ -151,7 +144,7 @@ export default function StudentThesisIndexPage() {
               <FileText className="h-3.5 w-3.5" />
               Official Approved Research Title
             </p>
-            <p className="mt-1 text-sm font-bold leading-snug text-(--earist-primary)">
+            <p className="mt-1 text-sm font-bold leading-snug text-[#333333]">
               {journey.selectedTitle?.titleText ??
                 "Data-Driven Instructional Supervision and Digital Readiness of Public Secondary School Heads in the Division of Manila"}
             </p>
@@ -160,16 +153,16 @@ export default function StudentThesisIndexPage() {
           <div className="rounded-lg border border-(--earist-border-gray) bg-white p-3.5 flex flex-col justify-between">
             <div>
               <p className="flex items-center gap-1.5 text-xs font-semibold text-(--earist-body-text)">
-                <UserCheck className="h-3.5 w-3.5 text-(--earist-secondary)" />
-                Assigned Thesis Adviser (GS Form No. 020)
+                <UserCheck className="h-3.5 w-3.5 text-[#e02b20]" />
+                Assigned Thesis Adviser (Adviser Request Form)
               </p>
-              <p className="mt-1 text-sm font-bold text-foreground">
+              <p className="mt-1 text-sm font-bold text-[#333333]">
                 {journey.activeAdviser?.name ??
                   "Dr. Maria Clara R. Santos, EdD"}
               </p>
             </div>
             <div className="mt-2 flex items-center justify-between text-xs text-(--earist-body-text)">
-              <span>STRIKE Plagiarism Policy: Mandatory (&lt;15%)</span>
+              <span>Plagiarism Check Policy: Mandatory (&lt;15%)</span>
               <Badge
                 variant="outline"
                 className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[11px]"
@@ -183,8 +176,8 @@ export default function StudentThesisIndexPage() {
 
       {/* All 5 Step Cards */}
       <div data-guide="thesis-step-cards" className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-base font-bold text-(--earist-primary)">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h3 className="text-base font-bold text-[#333333]">
             5-Step Thesis Journey Workspaces
           </h3>
           <span className="text-xs text-(--earist-body-text)">
@@ -228,7 +221,7 @@ export default function StudentThesisIndexPage() {
                       </Badge>
                     </div>
                   </div>
-                  <CardTitle className="mt-2 text-lg font-bold text-(--earist-primary)">
+                  <CardTitle className="mt-2 text-lg font-bold text-[#333333]">
                     {label}
                   </CardTitle>
                   <p className="text-xs font-medium text-(--earist-secondary)">

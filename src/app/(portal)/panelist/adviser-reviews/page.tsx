@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function ProposalAdviserReviewsPage() {
-  redirect("/panelist/advisees?tab=reviews");
+export default function PanelistAdviserReviewsCompatRedirect() {
+  redirect("/faculty/advisees?tab=reviews");
 }

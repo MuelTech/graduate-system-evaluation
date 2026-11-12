@@ -1,9 +1,14 @@
 import type {
+  ApiApplication,
+  EssayEvaluation,
+  ExamQuestion,
+  ExamRecordDetail,
   NotificationItem,
   PanelistAssignmentData,
   RapReportSignatureDoc,
   RepositoryPublication,
 } from "@/types";
+import type { ExamResult } from "@/components/exam-content/result-breakdown";
 import type {
   AdviserAdviseeDetailDto,
   AdviserWorkspaceDto,
@@ -1144,55 +1149,96 @@ export function buildStudentThesisJourney(scenarios: {
   };
 }
 
-export function buildCurrentDefenseApplication(titleScenario: string) {
+export function buildCurrentDefenseApplication(
+  scenario: string,
+  stage = "TITLE",
+) {
+  const normalizedStage =
+    stage === "PROPOSAL" || stage === "FINAL" ? stage : "TITLE";
+
+  const mainDoc =
+    normalizedStage === "PROPOSAL"
+      ? {
+          id: "doc-prop-ms-01",
+          docType: "PROPOSAL_CHAPTERS",
+          defenseStage: "PROPOSAL",
+          originalFilename: "DelaCruz_MAEd_Proposal_Manuscript_Ch1-3.pdf",
+          verifiedMimeType: "application/pdf",
+          sizeBytes: 2418600,
+          uploadedAt: "2026-03-08T10:15:00.000Z",
+          isCurrent: true,
+          supersedesDocumentId: null,
+          fileUrl: "/api/documents/thesis-document/doc-prop-ms-01/file",
+        }
+      : normalizedStage === "FINAL"
+        ? {
+            id: "doc-final-ms-01",
+            docType: "FINAL_MANUSCRIPT",
+            defenseStage: "FINAL",
+            originalFilename: "DelaCruz_MAEd_Final_Manuscript_Ch1-5.pdf",
+            verifiedMimeType: "application/pdf",
+            sizeBytes: 3892400,
+            uploadedAt: "2026-04-04T11:20:00.000Z",
+            isCurrent: true,
+            supersedesDocumentId: null,
+            fileUrl: "/api/documents/thesis-document/doc-final-ms-01/file",
+          }
+        : {
+            id: "doc-title-pkg-01",
+            docType: "TITLE_PROPOSAL",
+            defenseStage: "TITLE",
+            originalFilename: "DelaCruz_MAEd_Title_Proposal_Package.pdf",
+            verifiedMimeType: "application/pdf",
+            sizeBytes: 1845200,
+            uploadedAt: "2026-01-25T10:15:00.000Z",
+            isCurrent: true,
+            supersedesDocumentId: null,
+            fileUrl: "/api/documents/thesis-document/doc-title-pkg-01/file",
+          };
+
+  const corDoc = {
+    id: `doc-cor-${normalizedStage.toLowerCase()}-01`,
+    docType: "COR",
+    defenseStage: normalizedStage,
+    originalFilename: "DelaCruz_COR_2ndSem_AY2025-2026.pdf",
+    verifiedMimeType: "application/pdf",
+    sizeBytes: 425900,
+    uploadedAt: mainDoc.uploadedAt,
+    isCurrent: true,
+    supersedesDocumentId: null,
+    fileUrl: `/api/documents/thesis-document/doc-cor-${normalizedStage.toLowerCase()}-01/file`,
+  };
+
+  const receiptDoc = {
+    id: `doc-receipt-${normalizedStage.toLowerCase()}-01`,
+    docType: "RECEIPT",
+    defenseStage: normalizedStage,
+    originalFilename: "DelaCruz_Defense_Fee_Receipt_OR884120.pdf",
+    verifiedMimeType: "application/pdf",
+    sizeBytes: 312400,
+    uploadedAt: mainDoc.uploadedAt,
+    isCurrent: true,
+    supersedesDocumentId: null,
+    fileUrl: `/api/documents/thesis-document/doc-receipt-${normalizedStage.toLowerCase()}-01/file`,
+  };
+
+  const evidence = [mainDoc, corDoc, receiptDoc];
+
   return {
     thesisId: "thesis-eval-01",
-    stage: "TITLE",
+    stage: normalizedStage,
     status:
-      titleScenario === "REJECTED"
+      scenario === "REJECTED"
         ? "REJECTED"
-        : titleScenario === "APPLICATION_UNDER_REVIEW"
+        : scenario === "APPLICATION_UNDER_REVIEW"
           ? "PENDING_REVIEW"
           : "APPROVED",
     rejectionReason:
-      titleScenario === "REJECTED"
+      scenario === "REJECTED"
         ? "Please upload a clearer scan of your Official Defense Fee Receipt (OR #884120) and ensure your COR reflects 2nd Semester AY 2025–2026."
         : null,
-    evidence: [
-      {
-        id: "doc-title-pkg-01",
-        docType: "TITLE_PROPOSAL",
-        defenseStage: "TITLE",
-        originalFilename: "DelaCruz_MAEd_Title_Proposal_Package.pdf",
-        verifiedMimeType: "application/pdf",
-        sizeBytes: 1845200,
-        uploadedAt: "2026-01-25T10:15:00.000Z",
-        isCurrent: true,
-        supersedesDocumentId: null,
-      },
-      {
-        id: "doc-cor-01",
-        docType: "COR",
-        defenseStage: "TITLE",
-        originalFilename: "DelaCruz_COR_2ndSem_AY2025-2026.pdf",
-        verifiedMimeType: "application/pdf",
-        sizeBytes: 425900,
-        uploadedAt: "2026-01-25T10:15:30.000Z",
-        isCurrent: true,
-        supersedesDocumentId: null,
-      },
-      {
-        id: "doc-receipt-01",
-        docType: "RECEIPT",
-        defenseStage: "TITLE",
-        originalFilename: "DelaCruz_Defense_Fee_Receipt_OR884120.pdf",
-        verifiedMimeType: "application/pdf",
-        sizeBytes: 312400,
-        uploadedAt: "2026-01-25T10:16:00.000Z",
-        isCurrent: true,
-        supersedesDocumentId: null,
-      },
-    ],
+    evidence,
+    documents: evidence,
   };
 }
 
@@ -1487,24 +1533,24 @@ export const MOCK_PANELIST_DASHBOARD: PanelistDashboard = {
       scheduleId: "sched-title-01",
       stage: "Proposal Defense",
       responsibility: "Committee Chairperson",
-      statusText: "Session in progress — Rubric & RAP open",
+      statusText: "Session in progress — Rubric & Rapporteur Report open",
       date: "2026-03-24",
       actionLabel: "Open Defense Workspace",
-      href: "/panelist/defense-workspace/sched-title-01",
+      href: "/faculty/defense-workspace/sched-title-01",
       priority: 1,
     },
     {
       id: "attn-02",
       category: "ADVISER_REQUEST",
-      title: "GS-020 Adviser Request Awaiting CONFORME",
+      title: "Thesis Adviser Request Awaiting Acceptance",
       studentName: "Catherine L. Mendoza",
       scheduleId: null,
       stage: "Adviser Request",
       responsibility: "Requested Thesis Adviser",
-      statusText: "Awaiting your CONFORME response",
+      statusText: "Awaiting your acceptance response",
       date: "2026-03-07",
       actionLabel: "Review Request",
-      href: "/panelist/advisees",
+      href: "/faculty/advisees?tab=requests",
       priority: 1,
     },
     {
@@ -1518,21 +1564,21 @@ export const MOCK_PANELIST_DASHBOARD: PanelistDashboard = {
       statusText: "Manuscript uploaded — awaiting certification",
       date: "2026-03-09",
       actionLabel: "Review Manuscript",
-      href: "/panelist/advisees/student-adv-01",
+      href: "/faculty/advisees/student-adv-01",
       priority: 2,
     },
     {
       id: "attn-04",
       category: "RAP_SIGNATURE",
-      title: "Committee RAP Report Ready for Signature",
+      title: "Rapporteur Report Ready for Signature",
       studentName: "Paolo R. Evangelista",
       scheduleId: "sched-final-02",
       stage: "Final Defense",
       responsibility: "Panel Member",
-      statusText: "Frozen by Rapporteur — awaiting your e-signature",
+      statusText: "Finalized by Rapporteur — awaiting your e-signature",
       date: "2026-03-05",
-      actionLabel: "Sign RAP Report",
-      href: "/panelist/signatures",
+      actionLabel: "Sign Rapporteur Report",
+      href: "/faculty/signatures",
       priority: 2,
     },
   ],
@@ -1547,7 +1593,7 @@ export const MOCK_PANELIST_DASHBOARD: PanelistDashboard = {
       stageLabel: "Proposal Defense",
       sessionStatusLabel: "In Progress",
       roleLabel: "Chairman",
-      href: "/panelist/defense-workspace/sched-title-01",
+      href: "/faculty/defense-workspace/sched-title-01",
     },
   ],
   upcomingDefenses: [
@@ -1563,7 +1609,7 @@ export const MOCK_PANELIST_DASHBOARD: PanelistDashboard = {
       venueOrLink: "EARIST GS Defense Room 302",
       roleLabel: "Adviser",
       sessionStatusLabel: "Scheduled",
-      href: "/panelist/defense-workspace/sched-proposal-01",
+      href: "/faculty/defense-workspace/sched-proposal-01",
     },
     {
       scheduleId: "sched-final-01",
@@ -1577,7 +1623,7 @@ export const MOCK_PANELIST_DASHBOARD: PanelistDashboard = {
       venueOrLink: "EARIST Graduate School AVR",
       roleLabel: "Panelist",
       sessionStatusLabel: "Scheduled",
-      href: "/panelist/defense-workspace/sched-final-01",
+      href: "/faculty/defense-workspace/sched-final-01",
     },
   ],
   waitingOnOthers: [
@@ -1585,12 +1631,12 @@ export const MOCK_PANELIST_DASHBOARD: PanelistDashboard = {
       id: "wait-01",
       studentName: "Catherine L. Mendoza",
       studentNumber: "2025-GS-00210",
-      recordLabel: "Title Defense RAP Report",
+      recordLabel: "Title Defense Rapporteur Report",
       requirement: "Remaining Panel Member Signature",
       responsibleRole: "Dr. Roberto A. Villanueva",
       statusText: "2 of 3 signatures completed",
       date: "2026-03-10",
-      href: "/panelist/defense-workspace/sched-title-01",
+      href: "/faculty/defense-workspace/sched-title-01",
     },
   ],
 };
@@ -2615,3 +2661,300 @@ export const INITIAL_PENDING_RAP_SIGNATURES: RapReportSignatureDoc[] = [
     },
   },
 ];
+
+export const INITIAL_EXAM_APPLICATIONS: ApiApplication[] = [
+  {
+    id: "app-eval-001",
+    status: "TAKEN",
+    essayEvaluationCompleted: false,
+    student: {
+      pinnacleApplicantId: "APP-2026-0142",
+      user: {
+        firstName: "Maria Lourdes",
+        lastName: "Villanueva",
+        email: "mlvillanueva@applicant.earist.edu.ph",
+      },
+    },
+    program: {
+      id: "prog-maed-as",
+      programName:
+        "Master of Arts in Education major in Administration and Supervision",
+    },
+    slot: {
+      examDate: "2026-03-28T00:00:00.000Z",
+      examTime: "1970-01-01T08:00:00.000Z",
+    },
+  },
+  {
+    id: "app-eval-002",
+    status: "TAKEN",
+    essayEvaluationCompleted: false,
+    student: {
+      pinnacleApplicantId: "APP-2026-0148",
+      user: {
+        firstName: "Juan Carlos",
+        lastName: "Reyes",
+        email: "jcreyes@applicant.earist.edu.ph",
+      },
+    },
+    program: {
+      id: "prog-mpa",
+      programName: "Master in Public Administration",
+    },
+    slot: {
+      examDate: "2026-03-28T00:00:00.000Z",
+      examTime: "1970-01-01T10:00:00.000Z",
+    },
+  },
+  {
+    id: "app-eval-003",
+    status: "PASSED",
+    essayEvaluationCompleted: true,
+    student: {
+      pinnacleApplicantId: "APP-2026-0135",
+      user: {
+        firstName: "Patricia Anne",
+        lastName: "Dizon",
+        email: "padizon@applicant.earist.edu.ph",
+      },
+    },
+    program: {
+      id: "prog-edd-as",
+      programName:
+        "Doctor of Education major in Administration and Supervision",
+    },
+    slot: {
+      examDate: "2026-03-21T00:00:00.000Z",
+      examTime: "1970-01-01T08:00:00.000Z",
+    },
+  },
+  {
+    id: "app-eval-004",
+    status: "FAILED",
+    essayEvaluationCompleted: true,
+    student: {
+      pinnacleApplicantId: "APP-2026-0129",
+      user: {
+        firstName: "Mark Joseph",
+        lastName: "Tolentino",
+        email: "mjtolentino@applicant.earist.edu.ph",
+      },
+    },
+    program: {
+      id: "prog-mba",
+      programName: "Master in Business Administration",
+    },
+    slot: {
+      examDate: "2026-03-21T00:00:00.000Z",
+      examTime: "1970-01-01T13:00:00.000Z",
+    },
+  },
+];
+
+export function computeExamResult(params: {
+  multipleChoiceScore: number;
+  essayScore: number;
+  gradedAt: string;
+}): ExamResult {
+  const mcqTotal = 72;
+  const essayTotal = 38;
+  const maxPossibleScore = 110;
+  const passingThreshold = 75;
+  const totalScore = params.multipleChoiceScore + params.essayScore;
+  const percentage = ((totalScore / maxPossibleScore) * 100).toFixed(2);
+  const passed = Number(percentage) >= passingThreshold;
+
+  return {
+    provenance: "B8",
+    status: passed ? "passed" : "failed",
+    computedStatus: passed ? "PASSED" : "FAILED",
+    effectiveStatus: passed ? "passed" : "failed",
+    institutionalDecision: null,
+    mcqScore: String(params.multipleChoiceScore),
+    mcqTotal: String(mcqTotal),
+    mcqCorrectCount: params.multipleChoiceScore,
+    mcqQuestionCount: mcqTotal,
+    essayScore: String(params.essayScore),
+    essayTotal: String(essayTotal),
+    totalScore: String(totalScore),
+    totalPossible: String(maxPossibleScore),
+    percentage,
+    passingThreshold: String(passingThreshold),
+    scoredAt: params.gradedAt,
+  };
+}
+
+const ESSAY_EVAL_QUESTION: ExamQuestion = {
+  id: "q-essay-01",
+  questionText:
+    "Discuss a critical policy, administrative, or instructional challenge currently facing Philippine public education or public governance, and explain how your proposed graduate research at EARIST will contribute evidence-based solutions to address it. (Maximum of 38 points)",
+  type: "ESSAY",
+  order: 73,
+  stimulusType: "STRUCTURED",
+  stimulusMediaId: null,
+  structuredStimulus: {
+    type: "LOGICAL_PREMISES",
+    items: [
+      "Rubric Criterion 1: Clarity & Depth of Problem Analysis (12 points)",
+      "Rubric Criterion 2: Alignment with Target Graduate Program & Research Rigor (14 points)",
+      "Rubric Criterion 3: Academic Writing Organization & Policy Relevance (12 points)",
+    ],
+  },
+  options: [],
+};
+
+const APPLICANT_ESSAY_RESPONSES: Record<
+  string,
+  {
+    mcqScore: number;
+    initialEssayScore: number | null;
+    essayText: string;
+  }
+> = {
+  "app-eval-001": {
+    mcqScore: 64,
+    initialEssayScore: null,
+    essayText:
+      "One of the most pressing challenges confronting public secondary schools in the Division of Manila is the gap between classroom observation data collection and actionable instructional coaching for teachers. While school heads regularly conduct Results-Based Performance Management System (RPMS) classroom observations under DepEd Order No. 2, s. 2015, the resulting supervisory data often remains archival rather than diagnostic.\n\nThrough the Master of Arts in Education major in Administration and Supervision (MAEd-AS) program at EARIST, my proposed research will examine how public secondary school principals and head teachers can utilize structured instructional analytics to design targeted professional development interventions. Specifically, I aim to assess the digital readiness and supervisory feedback practices of school heads across Manila's public high schools and develop a Data-Driven Instructional Supervision Toolkit.\n\nBy bridging empirical classroom observation indicators with collaborative mentoring, this study seeks to strengthen instructional leadership capacity, support teacher self-efficacy, and ultimately improve learner literacy and numeracy outcomes in urban public schools.",
+  },
+  "app-eval-002": {
+    mcqScore: 58,
+    initialEssayScore: null,
+    essayText:
+      "Local government units (LGUs) in Metro Manila face persistent bottlenecks in frontline service delivery and participatory budgeting despite the mandate of Republic Act No. 11032 (Ease of Doing Business and Efficient Government Service Delivery Act of 2018). Citizens frequently encounter fragmented digital portals and manual verification steps that delay social welfare and business permitting services.\n\nIn pursuing the Master in Public Administration (MPA) at EARIST, my research will evaluate e-governance maturity and citizen satisfaction across barangay and city hall frontline offices in Manila. Using a mixed-methods evaluation framework, I intend to identify workflow redundancies, digital literacy barriers among civil servants, and accessibility gaps for vulnerable constituents.\n\nThe findings will inform a standardized Citizen-Centric Digital Service Blueprint designed to reduce transaction turnaround times, strengthen fiscal transparency, and reinforce public trust in local governance.",
+  },
+  "app-eval-003": {
+    mcqScore: 66,
+    initialEssayScore: 34,
+    essayText:
+      "At the division and regional levels of the Department of Education, policy implementation of the MATATAG Curriculum requires sustained instructional leadership resiliency and systemic change management. School heads are tasked with balancing curriculum decompression, teacher workload welfare, and institutional accountability metrics simultaneously.\n\nFor my doctoral dissertation in the Doctor of Education major in Administration and Supervision (EdD-AS) at EARIST, I propose to develop and validate a Structural Equation Model (SEM) linking transformational leadership, organizational climate, and curriculum implementation fidelity across public secondary schools in the National Capital Region. This policy-oriented research will provide division superintendents and school heads with an evidence-based governance model for sustaining instructional reform.",
+  },
+  "app-eval-004": {
+    mcqScore: 44,
+    initialEssayScore: 21,
+    essayText:
+      "Small and medium enterprises in Manila are facing rising operational costs and competition from online platforms. Many small business owners do not have formal financial records or digital marketing strategies to compete effectively in the modern market.\n\nThrough the MBA program at EARIST, I want to study how small retail businesses can adopt basic digital payment tools and inventory tracking to improve their daily sales and customer retention.",
+  },
+};
+
+export function buildExamRecordDetail(
+  app: ApiApplication,
+  essayEvalScenario: string,
+  gradedScores: Record<string, { essayScore: number; gradedAt: string }>,
+): ExamRecordDetail {
+  const meta =
+    APPLICANT_ESSAY_RESPONSES[app.id] ??
+    APPLICANT_ESSAY_RESPONSES["app-eval-001"];
+  const mcqScore = meta.mcqScore;
+
+  const customGrade = gradedScores[app.id];
+  const isScenarioEvaluated = essayEvalScenario === "EVALUATED";
+  const isScenarioPending = essayEvalScenario === "PENDING_EVALUATION";
+
+  let effectiveEssayScore: number | null = meta.initialEssayScore;
+  let gradedAt: string | null =
+    app.essayEvaluationCompleted ? "2026-03-22T14:30:00.000Z" : null;
+
+  if (customGrade) {
+    effectiveEssayScore = customGrade.essayScore;
+    gradedAt = customGrade.gradedAt;
+  } else if (isScenarioEvaluated && effectiveEssayScore === null) {
+    effectiveEssayScore = app.id === "app-eval-002" ? 30 : 31;
+    gradedAt = "2026-03-29T10:15:00.000Z";
+  } else if (
+    isScenarioPending &&
+    (app.id === "app-eval-001" || app.id === "app-eval-002")
+  ) {
+    effectiveEssayScore = null;
+    gradedAt = null;
+  }
+
+  const isEvaluated = effectiveEssayScore !== null;
+  const computedResult =
+    effectiveEssayScore !== null
+      ? computeExamResult({
+          multipleChoiceScore: mcqScore,
+          essayScore: effectiveEssayScore,
+          gradedAt: gradedAt ?? "2026-03-29T10:15:00.000Z",
+        })
+      : null;
+
+  const effectiveStatus = computedResult
+    ? (computedResult.computedStatus ?? "PASSED")
+    : "TAKEN";
+
+  const evaluator = isEvaluated
+    ? {
+        id: "panelist-eval-01",
+        firstName: "Dr. Maria Clara",
+        lastName: "Santos, EdD",
+      }
+    : null;
+
+  const essayEvaluation: EssayEvaluation = {
+    status: isEvaluated ? "COMPLETED" : "PENDING",
+    questionId: ESSAY_EVAL_QUESTION.id,
+    question: ESSAY_EVAL_QUESTION,
+    responseText: meta.essayText,
+    responseState: "SUBMITTED",
+    maximumScore: 38,
+    essayScore: effectiveEssayScore,
+    evaluator,
+    evaluatedAt: gradedAt,
+  };
+
+  return {
+    id: app.id,
+    status: effectiveStatus,
+    canAmendAppointment: false,
+    canReconsiderResult: false,
+    computedStatus: effectiveStatus,
+    effectiveStatus,
+    institutionalDecision: null,
+    seatReleasedAt: null,
+    replacementOfApplicationId: null,
+    scheduleAmendment: null,
+    reconsideration: null,
+    result: computedResult,
+    resultEmailEligible: isEvaluated,
+    essayEvaluation,
+    student: {
+      id: `student-${app.id}`,
+      pinnacleApplicantId: app.student.pinnacleApplicantId ?? "APP-2026-0142",
+      user: {
+        firstName: app.student.user.firstName,
+        lastName: app.student.user.lastName,
+        email: app.student.user.email,
+      },
+    },
+    program: {
+      id: app.program.id,
+      programName: app.program.programName,
+      examMcqTotal: 72,
+      examEssayTotal: 38,
+    },
+    slot: {
+      id: `slot-${app.id}`,
+      examDate: app.slot?.examDate ?? "2026-03-28T00:00:00.000Z",
+      examTime: app.slot?.examTime ?? "1970-01-01T08:00:00.000Z",
+    },
+    score: {
+      multipleChoiceScore: mcqScore,
+      essayScore: effectiveEssayScore,
+      totalScore:
+        effectiveEssayScore !== null ? mcqScore + effectiveEssayScore : null,
+      status: effectiveStatus,
+      gradedBy: evaluator,
+    },
+    essayAnswers: [
+      {
+        questionId: ESSAY_EVAL_QUESTION.id,
+        questionText: ESSAY_EVAL_QUESTION.questionText,
+        order: ESSAY_EVAL_QUESTION.order,
+        essayAnswer: meta.essayText,
+      },
+    ],
+  };
+}
+
+

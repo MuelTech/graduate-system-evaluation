@@ -13,6 +13,7 @@
  */
 import {
   defenseStatusDescription,
+  formatJourneyCopy,
   JOURNEY_STEP_ORDER,
   journeyLabelFor,
   JOURNEY_STEP_ROUTES,
@@ -44,7 +45,7 @@ const STEP_HEADINGS: Record<JourneyStepKey, string> = {
   TITLE_DEFENSE: "Prepare your Title Defense",
   ADVISER_REQUEST: "Request your Thesis Adviser",
   PROPOSAL_DEFENSE: "Prepare your Proposal Defense",
-  STRIKE: "Complete your STRIKE / Plagiarism check",
+  STRIKE: "Complete your Plagiarism Check",
   FINAL_DEFENSE: "Prepare your Final Defense",
 };
 
@@ -52,7 +53,7 @@ const STEP_ACTIONS: Record<JourneyStepKey, string> = {
   TITLE_DEFENSE: "Open Title Defense",
   ADVISER_REQUEST: "Request an Adviser",
   PROPOSAL_DEFENSE: "Open Proposal Defense",
-  STRIKE: "Open STRIKE / Plagiarism",
+  STRIKE: "Open Plagiarism Check",
   FINAL_DEFENSE: "Open Final Defense",
 };
 
@@ -234,7 +235,7 @@ export function resolveNextStep(
       stepKey: step.key,
       heading: `${label} application returned`,
       explanation:
-        step.detail ||
+        formatJourneyCopy(step.detail) ||
         (kind ? defenseStatusDescription(ds, kind, null) : null) ||
         "Review the feedback and resubmit your application.",
       statusLabel: "Action required",
@@ -248,7 +249,7 @@ export function resolveNextStep(
       stepKey: step.key,
       heading: `${label} result: Failed`,
       explanation:
-        step.detail ||
+        formatJourneyCopy(step.detail) ||
         (kind ? defenseStatusDescription(ds, kind, null) : null) ||
         "The formal defense result was recorded as Failed. Await Graduate School instructions.",
       statusLabel: "Failed",
@@ -262,7 +263,7 @@ export function resolveNextStep(
       stepKey: step.key,
       heading: `${label} revision required`,
       explanation:
-        step.detail ||
+        formatJourneyCopy(step.detail) ||
         (kind ? defenseStatusDescription(ds, kind, null) : null) ||
         "Follow the Graduate School / panel instructions for required revisions.",
       statusLabel: "Revision required",
@@ -276,7 +277,7 @@ export function resolveNextStep(
       stepKey: step.key,
       heading: `${label} session cancelled`,
       explanation:
-        step.detail ||
+        formatJourneyCopy(step.detail) ||
         (kind ? defenseStatusDescription(ds, kind, null) : null) ||
         "Your defense session was cancelled. Await rescheduling or further instructions.",
       statusLabel: "Cancelled",
@@ -291,7 +292,7 @@ export function resolveNextStep(
       stepKey: step.key,
       heading: `${label} is locked`,
       explanation:
-        step.lockReason ||
+        formatJourneyCopy(step.lockReason) ||
         "Complete the required prerequisite before you can continue.",
       statusLabel: "Locked",
       action: null,
@@ -305,8 +306,8 @@ export function resolveNextStep(
       stepKey: step.key,
       heading: waitingHeading(step, label, ds),
       explanation:
-        step.lockReason ||
-        step.detail ||
+        formatJourneyCopy(step.lockReason) ||
+        formatJourneyCopy(step.detail) ||
         "Another authorized actor must act before this step can continue.",
       statusLabel: "Waiting",
       action: null,
@@ -320,8 +321,8 @@ export function resolveNextStep(
     stepKey: step.key,
     heading: STEP_HEADINGS[step.key],
     explanation:
-      step.nextAction ||
-      step.detail ||
+      formatJourneyCopy(step.nextAction) ||
+      formatJourneyCopy(step.detail) ||
       "Continue this step in the Thesis Journey.",
     statusLabel: "Needs your action",
     action: { label: STEP_ACTIONS[step.key], href: route },

@@ -10,7 +10,7 @@ import React, {
 } from "react";
 import { usePathname } from "next/navigation";
 
-export type EvaluationRole = "student" | "panelist";
+export type EvaluationRole = "applicant" | "student" | "panelist";
 
 export interface EvaluationUser {
   id: string;
@@ -21,6 +21,7 @@ export interface EvaluationUser {
   role: EvaluationRole;
   accessToken: string;
   mustChangePassword: boolean;
+  applicantId?: string;
   studentNumber?: string;
   program?: string;
   facultyId?: string;
@@ -35,6 +36,19 @@ export interface EvaluationSession {
 }
 
 export const EVALUATION_PERSONAS: Record<EvaluationRole, EvaluationUser> = {
+  applicant: {
+    id: "applicant-eval-01",
+    name: "Maria Lourdes G. Villanueva",
+    firstName: "Maria Lourdes",
+    lastName: "Villanueva",
+    email: "mlgvillanueva@applicant.earist.edu.ph",
+    role: "applicant",
+    accessToken: "eval-token-applicant-01",
+    mustChangePassword: false,
+    applicantId: "APP-2026-0142",
+    program:
+      "Master of Arts in Education major in Administration and Supervision",
+  },
   student: {
     id: "student-eval-01",
     name: "Juan M. Dela Cruz",
@@ -79,15 +93,22 @@ function notifyListeners() {
 export function getActiveEvaluationRole(): EvaluationRole {
   if (typeof window !== "undefined") {
     const pathname = window.location.pathname;
-    if (pathname.startsWith("/panelist")) {
+    if (pathname.startsWith("/panelist") || pathname.startsWith("/faculty")) {
       return "panelist";
     }
     if (pathname.startsWith("/student")) {
       return "student";
     }
+    if (pathname.startsWith("/applicant")) {
+      return "applicant";
+    }
     try {
       const saved = window.localStorage.getItem(STORAGE_KEY);
-      if (saved === "student" || saved === "panelist") {
+      if (
+        saved === "applicant" ||
+        saved === "student" ||
+        saved === "panelist"
+      ) {
         currentRole = saved;
       }
     } catch {
@@ -138,18 +159,26 @@ export async function signIn(
   providerOrRole?: string,
   options?: {
     callbackUrl?: string;
-    role?: EvaluationRole;
+    role?: EvaluationRole | "faculty";
     redirect?: boolean;
     [key: string]: unknown;
   },
 ): Promise<{ ok: true; error: null; status: 200; url: string | null }> {
+  const rawRole = options?.role ?? providerOrRole;
   const targetRole: EvaluationRole =
-    options?.role ??
-    (providerOrRole === "panelist" ? "panelist" : "student");
+    rawRole === "applicant"
+      ? "applicant"
+      : rawRole === "panelist" || rawRole === "faculty"
+        ? "panelist"
+        : "student";
   setActiveEvaluationRole(targetRole);
   const destination =
     options?.callbackUrl ??
-    (targetRole === "panelist" ? "/panelist/dashboard" : "/student/dashboard");
+    (targetRole === "applicant"
+      ? "/applicant/dashboard"
+      : targetRole === "panelist"
+        ? "/faculty/dashboard"
+        : "/student/dashboard");
 
   if (typeof window !== "undefined" && options?.redirect !== false) {
     window.location.assign(destination);
@@ -190,16 +219,27 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   );
 
   const effectiveRole: EvaluationRole = useMemo(() => {
-    if (pathname?.startsWith("/panelist")) return "panelist";
+    if (pathname?.startsWith("/panelist") || pathname?.startsWith("/faculty")) {
+      return "panelist";
+    }
     if (pathname?.startsWith("/student")) return "student";
+    if (pathname?.startsWith("/applicant")) return "applicant";
     return storeRole;
   }, [pathname, storeRole]);
 
   useEffect(() => {
-    if (pathname?.startsWith("/panelist") && currentRole !== "panelist") {
+    if (
+      (pathname?.startsWith("/panelist") || pathname?.startsWith("/faculty")) &&
+      currentRole !== "panelist"
+    ) {
       setActiveEvaluationRole("panelist");
     } else if (pathname?.startsWith("/student") && currentRole !== "student") {
       setActiveEvaluationRole("student");
+    } else if (
+      pathname?.startsWith("/applicant") &&
+      currentRole !== "applicant"
+    ) {
+      setActiveEvaluationRole("applicant");
     }
   }, [pathname]);
 
@@ -228,7 +268,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
 
 export function useSession(): {
   data: EvaluationSession;
-  status: "authenticated";
+  status: "authenticated" | "loading" | "unauthenticated";
   update: (data?: unknown) => Promise<EvaluationSession>;
 } {
   const ctx = useContext(EvaluationSessionContext);
@@ -247,6 +287,7 @@ export function useEvaluationRole() {
   const role = ctx?.role ?? fallbackRole;
   return {
     role,
+    user: EVALUATION_PERSONAS[role],
     persona: EVALUATION_PERSONAS[role],
     personas: EVALUATION_PERSONAS,
     setRole: setActiveEvaluationRole,
@@ -255,3 +296,5 @@ export function useEvaluationRole() {
 }
 
 export const useEvaluationContext = useEvaluationRole;
+export const useEvaluationSession = useEvaluationRole;
+

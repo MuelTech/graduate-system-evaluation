@@ -70,7 +70,11 @@ export interface WaitingItem {
 }
 
 export interface PanelistDashboard {
-  kpis: { upcomingDefenses: number; pendingTasks: number };
+  kpis: {
+    upcomingDefenses: number;
+    pendingTasks: number;
+    pendingEssayEvaluationsCount?: number;
+  };
   needsAttention: PanelistAttentionTask[];
   activeDefenses: ActiveDefenseItem[];
   upcomingDefenses: UpcomingDefenseItem[];

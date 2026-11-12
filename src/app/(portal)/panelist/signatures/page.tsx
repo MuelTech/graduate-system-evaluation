@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { apiClientRequest } from "@/lib/api.client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -105,11 +106,15 @@ export default function PanelistSignaturesPage() {
           ...prev,
         ]);
       }
+      toast.success("Rapporteur Report e-signature recorded.");
       void queryClient.invalidateQueries({ queryKey: ["pendingRapReports"] });
       void queryClient.invalidateQueries({ queryKey: ["defenseWorkspace"] });
       setSelectedDoc(null);
       setShowConfirm(false);
       setSignatureData("");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Could not record e-signature.");
     },
   });
 
@@ -121,14 +126,11 @@ export default function PanelistSignaturesPage() {
   return (
     <div className="space-y-6 pb-24">
       <div>
-        <h2
-          className="text-2xl font-bold text-(--earist-primary)"
-          style={{ fontFamily: '"Calibri", sans-serif' }}
-        >
+        <h2 className="text-2xl font-bold text-[#e02b20]">
           E-Signatures
         </h2>
-        <p className="text-sm text-(--earist-body-text)">
-          Manage your digital signature specimen and sign pending Committee
+        <p className="text-sm text-[#333333]">
+          Manage your digital signature specimen and sign pending Rapporteur
           Report (RAP) slots and GS-020 Adviser Request forms.
         </p>
       </div>
@@ -188,6 +190,7 @@ export default function PanelistSignaturesPage() {
                     if (!signatureData) {
                       setSignatureData(specimenData);
                     }
+                    toast.success("Default digital signature specimen saved.");
                   }}
                   className="bg-(--earist-primary) text-white hover:bg-(--earist-primary)/90"
                 >

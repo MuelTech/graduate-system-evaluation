@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { apiClientRequest } from "@/lib/api.client";
 import { useStudentThesisJourney } from "@/hooks/use-student-thesis-journey";
+import { PageHeader } from "@/components/ui/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -84,23 +85,16 @@ export default function StudentProfile() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2
-            className="text-2xl font-bold text-(--earist-primary)"
-            style={{ fontFamily: '"Calibri", sans-serif' }}
-          >
-            Student Profile & Academic Record
-          </h2>
-          <p className="text-sm text-(--earist-body-text)">
-            Verified personal demographics, enrollment standing, and Graduate School thesis records.
-          </p>
-        </div>
-        <Badge className="w-fit bg-emerald-100 text-emerald-800 border-emerald-300">
-          <ShieldCheck className="mr-1.5 h-3.5 w-3.5" />
-          Officially Enrolled — AY 2025–2026
-        </Badge>
-      </div>
+      <PageHeader
+        title="Student Profile & Academic Record"
+        description="Verified personal demographics, enrollment standing, and Graduate School thesis records."
+        actions={
+          <Badge className="w-fit bg-emerald-100 text-emerald-800 border-emerald-300">
+            <ShieldCheck className="mr-1.5 h-3.5 w-3.5" />
+            Officially Enrolled — AY 2025–2026
+          </Badge>
+        }
+      />
 
       {isLoading ? (
         <Card>
@@ -123,12 +117,12 @@ export default function StudentProfile() {
                     {profile?.user.lastName?.[0] ?? "D"}
                   </div>
                   <div>
-                    <CardTitle className="text-xl font-bold text-(--earist-primary)">
+                    <CardTitle className="text-xl font-bold text-[#333333]">
                       {fullName}
                     </CardTitle>
                     <p className="text-sm font-medium text-(--earist-secondary)">
                       Student No.:{" "}
-                      <span className="font-mono font-bold text-foreground">
+                      <span className="font-mono font-bold text-[#333333]">
                         {profile?.studentNumber ?? "2025-GS-00142"}
                       </span>
                     </p>
@@ -164,7 +158,7 @@ export default function StudentProfile() {
                     <p className="text-xs font-semibold text-(--earist-body-text)">
                       Institutional Email
                     </p>
-                    <p className="mt-0.5 truncate text-sm font-medium text-foreground">
+                    <p className="mt-0.5 truncate text-sm font-medium text-[#333333]">
                       {profile?.user.email ?? "jmdelacruz.gs@earist.edu.ph"}
                     </p>
                   </div>
@@ -176,7 +170,7 @@ export default function StudentProfile() {
                     <p className="text-xs font-semibold text-(--earist-body-text)">
                       Mobile Contact Number
                     </p>
-                    <p className="mt-0.5 text-sm font-medium text-foreground">
+                    <p className="mt-0.5 text-sm font-medium text-[#333333]">
                       {profile?.cellphone ?? "+63 917 842 5109"}
                     </p>
                   </div>
@@ -188,7 +182,7 @@ export default function StudentProfile() {
                     <p className="text-xs font-semibold text-(--earist-body-text)">
                       Date of Birth
                     </p>
-                    <p className="mt-0.5 text-sm font-medium text-foreground">
+                    <p className="mt-0.5 text-sm font-medium text-[#333333]">
                       {profile?.dateOfBirth
                         ? new Date(profile.dateOfBirth).toLocaleDateString(
                             "en-US",
@@ -209,7 +203,7 @@ export default function StudentProfile() {
                     <p className="text-xs font-semibold text-(--earist-body-text)">
                       Permanent Residential Address
                     </p>
-                    <p className="mt-0.5 text-sm font-medium text-foreground">
+                    <p className="mt-0.5 text-sm font-medium text-[#333333]">
                       {profile?.address ?? "Sampaloc, Manila, Metro Manila"}
                     </p>
                   </div>
@@ -221,7 +215,7 @@ export default function StudentProfile() {
                     <p className="text-xs font-semibold text-(--earist-body-text)">
                       Undergraduate Degree
                     </p>
-                    <p className="mt-0.5 text-sm font-medium text-foreground">
+                    <p className="mt-0.5 text-sm font-medium text-[#333333]">
                       {profile?.undergraduateProgram?.programName ??
                         "B.S. in Secondary Education Major in Mathematics"}
                     </p>
@@ -238,8 +232,8 @@ export default function StudentProfile() {
           >
             <Card className="shadow-xs">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base text-(--earist-primary)">
-                  <GraduationCap className="h-5 w-5 text-(--earist-secondary)" />
+                <CardTitle className="flex items-center gap-2 text-base font-bold text-[#333333]">
+                  <GraduationCap className="h-5 w-5 text-[#e02b20]" />
                   Graduate Program & Residency Standing
                 </CardTitle>
               </CardHeader>
@@ -248,7 +242,7 @@ export default function StudentProfile() {
                   <p className="text-xs font-semibold text-(--earist-body-text)">
                     Enrolled Degree Program
                   </p>
-                  <p className="mt-1 font-bold text-(--earist-primary)">
+                  <p className="mt-1 font-bold text-[#333333]">
                     {profile?.program.programName}
                   </p>
                 </div>
@@ -266,23 +260,23 @@ export default function StudentProfile() {
                     <dt className="text-(--earist-body-text)">
                       Required Total Units
                     </dt>
-                    <dd className="mt-1 font-semibold text-foreground">
+                    <dd className="mt-1 font-semibold text-[#333333]">
                       {profile?.program.totalUnits ?? 36} Academic Units
                     </dd>
                   </div>
                   <div className="rounded-lg border border-(--earist-border-gray) p-3">
                     <dt className="flex items-center gap-1 text-(--earist-body-text)">
-                      <Clock className="h-3.5 w-3.5 text-(--earist-secondary)" />
+                      <Clock className="h-3.5 w-3.5 text-[#e02b20]" />
                       Residency Elapsed
                     </dt>
-                    <dd className="mt-1 font-semibold text-foreground">
+                    <dd className="mt-1 font-semibold text-[#333333]">
                       {profile?.residency?.elapsedSemesters ?? 3} Semesters (Max{" "}
                       {profile?.residency?.maxYears ?? 5} Years)
                     </dd>
                   </div>
                   <div className="rounded-lg border border-(--earist-border-gray) p-3">
                     <dt className="flex items-center gap-1 text-(--earist-body-text)">
-                      <Award className="h-3.5 w-3.5 text-(--earist-secondary)" />
+                      <Award className="h-3.5 w-3.5 text-[#e02b20]" />
                       Comprehensive Exam
                     </dt>
                     <dd className="mt-1 font-semibold text-emerald-700">
@@ -308,8 +302,8 @@ export default function StudentProfile() {
 
             <Card className="shadow-xs">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-base text-(--earist-primary)">
-                  <FileCheck2 className="h-5 w-5 text-(--earist-secondary)" />
+                <CardTitle className="flex items-center gap-2 text-base font-bold text-[#333333]">
+                  <FileCheck2 className="h-5 w-5 text-[#e02b20]" />
                   Thesis & Adviser Assignment Record
                 </CardTitle>
               </CardHeader>
@@ -318,7 +312,7 @@ export default function StudentProfile() {
                   <p className="text-xs font-semibold text-(--earist-secondary)">
                     Approved Official Thesis Title
                   </p>
-                  <p className="mt-1 font-semibold leading-snug text-(--earist-primary)">
+                  <p className="mt-1 font-semibold leading-snug text-[#333333]">
                     {journey?.selectedTitle?.titleText ??
                       "Data-Driven Instructional Supervision and Digital Readiness of Public Secondary School Heads in the Division of Manila"}
                   </p>
@@ -328,9 +322,9 @@ export default function StudentProfile() {
                   <div className="flex items-center justify-between gap-2">
                     <div>
                       <p className="text-xs font-semibold text-(--earist-body-text)">
-                        Official Thesis Adviser (GS Form No. 020)
+                        Official Thesis Adviser (Adviser Request Form)
                       </p>
-                      <p className="mt-0.5 font-bold text-foreground">
+                      <p className="mt-0.5 font-bold text-[#333333]">
                         {profile?.adviserAssignment?.adviserName ??
                           "Dr. Maria Clara R. Santos, EdD"}
                       </p>
@@ -340,7 +334,7 @@ export default function StudentProfile() {
                     </Badge>
                   </div>
                   <p className="mt-1.5 text-xs text-(--earist-body-text)">
-                    Confirmed via Official GS-020 Adviser Request workflow on{" "}
+                    Confirmed via Official Adviser Request Form workflow on{" "}
                     {profile?.adviserAssignment?.assignedDate
                       ? new Date(
                           profile.adviserAssignment.assignedDate,
@@ -369,7 +363,7 @@ export default function StudentProfile() {
                       size: "sm",
                     })}
                   >
-                    View GS-020 Adviser Form
+                    View Adviser Request Form
                   </Link>
                 </div>
               </CardContent>

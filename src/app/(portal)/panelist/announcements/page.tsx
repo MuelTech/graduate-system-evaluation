@@ -44,13 +44,10 @@ export default function PanelistAnnouncements() {
       {/* Header & Search */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2
-            className="text-2xl font-bold text-(--earist-primary)"
-            style={{ fontFamily: '"Calibri", sans-serif' }}
-          >
+          <h2 className="text-2xl font-bold text-[#e02b20]">
             Announcements & Memos
           </h2>
-          <p className="text-sm text-(--earist-body-text)">
+          <p className="text-sm text-[#333333]">
             View official communications and circulars from the Graduate School Office.
           </p>
         </div>
