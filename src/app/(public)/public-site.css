@@ -134,6 +134,13 @@
 .earist-public .public-masthead__register:hover {
   background: #701515;
 }
+.earist-public .public-masthead__mobile-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
 .earist-public .public-masthead__menu-toggle {
   display: inline-flex;
   width: 44px;
@@ -494,6 +501,66 @@
     inset: 0;
   }
 }
+@media (min-width: 960px) {
+  .earist-public .public-masthead__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    min-height: 80px;
+    padding-block: 6px;
+  }
+  .earist-public .public-masthead__identity {
+    justify-self: start;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .earist-public .public-masthead__seal {
+    width: 52px;
+    height: 52px;
+  }
+  .earist-public .public-masthead__school {
+    font-size: 16px;
+  }
+  .earist-public .public-masthead__full-name {
+    font-size: 11px;
+    max-width: 210px;
+    line-height: 1.2;
+  }
+  .earist-public .public-masthead__desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  .earist-public .public-masthead__link {
+    font-size: 14px;
+    padding-inline: 8px;
+    min-height: 38px;
+  }
+  .earist-public .public-masthead__desktop-account {
+    display: flex;
+    justify-self: end;
+    align-items: center;
+    gap: 8px;
+    border-left: 1px solid #e5dfd5;
+    padding-left: 10px;
+    flex-shrink: 0;
+  }
+  .earist-public .public-masthead__signin,
+  .earist-public .public-masthead__register {
+    min-height: 38px;
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+  .earist-public .public-masthead__mobile-actions,
+  .earist-public .public-masthead__menu-toggle,
+  .earist-public .public-masthead__backdrop,
+  .earist-public .public-masthead__panel {
+    display: none !important;
+  }
+}
+
 @media (min-width: 1200px) {
   .earist-public .public-masthead__inner {
     display: grid;
@@ -511,11 +578,23 @@
     width: 60px;
     height: 60px;
   }
+  .earist-public .public-masthead__school {
+    font-size: 18px;
+  }
+  .earist-public .public-masthead__full-name {
+    font-size: 12px;
+    max-width: 270px;
+  }
   .earist-public .public-masthead__desktop-nav {
     display: flex;
     align-items: center;
     gap: 14px;
     white-space: nowrap;
+  }
+  .earist-public .public-masthead__link {
+    font-size: 15px;
+    padding-inline: 10px;
+    min-height: 44px;
   }
   .earist-public .public-masthead__desktop-account {
     display: flex;
@@ -525,10 +604,17 @@
     border-left: 1px solid #e5dfd5;
     padding-left: 12px;
   }
+  .earist-public .public-masthead__signin,
+  .earist-public .public-masthead__register {
+    min-height: 44px;
+    font-size: 15px;
+    padding: 9px 16px;
+  }
+  .earist-public .public-masthead__mobile-actions,
   .earist-public .public-masthead__menu-toggle,
   .earist-public .public-masthead__backdrop,
   .earist-public .public-masthead__panel {
-    display: none;
+    display: none !important;
   }
   .earist-public .public-hero__title {
     font-size: 68px;

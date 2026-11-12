@@ -682,7 +682,7 @@ export function PageGuideOverlay() {
       return;
     }
 
-    const isMobile = window.innerWidth < 1024;
+    const isMobile = window.innerWidth < 768;
     const shouldOpenSidebar =
       isMobile && isSidebarTarget(currentStep.targetSelector);
 

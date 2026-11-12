@@ -93,7 +93,7 @@ export function Navbar() {
         </div>
         {/* Mobile Actions: Page Guide Trigger + Menu Toggle */}
         <div
-          className="flex items-center gap-2 min-[900px]:hidden"
+          className="public-masthead__mobile-actions"
           data-guide="public-navbar-mobile"
         >
           <PageGuideTrigger compact label="Guide" />

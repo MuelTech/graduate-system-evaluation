@@ -145,7 +145,7 @@ export default function StudentLayout({
     <div className="flex min-h-screen bg-[#FFF8F0]">
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs lg:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -154,7 +154,7 @@ export default function StudentLayout({
         className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r border-black/10 bg-[#b71c1c] text-white shadow-xl transition-all duration-300 ${
           collapsed ? "w-[72px]" : "w-64"
         } ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+          sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
         <div className="flex h-16 items-center justify-between border-b border-white/15 px-4">
@@ -176,7 +176,7 @@ export default function StudentLayout({
           <button
             onClick={() => setSidebarOpen(false)}
             aria-label="Close navigation"
-            className="rounded-md p-1 text-white/80 hover:bg-white/10 hover:text-white lg:hidden"
+            className="rounded-md p-1 text-white/80 hover:bg-white/10 hover:text-white md:hidden"
           >
             <X className="h-5 w-5" />
           </button>
@@ -345,7 +345,7 @@ export default function StudentLayout({
 
       <div
         className={`flex min-w-0 flex-1 flex-col transition-all duration-300 ${
-          collapsed ? "lg:ml-[72px]" : "lg:ml-64"
+          collapsed ? "md:ml-[72px]" : "md:ml-64"
         }`}
       >
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-100 bg-white px-4 shadow-2xs sm:px-6">
@@ -354,14 +354,14 @@ export default function StudentLayout({
               data-guide="mobile-sidebar-toggle"
               onClick={() => setSidebarOpen(true)}
               aria-label="Open navigation"
-              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#333333] lg:hidden"
+              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#333333] md:hidden"
             >
               <Menu className="h-5 w-5" />
             </button>
             <button
               onClick={() => setCollapsed(!collapsed)}
               aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              className="hidden rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-[#333333] lg:inline-flex"
+              className="hidden rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-[#333333] md:inline-flex"
               title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
               <PanelLeft className="h-5 w-5" />
