@@ -20,10 +20,11 @@ export interface RouteGuideConfig {
 export const COMMON_APPLICANT_SHELL_STEPS: GuideStep[] = [
   {
     id: "applicant-sidebar-nav",
-    targetSelector: '[data-guide="applicant-sidebar-nav"], [data-guide="applicant-sidebar"]',
+    targetSelector:
+      '[data-guide="applicant-sidebar-nav"], [data-guide="applicant-sidebar"], [data-guide="mobile-sidebar-toggle"]',
     title: "Applicant Portal Navigation",
     description:
-      "Use this sidebar to track your application from Program Alignment, Exam Scheduling, and Entrance Examination to Exam Results and COR Upload.",
+      "Use this sidebar (or tap the ≡ menu on mobile) to track your application from Program Alignment, Exam Scheduling, and Entrance Examination to Exam Results and COR Upload.",
     placement: "right",
     roleContext: "applicant",
   },
@@ -32,16 +33,18 @@ export const COMMON_APPLICANT_SHELL_STEPS: GuideStep[] = [
 export const COMMON_STUDENT_SHELL_STEPS: GuideStep[] = [
   {
     id: "student-sidebar-nav",
-    targetSelector: '[data-guide="student-sidebar-nav"]',
+    targetSelector:
+      '[data-guide="student-sidebar-nav"], [data-guide="mobile-sidebar-toggle"]',
     title: "Student Portal Navigation",
     description:
-      "Use this sidebar to navigate across your Dashboard, Academic Profile, Curriculum Checklist, Academic Journey timeline, and the Graduate Thesis Repository.",
+      "Use this sidebar (or tap the ≡ menu on mobile) to navigate across your Dashboard, Academic Profile, Curriculum Checklist, Academic Journey timeline, and the Graduate Thesis Repository.",
     placement: "right",
     roleContext: "student",
   },
   {
     id: "student-thesis-journey-menu",
-    targetSelector: '[data-guide="student-thesis-journey-menu"]',
+    targetSelector:
+      '[data-guide="student-thesis-journey-menu"], [data-guide="student-sidebar-nav"], [data-guide="mobile-sidebar-toggle"]',
     title: "Unlocked 5-Step Thesis Journey",
     description:
       "In this Evaluation Edition, all 5 Thesis Journey milestones (Title Defense, Thesis Adviser Request, Proposal Defense, Plagiarism & Similarity Check, and Final Defense) are unlocked so you can freely evaluate every workflow screen.",
@@ -53,10 +56,11 @@ export const COMMON_STUDENT_SHELL_STEPS: GuideStep[] = [
 export const COMMON_PANELIST_SHELL_STEPS: GuideStep[] = [
   {
     id: "faculty-sidebar-nav",
-    targetSelector: '[data-guide="faculty-sidebar-nav"]',
+    targetSelector:
+      '[data-guide="faculty-sidebar-nav"], [data-guide="mobile-sidebar-toggle"]',
     title: "Faculty Portal Navigation",
     description:
-      "Use this sidebar to manage assigned oral defenses, supervise advisees, grade applicant entrance exam essays, and digitally sign official documents.",
+      "Use this sidebar (or tap the ≡ menu on mobile) to manage assigned oral defenses, supervise advisees, grade applicant entrance exam essays, and digitally sign official documents.",
     placement: "right",
     roleContext: "panelist",
   },
@@ -1225,7 +1229,8 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
     steps: [
       {
         id: "public-navbar-signin",
-        targetSelector: '[data-guide="public-navbar-signin"]',
+        targetSelector:
+          '[data-guide="public-navbar-signin"], [data-guide="public-navbar-mobile"], [data-guide="page-guide-trigger"]',
         title: "Sign In or Create an Applicant Account",
         description:
           "Click 'Sign In' to select your evaluation role (Applicant, Graduate Student, or Faculty) or 'Create Account' to test the Applicant Registration workflow.",

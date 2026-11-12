@@ -200,6 +200,8 @@
   - Replace all jargon (`GS-020`/`GS-20`, `RAP`, `STRIKE`, `DL-9`) in `guide-definitions.ts` and `ScenarioSwitcherBar` options with clear, self-explanatory respondent labels.
 - [x] **11.2 Complete Section Coverage Audit (`data-guide`):**
   - Verify every visible section across Public, Applicant, Student, and Faculty pages has a working `data-guide` target and accurate guide step.
+  - Added mobile `PageGuideTrigger` to public landing navbar (`min-[900px]:hidden`) and inside the mobile navigation drawer.
+  - Implemented responsive mobile drawer auto-sync (`earist-guide-sidebar-toggle` event) so portal sidebars slide open automatically during guide steps targeting navigation menus, with safe viewport spotlight clamping and centered card geometry on mobile.
 - [x] **11.3 Production Build & Verification:**
-  - Run `npm run build` and verify zero TypeScript or Next.js build errors.
+  - Run `npm run build` and verify zero TypeScript or Next.js build errors (47/47 static pages generated cleanly).
 

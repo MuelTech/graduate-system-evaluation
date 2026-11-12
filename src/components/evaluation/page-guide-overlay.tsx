@@ -273,6 +273,35 @@ const CARD_ESTIMATED_HEIGHT = 250;
 const SPOTLIGHT_PADDING = 8;
 const CARD_GAP = 28;
 
+function isSidebarTarget(selector?: string): boolean {
+  if (!selector) return false;
+  return (
+    selector.includes("sidebar-nav") ||
+    selector.includes("thesis-journey-menu") ||
+    selector.includes("sidebar")
+  );
+}
+
+function isElementVisibleInViewport(el: Element): boolean {
+  if (typeof window === "undefined") return false;
+  const rect = el.getBoundingClientRect();
+  if (rect.width <= 0 || rect.height <= 0) return false;
+  // If element is translated completely offscreen to the left or right (e.g. mobile hidden sidebar)
+  if (rect.right <= 10 || rect.left >= window.innerWidth - 10) return false;
+  // If element is placed completely offscreen vertically
+  if (rect.bottom <= 0 || rect.top >= window.innerHeight) return false;
+
+  const style = window.getComputedStyle(el);
+  if (
+    style.display === "none" ||
+    style.visibility === "hidden" ||
+    style.opacity === "0"
+  ) {
+    return false;
+  }
+  return true;
+}
+
 function resolveTargetElement(selectorList: string): Element | null {
   if (typeof document === "undefined" || !selectorList) return null;
   const selectors = selectorList
@@ -282,11 +311,8 @@ function resolveTargetElement(selectorList: string): Element | null {
   for (const sel of selectors) {
     try {
       const el = document.querySelector(sel);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0) {
-          return el;
-        }
+      if (el && isElementVisibleInViewport(el)) {
+        return el;
       }
     } catch {
       // Ignore invalid selector syntax
@@ -319,11 +345,64 @@ function computeCardAndArrowGeometry(
     };
   }
 
+  const isMobile = viewportW < 768;
   const effectiveCardWidth = Math.min(CARD_WIDTH, viewportW - 32);
   const targetCenterX = targetRect.left + targetRect.width / 2;
   const targetCenterY = targetRect.top + targetRect.height / 2;
 
-  // Determine best placement with available viewport space
+  // On compact mobile screens, horizontally center card and place it either above or below
+  if (isMobile) {
+    const cardLeft = Math.max(16, (viewportW - effectiveCardWidth) / 2);
+    const isTargetUpper = targetCenterY < viewportH / 2;
+    const cardTop = isTargetUpper
+      ? Math.min(
+          viewportH - CARD_ESTIMATED_HEIGHT - 16,
+          Math.max(16, targetRect.bottom + SPOTLIGHT_PADDING + 16),
+        )
+      : Math.max(
+          16,
+          Math.min(
+            viewportH - CARD_ESTIMATED_HEIGHT - 16,
+            targetRect.top - SPOTLIGHT_PADDING - CARD_ESTIMATED_HEIGHT - 16,
+          ),
+        );
+
+    const arrowStart = isTargetUpper
+      ? { x: cardLeft + effectiveCardWidth / 2, y: cardTop - 4 }
+      : {
+          x: cardLeft + effectiveCardWidth / 2,
+          y: cardTop + CARD_ESTIMATED_HEIGHT + 4,
+        };
+
+    const arrowEnd = isTargetUpper
+      ? {
+          x: Math.max(20, Math.min(viewportW - 20, targetCenterX)),
+          y: Math.min(cardTop - 8, targetRect.bottom + SPOTLIGHT_PADDING + 4),
+        }
+      : {
+          x: Math.max(20, Math.min(viewportW - 20, targetCenterX)),
+          y: Math.max(
+            cardTop + CARD_ESTIMATED_HEIGHT + 8,
+            targetRect.top - SPOTLIGHT_PADDING - 4,
+          ),
+        };
+
+    const arrowControl = {
+      x: (arrowStart.x + arrowEnd.x) / 2,
+      y: (arrowStart.y + arrowEnd.y) / 2,
+    };
+
+    return {
+      cardTop,
+      cardLeft,
+      resolvedPlacement: isTargetUpper ? "bottom" : "top",
+      arrowStart,
+      arrowEnd,
+      arrowControl,
+    };
+  }
+
+  // Determine best placement with available viewport space (Desktop)
   let placement: GuidePlacement = preferredPlacement;
   const spaceBottom = viewportH - targetRect.bottom;
   const spaceTop = targetRect.top;
@@ -583,6 +662,53 @@ export function PageGuideOverlay() {
     };
   }, [isOpen, updateMeasurement, closeGuide, nextStep, prevStep]);
 
+  // Auto-toggle mobile sidebar when step targets sidebar navigation
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!isOpen || !currentStep) {
+      window.dispatchEvent(
+        new CustomEvent("earist-guide-sidebar-toggle", {
+          detail: { open: false },
+        }),
+      );
+      return;
+    }
+
+    const isMobile = window.innerWidth < 1024;
+    const shouldOpenSidebar =
+      isMobile && isSidebarTarget(currentStep.targetSelector);
+
+    window.dispatchEvent(
+      new CustomEvent("earist-guide-sidebar-toggle", {
+        detail: { open: shouldOpenSidebar },
+      }),
+    );
+
+    if (isMobile) {
+      const t1 = setTimeout(updateMeasurement, 60);
+      const t2 = setTimeout(updateMeasurement, 160);
+      const t3 = setTimeout(updateMeasurement, 340);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+      };
+    }
+  }, [isOpen, currentStep, updateMeasurement]);
+
+  // Ensure sidebar is closed when guide overlay is unmounted
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("earist-guide-sidebar-toggle", {
+            detail: { open: false },
+          }),
+        );
+      }
+    };
+  }, []);
+
   if (!isPrimaryInstance || !isOpen || !currentStep) {
     return null;
   }
@@ -602,13 +728,15 @@ export function PageGuideOverlay() {
   const arrowMarkerId = `earist-guide-arrow-${instanceId.replace(/:/g, "")}`;
 
   const cutoutX = targetRect
-    ? Math.max(4, targetRect.left - SPOTLIGHT_PADDING)
+    ? Math.max(0, Math.min(viewport.w - 10, targetRect.left - SPOTLIGHT_PADDING))
     : 0;
   const cutoutY = targetRect
-    ? Math.max(4, targetRect.top - SPOTLIGHT_PADDING)
+    ? Math.max(0, Math.min(viewport.h - 10, targetRect.top - SPOTLIGHT_PADDING))
     : 0;
-  const cutoutW = targetRect ? targetRect.width + SPOTLIGHT_PADDING * 2 : 0;
-  const cutoutH = targetRect ? targetRect.height + SPOTLIGHT_PADDING * 2 : 0;
+  const rawCutoutW = targetRect ? targetRect.width + SPOTLIGHT_PADDING * 2 : 0;
+  const rawCutoutH = targetRect ? targetRect.height + SPOTLIGHT_PADDING * 2 : 0;
+  const cutoutW = Math.max(0, Math.min(viewport.w - cutoutX, rawCutoutW));
+  const cutoutH = Math.max(0, Math.min(viewport.h - cutoutY, rawCutoutH));
 
   return (
     <div
@@ -696,7 +824,7 @@ export function PageGuideOverlay() {
       </svg>
 
       {/* Gold Spotlight Ring around Target Element */}
-      {targetRect && (
+      {targetRect && cutoutW > 0 && cutoutH > 0 && (
         <div
           className="fixed pointer-events-none rounded-xl ring-2 ring-(--earist-accent) shadow-[0_0_0_4px_rgba(212,165,72,0.28)] transition-all duration-200"
           style={{

@@ -91,22 +91,29 @@ export function Navbar() {
             Create Account
           </Link>
         </div>
-        <button
-          ref={menuButtonRef}
-          type="button"
-          className="public-masthead__menu-toggle"
-          onClick={() => setIsOpen((open) => !open)}
-          onKeyDown={handleMenuKeyDown}
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isOpen}
-          aria-controls={menuId}
+        {/* Mobile Actions: Page Guide Trigger + Menu Toggle */}
+        <div
+          className="flex items-center gap-2 min-[900px]:hidden"
+          data-guide="public-navbar-mobile"
         >
-          {isOpen ? (
-            <X aria-hidden="true" size={24} />
-          ) : (
-            <Menu aria-hidden="true" size={24} />
-          )}
-        </button>
+          <PageGuideTrigger compact label="Guide" />
+          <button
+            ref={menuButtonRef}
+            type="button"
+            className="public-masthead__menu-toggle"
+            onClick={() => setIsOpen((open) => !open)}
+            onKeyDown={handleMenuKeyDown}
+            aria-label={isOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isOpen}
+            aria-controls={menuId}
+          >
+            {isOpen ? (
+              <X aria-hidden="true" size={24} />
+            ) : (
+              <Menu aria-hidden="true" size={24} />
+            )}
+          </button>
+        </div>
       </div>
       <div
         className="public-masthead__backdrop"
@@ -169,8 +176,15 @@ export function Navbar() {
           </div>
           <div className="public-masthead__mobile-account">
             <p className="public-masthead__mobile-caption">
-              Portal Access &amp; Applicant Services
+              Portal Access &amp; Evaluation Tools
             </p>
+            <div className="mb-2" onClick={closeMenu}>
+              <PageGuideTrigger
+                className="w-full justify-center"
+                label="Launch Page Guide Tour"
+                compact={false}
+              />
+            </div>
             <Link
               href="/login"
               onClick={closeMenu}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   LayoutDashboard,
@@ -55,6 +55,22 @@ export default function PanelistLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
+  // Sync mobile drawer when the interactive page guide highlights sidebar navigation items
+  useEffect(() => {
+    const handleGuideSidebar = (e: Event) => {
+      const custom = e as CustomEvent<{ open?: boolean }>;
+      if (typeof custom.detail?.open === "boolean") {
+        setSidebarOpen(custom.detail.open);
+      }
+    };
+    window.addEventListener("earist-guide-sidebar-toggle", handleGuideSidebar);
+    return () =>
+      window.removeEventListener(
+        "earist-guide-sidebar-toggle",
+        handleGuideSidebar,
+      );
+  }, []);
+
   const { data: panelistProfile } = useQuery<Panelist | null>({
     queryKey: ["panelistLayoutProfile"],
     queryFn: async () => {
@@ -102,6 +118,7 @@ export default function PanelistLayout({
           <NotificationBell role="FACULTY" />
           <button
             type="button"
+            data-guide="mobile-sidebar-toggle"
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="rounded p-1 hover:bg-black/10"
           >

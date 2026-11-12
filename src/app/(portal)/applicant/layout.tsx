@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChatbotWidget } from "@/components/chatbot/chatbot-widget";
@@ -48,6 +48,22 @@ export default function ApplicantLayout({
   const { data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+
+  // Sync mobile drawer when the interactive page guide highlights sidebar navigation items
+  useEffect(() => {
+    const handleGuideSidebar = (e: Event) => {
+      const custom = e as CustomEvent<{ open?: boolean }>;
+      if (typeof custom.detail?.open === "boolean") {
+        setSidebarOpen(custom.detail.open);
+      }
+    };
+    window.addEventListener("earist-guide-sidebar-toggle", handleGuideSidebar);
+    return () =>
+      window.removeEventListener(
+        "earist-guide-sidebar-toggle",
+        handleGuideSidebar,
+      );
+  }, []);
 
   // Generate User Avatar Initial from Session
   const userInitial = session?.user?.name
@@ -153,6 +169,7 @@ export default function ApplicantLayout({
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-100 bg-white px-4 shadow-2xs sm:px-6">
           <div className="flex items-center gap-3">
             <button
+              data-guide="mobile-sidebar-toggle"
               onClick={() => setSidebarOpen(true)}
               aria-label="Open navigation"
               className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#333333] lg:hidden"
