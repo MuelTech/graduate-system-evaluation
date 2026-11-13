@@ -1,7 +1,9 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   Bell,
   CheckCircle2,
@@ -27,6 +29,10 @@ export default function PanelistNotificationsPage() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["panelistNotifications"] });
       void queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      toast.success("Notification marked as read.");
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || "Failed to mark notification as read.");
     },
   });
 
@@ -45,21 +51,15 @@ export default function PanelistNotificationsPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-[#e02b20]">Notifications</h2>
-        <p className="text-sm text-[#333333]">
-          Track defense assignments, incoming Thesis Adviser Requests,
-          manuscript review submissions, and Rapporteur Report signature alerts.
-        </p>
-      </div>
+      <PageHeader
+        title="Notifications"
+        description="View all your notifications."
+      />
 
-      <Card
-        data-guide="notifications-list"
-        className="border-gray-200 shadow-sm"
-      >
+      <Card data-guide="notifications-list">
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="p-8 text-center text-sm text-[#333333]">
+            <div className="p-8 text-center text-sm text-gray-500">
               Loading...
             </div>
           ) : notifications.length === 0 ? (
@@ -70,12 +70,12 @@ export default function PanelistNotificationsPage() {
               </p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200">
+            <div className="divide-y divide-gray-100">
               {notifications.map((n: NotificationItem) => (
                 <div
                   key={n.id}
                   className={`flex gap-4 p-4 transition-colors sm:p-6 ${
-                    n.isRead ? "bg-white" : "bg-red-50/40"
+                    n.isRead ? "bg-white" : "bg-[#FFF8F0]"
                   }`}
                 >
                   <div className="mt-1">{getIcon(n.type || "MEMO")}</div>
@@ -83,18 +83,18 @@ export default function PanelistNotificationsPage() {
                     <div className="mb-1 flex items-start justify-between">
                       <h4
                         className={`text-sm font-bold ${
-                          n.isRead ? "text-[#333333]" : "text-[#e02b20]"
+                          n.isRead ? "text-gray-600" : "text-[#333333]"
                         }`}
                       >
                         {n.title}
                       </h4>
-                      <span className="text-[10px] text-gray-500">
+                      <span className="text-[11px] text-gray-400">
                         {new Date(n.createdAt).toLocaleDateString()}
                       </span>
                     </div>
                     <p
                       className={`mb-3 text-sm ${
-                        n.isRead ? "text-[#333333]" : "text-black"
+                        n.isRead ? "text-gray-500" : "text-[#333333]"
                       }`}
                     >
                       {n.message}
@@ -103,7 +103,7 @@ export default function PanelistNotificationsPage() {
                       <button
                         type="button"
                         onClick={() => markAsRead.mutate(n.id)}
-                        className="flex cursor-pointer items-center gap-1 text-xs font-bold text-[#e02b20] hover:underline"
+                        className="flex cursor-pointer items-center gap-1 text-xs font-semibold text-[#e02b20] hover:underline"
                       >
                         <CheckCircle2 className="h-3 w-3" /> Mark as Read
                       </button>

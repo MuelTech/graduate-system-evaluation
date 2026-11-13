@@ -16,6 +16,7 @@ import {
   FileCheck2,
   BadgeCheck,
   Upload,
+  Bell,
   GraduationCap,
   Menu,
   X,
@@ -35,6 +36,7 @@ const navItems = [
   { href: "/applicant/exam", label: "Entrance Exam", icon: FileCheck2 },
   { href: "/applicant/results", label: "Exam Results", icon: BadgeCheck },
   { href: "/applicant/cor-upload", label: "COR Upload", icon: Upload },
+  { href: "/applicant/notifications", label: "Notifications", icon: Bell },
 ];
 
 export default function ApplicantLayout({
@@ -64,18 +66,16 @@ export default function ApplicantLayout({
   }, []);
 
   // Generate User Avatar Initial from Session
-  const userInitial = session?.user?.name
-    ? session.user.name.charAt(0).toUpperCase()
-    : session?.user?.email
-      ? session.user.email.charAt(0).toUpperCase()
-      : "M";
+  const userInitial = session?.user?.email
+    ? session.user.email.charAt(0).toUpperCase()
+    : "U";
 
   return (
     <div className="flex min-h-screen bg-[#FFF8F0]">
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs md:hidden"
+          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-xs lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -86,7 +86,7 @@ export default function ApplicantLayout({
         className={`fixed inset-y-0 left-0 z-50 flex flex-col border-r border-black/10 bg-[#b71c1c] text-white shadow-xl transition-all duration-300 ${
           collapsed ? "w-[72px]" : "w-64"
         } ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
         {/* Logo */}
@@ -109,7 +109,7 @@ export default function ApplicantLayout({
           <button
             onClick={() => setSidebarOpen(false)}
             aria-label="Close navigation"
-            className="rounded-md p-1 text-white/80 hover:bg-white/10 hover:text-white md:hidden"
+            className="rounded-md p-1 text-white/80 hover:bg-white/10 hover:text-white lg:hidden"
           >
             <X className="h-5 w-5" />
           </button>
@@ -160,7 +160,7 @@ export default function ApplicantLayout({
       {/* Main Content */}
       <div
         className={`flex min-w-0 flex-1 flex-col transition-all duration-300 ${
-          collapsed ? "md:ml-[72px]" : "md:ml-64"
+          collapsed ? "lg:ml-[72px]" : "lg:ml-64"
         }`}
       >
         {/* Top Header */}
@@ -170,14 +170,14 @@ export default function ApplicantLayout({
               data-guide="mobile-sidebar-toggle"
               onClick={() => setSidebarOpen(true)}
               aria-label="Open navigation"
-              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#333333] md:hidden"
+              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-[#333333] lg:hidden"
             >
               <Menu className="h-5 w-5" />
             </button>
             <button
               onClick={() => setCollapsed(!collapsed)}
               aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              className="hidden rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-[#333333] md:inline-flex"
+              className="hidden rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-[#333333] lg:inline-flex"
               title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
             >
               <PanelLeft className="h-5 w-5" />

@@ -28,6 +28,12 @@ export interface EvaluationUser {
   academicRank?: string;
   specialization?: string;
   officeAffiliation?: string;
+  facultyProfile?: {
+    id: string;
+    isExternal: boolean;
+    isAvailableAsAdviser: boolean;
+    canEvaluateEssays: boolean;
+  };
 }
 
 export interface EvaluationSession {
@@ -76,6 +82,12 @@ export const EVALUATION_PERSONAS: Record<EvaluationRole, EvaluationUser> = {
     specialization:
       "Educational Leadership, Curriculum Development, & Policy Research",
     officeAffiliation: "EARIST Graduate School — College of Education",
+    facultyProfile: {
+      id: "panelist-eval-01",
+      isExternal: false,
+      isAvailableAsAdviser: true,
+      canEvaluateEssays: true,
+    },
   },
 };
 

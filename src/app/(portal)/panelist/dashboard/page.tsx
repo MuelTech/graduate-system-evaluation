@@ -1,680 +1,717 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { apiClientRequest } from "@/lib/api.client";
+import type { ApiApplication } from "@/types";
+import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { apiClientRequest } from "@/lib/api.client";
-import { cn } from "@/lib/utils";
+import { PageHeader } from "@/components/ui/page-header";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
-  formatWallDate,
-  formatWallTime,
+  CalendarClock,
+  ChevronRight,
+  CircleAlert,
+  CirclePlay,
+  ClipboardCheck,
+  ClipboardList,
+  Clock,
+  FileSignature,
+  FileText,
+  Gavel,
+  Inbox,
+  MapPin,
+  NotebookPen,
+  PenLine,
+  RefreshCw,
+  UserCheck,
+} from "lucide-react";
+import {
   MAX_VISIBLE_NOTIFICATIONS,
   MAX_VISIBLE_OTHER_UPCOMING,
   MAX_VISIBLE_TASKS,
   MAX_VISIBLE_WAITING,
+  formatWallDate,
+  formatWallTime,
   panelistDashboardQueryKey,
+  type ActiveDefenseItem,
   type PanelistAttentionCategory,
+  type PanelistAttentionTask,
   type PanelistDashboard,
   type PanelistNotification,
   type UpcomingDefenseItem,
+  type WaitingItem,
 } from "@/lib/panelist-dashboard";
-import type { ApiApplication, Panelist } from "@/types/index";
-import {
-  AlertCircle,
-  ArrowRight,
-  Bell,
-  BookOpen,
-  Calendar,
-  CheckCircle2,
-  ClipboardCheck,
-  Clock,
-  FileSignature,
-  Gavel,
-  MapPin,
-  PlayCircle,
-  UserCheck,
-} from "lucide-react";
 
-const CATEGORY_BADGE: Record<
-  PanelistAttentionCategory,
-  { label: string; className: string }
-> = {
-  EVALUATION: {
-    label: "Evaluation",
-    className: "border-red-200 bg-red-50 text-red-700",
-  },
-  CHAIRMAN_CONCLUSION: {
-    label: "Chairman Decision",
-    className: "border-red-200 bg-red-50 text-red-700",
-  },
-  RAPPORTEUR_FINALIZE: {
-    label: "Rapporteur Report",
-    className: "border-red-200 bg-red-50 text-red-700",
-  },
-  TITLE_START: {
-    label: "Start Defense",
-    className: "border-amber-200 bg-amber-50 text-amber-800",
-  },
-  RAP_SIGNATURE: {
-    label: "E-Signature",
-    className: "border-amber-200 bg-amber-50 text-amber-800",
-  },
-  ADVISER_REQUEST: {
-    label: "Adviser Request",
-    className: "border-amber-200 bg-amber-50 text-amber-800",
-  },
-  ADVISER_MANUSCRIPT_REVIEW: {
-    label: "Manuscript Review",
-    className: "border-amber-200 bg-amber-50 text-amber-800",
-  },
+const CATEGORY_ICON: Record<PanelistAttentionCategory, typeof ClipboardList> = {
+  EVALUATION: PenLine,
+  CHAIRMAN_CONCLUSION: Gavel,
+  RAPPORTEUR_FINALIZE: NotebookPen,
+  TITLE_START: CirclePlay,
+  RAP_SIGNATURE: FileSignature,
+  ADVISER_REQUEST: UserCheck,
+  ADVISER_MANUSCRIPT_REVIEW: FileText,
 };
 
-function CategoryIcon({ category }: { category: PanelistAttentionCategory }) {
-  switch (category) {
-    case "EVALUATION":
-      return <ClipboardCheck className="h-4 w-4 text-[#e02b20]" />;
-    case "CHAIRMAN_CONCLUSION":
-      return <Gavel className="h-4 w-4 text-[#e02b20]" />;
-    case "RAPPORTEUR_FINALIZE":
-    case "RAP_SIGNATURE":
-      return <FileSignature className="h-4 w-4 text-[#e02b20]" />;
-    case "TITLE_START":
-      return <PlayCircle className="h-4 w-4 text-[#e02b20]" />;
-    case "ADVISER_REQUEST":
-      return <UserCheck className="h-4 w-4 text-[#e02b20]" />;
-    case "ADVISER_MANUSCRIPT_REVIEW":
-      return <BookOpen className="h-4 w-4 text-[#e02b20]" />;
-  }
+/* ---------------------------------------------------------------- surfaces */
+
+function SectionCard({
+  title,
+  description,
+  action,
+  dataGuide,
+  children,
+}: {
+  title: string;
+  description?: string;
+  action?: React.ReactNode;
+  dataGuide?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Card data-guide={dataGuide}>
+      <CardHeader>
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 space-y-1">
+            <h2 className="text-base font-bold text-[#333333]">
+              {title}
+            </h2>
+            {description ? (
+              <p className="text-xs text-gray-500">{description}</p>
+            ) : null}
+          </div>
+          {action ? <div className="shrink-0">{action}</div> : null}
+        </div>
+      </CardHeader>
+      <CardContent>{children}</CardContent>
+    </Card>
+  );
 }
 
-export default function PanelistDashboardPage() {
+function EmptyState({ message }: { message: string }) {
+  return (
+    <div className="flex flex-col items-center gap-2 py-6 text-center">
+      <Inbox
+        className="h-6 w-6 text-gray-300"
+        aria-hidden="true"
+      />
+      <p className="text-sm text-gray-500">{message}</p>
+    </div>
+  );
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-6" aria-busy="true" aria-live="polite">
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-56" />
+        <Skeleton className="h-4 w-96 max-w-full" />
+      </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {Array.from({ length: 2 }).map((_, i) => (
+          <Skeleton key={i} className="h-28 w-full rounded-xl" />
+        ))}
+      </div>
+      <Skeleton className="h-64 w-full rounded-xl" />
+      <Skeleton className="h-48 w-full rounded-xl" />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <Skeleton className="h-64 w-full rounded-xl" />
+        <Skeleton className="h-64 w-full rounded-xl" />
+      </div>
+      <Skeleton className="h-56 w-full rounded-xl" />
+    </div>
+  );
+}
+
+function LoadError({
+  label,
+  onRetry,
+  retrying,
+  compact = false,
+}: {
+  label: string;
+  onRetry: () => void;
+  retrying?: boolean;
+  compact?: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex flex-col items-center gap-3 text-center",
+        compact ? "py-6" : "py-12",
+      )}
+    >
+      <CircleAlert
+        className="h-8 w-8 text-[#e02b20]"
+        aria-hidden="true"
+      />
+      <div className="space-y-1">
+        <p className="text-sm font-semibold text-[#333333]">{label}</p>
+        <p className="text-sm text-gray-500">
+          Something went wrong while loading this section. Please try again.
+        </p>
+      </div>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={onRetry}
+        disabled={retrying}
+      >
+        <RefreshCw
+          className={cn("mr-2 h-4 w-4", retrying && "animate-spin")}
+          aria-hidden="true"
+        />
+        Retry
+      </Button>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------- rows */
+
+function toFacultyHref(href: string): string {
+  return href.replace(/^\/panelist(?=\/|$)/, "/faculty");
+}
+
+function TaskRow({ task }: { task: PanelistAttentionTask }) {
+  const Icon = CATEGORY_ICON[task.category] ?? ClipboardList;
+  return (
+    <li className="flex flex-col gap-3 rounded-xl border border-gray-100 bg-gray-50/70 p-3.5 sm:flex-row sm:items-center">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[#e02b20] shadow-xs">
+        <Icon className="h-5 w-5" aria-hidden="true" />
+      </span>
+      <div className="min-w-0 flex-1 space-y-0.5">
+        <p className="text-sm font-semibold text-[#333333]">
+          {task.title}
+        </p>
+        <p className="text-xs text-gray-500">
+          {task.studentName ?? "Academic record"}
+          {task.stage ? ` · ${task.stage}` : ""}
+          {task.responsibility ? ` · ${task.responsibility}` : ""}
+        </p>
+        <p className="text-xs text-gray-500">
+          {task.statusText}
+          {task.date ? ` · ${formatWallDate(task.date)}` : ""}
+        </p>
+      </div>
+      <Link
+        href={toFacultyHref(task.href)}
+        className={cn(
+          buttonVariants({ variant: "outline", size: "sm" }),
+          "shrink-0 justify-between",
+        )}
+      >
+        {task.actionLabel}
+        <ChevronRight className="ml-1 h-4 w-4" aria-hidden="true" />
+      </Link>
+    </li>
+  );
+}
+
+function ActiveDefenseRow({ item }: { item: ActiveDefenseItem }) {
+  return (
+    <li>
+      <Link
+        href={toFacultyHref(item.href)}
+        className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-gray-100 bg-gray-50/70 p-3.5 transition-colors hover:bg-[#e02b20]/5 focus-visible:ring-2 focus-visible:ring-[#e02b20] focus-visible:outline-none"
+      >
+        <span className="min-w-0">
+          <span className="block text-sm font-semibold text-[#333333]">
+            {item.studentName}
+          </span>
+          <span className="block text-xs text-gray-500">
+            {item.stageLabel} · Your role: {item.roleLabel}
+            {item.programName ? ` · ${item.programName}` : ""}
+          </span>
+        </span>
+        <span className="flex shrink-0 items-center gap-2">
+          <Badge className="bg-amber-50 text-amber-700 border border-amber-200">
+            {item.sessionStatusLabel}
+          </Badge>
+          <ChevronRight
+            className="h-4 w-4 text-gray-400"
+            aria-hidden="true"
+          />
+        </span>
+      </Link>
+    </li>
+  );
+}
+
+function UpcomingDefenseSummary({ item }: { item: UpcomingDefenseItem }) {
+  return (
+    <li>
+      <Link
+        href={toFacultyHref(item.href)}
+        className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-gray-100 bg-gray-50/70 p-3.5 transition-colors hover:bg-[#e02b20]/5 focus-visible:ring-2 focus-visible:ring-[#e02b20] focus-visible:outline-none"
+      >
+        <span className="min-w-0">
+          <span className="block text-sm font-semibold text-[#333333]">
+            {item.studentName}
+          </span>
+          <span className="block text-xs text-gray-500">
+            {item.stageLabel} · {item.roleLabel}
+          </span>
+        </span>
+        <span className="shrink-0 text-right text-xs text-gray-500">
+          {formatWallDate(item.defenseDate)} · {formatWallTime(item.defenseTime)}
+        </span>
+      </Link>
+    </li>
+  );
+}
+
+function WaitingRow({ item }: { item: WaitingItem }) {
+  const body = (
+    <>
+      <span className="min-w-0">
+        <span className="block text-sm font-semibold text-[#333333]">
+          {item.studentName ?? item.recordLabel}
+        </span>
+        <span className="block text-xs text-gray-500">
+          {item.recordLabel} · {item.requirement}
+        </span>
+        <span className="block text-xs text-gray-500">
+          {item.statusText} · Responsible: {item.responsibleRole}
+          {item.date ? ` · ${formatWallDate(item.date)}` : ""}
+        </span>
+      </span>
+    </>
+  );
+  if (!item.href) {
+    return (
+      <li className="rounded-xl border border-gray-100 bg-gray-50/70 p-3.5">{body}</li>
+    );
+  }
+  return (
+    <li>
+      <Link
+        href={toFacultyHref(item.href)}
+        className="flex items-center justify-between gap-2 rounded-xl border border-gray-100 bg-gray-50/70 p-3.5 transition-colors hover:bg-[#e02b20]/5 focus-visible:ring-2 focus-visible:ring-[#e02b20] focus-visible:outline-none"
+      >
+        {body}
+        <ChevronRight
+          className="h-4 w-4 shrink-0 text-gray-400"
+          aria-hidden="true"
+        />
+      </Link>
+    </li>
+  );
+}
+
+/* ------------------------------------------------------------------- page */
+
+export default function PanelistDashboard() {
   const [showAllTasks, setShowAllTasks] = useState(false);
+  const { data: session } = useSession();
 
-  const dashboardQuery = useQuery<PanelistDashboard>({
-    queryKey: panelistDashboardQueryKey,
+  const { data: profileData } = useQuery<{ canEvaluateEssays?: boolean }>({
+    queryKey: ["panelistProfile"],
     queryFn: async () =>
-      (await apiClientRequest(
-        "/thesis/defense/panelist/dashboard",
-      )) as PanelistDashboard,
-  });
-
-  const notificationsQuery = useQuery<PanelistNotification[]>({
-    queryKey: ["panelistNotifications"],
-    queryFn: async () =>
-      (await apiClientRequest("/notifications")) as PanelistNotification[],
-  });
-
-  const { data: panelistProfile } = useQuery<Panelist | null>({
-    queryKey: ["panelistLayoutProfile"],
-    queryFn: async () => {
-      try {
-        return (await apiClientRequest("/panelists/me")) as Panelist;
-      } catch {
-        return null;
-      }
-    },
+      (await apiClientRequest("/panelists/me")) as {
+        canEvaluateEssays?: boolean;
+      },
     staleTime: 60_000,
+    refetchOnWindowFocus: false,
   });
 
-  const canEvaluateEssays = Boolean(panelistProfile?.canEvaluateEssays);
+  const canEvaluateEssays =
+    profileData?.canEvaluateEssays ??
+    session?.user?.facultyProfile?.canEvaluateEssays ??
+    true;
 
   const { data: examApps = [] } = useQuery<ApiApplication[]>({
     queryKey: ["examRecords"],
-    queryFn: async () =>
-      (await apiClientRequest("/exam/applications")) as ApiApplication[],
+    queryFn: async () => {
+      const res = await apiClientRequest("/exam/applications");
+      return Array.isArray(res) ? (res as ApiApplication[]) : [];
+    },
     enabled: canEvaluateEssays,
+    staleTime: 30_000,
   });
 
-  const pendingEssayCount = (Array.isArray(examApps) ? examApps : []).filter(
-    (app) => app.status === "TAKEN" && !app.essayEvaluationCompleted,
-  ).length;
+  const pendingEssayCount = canEvaluateEssays
+    ? examApps.filter(
+        (app) => app.status === "TAKEN" && !app.essayEvaluationCompleted,
+      ).length
+    : 0;
 
-  const dashboard = dashboardQuery.data;
-  const upcomingCount = dashboard?.kpis.upcomingDefenses ?? 0;
-  const pendingCount = dashboard?.kpis.pendingTasks ?? 0;
-  const tasks = dashboard?.needsAttention ?? [];
-  const activeDefenses = dashboard?.activeDefenses ?? [];
-  const upcomingDefenses = dashboard?.upcomingDefenses ?? [];
-  const waitingItems = dashboard?.waitingOnOthers ?? [];
+  const {
+    data,
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+  } = useQuery<PanelistDashboard>({
+    queryKey: panelistDashboardQueryKey,
+    queryFn: () =>
+      apiClientRequest(
+        "/thesis/defense/panelist/dashboard",
+      ) as Promise<PanelistDashboard>,
+    refetchInterval: 30_000,
+  });
 
+  const {
+    data: notifications = [],
+    isLoading: notificationsLoading,
+    isError: notificationsError,
+    isFetching: notificationsFetching,
+    refetch: refetchNotifications,
+  } = useQuery<PanelistNotification[]>({
+    queryKey: ["notifications"],
+    queryFn: async () => {
+      const res = await apiClientRequest("/notifications");
+      return Array.isArray(res) ? (res as PanelistNotification[]) : [];
+    },
+    refetchInterval: 30_000,
+  });
+
+  const refreshing = isFetching || notificationsFetching;
+
+  const refresh = () => {
+    void refetch();
+    void refetchNotifications();
+  };
+
+  if (isLoading) {
+    return <DashboardSkeleton />;
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title="Dashboard"
+          description="Overview of your assigned defenses and academic responsibilities."
+        />
+        <Card>
+          <CardContent>
+            <LoadError
+              label="Unable to load the dashboard"
+              onRetry={refresh}
+              retrying={refreshing}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const { kpis, needsAttention, activeDefenses, upcomingDefenses, waitingOnOthers } =
+    data;
+  const nextDefense = upcomingDefenses[0] ?? null;
+  const otherUpcoming = upcomingDefenses.slice(1, 1 + MAX_VISIBLE_OTHER_UPCOMING);
   const visibleTasks = showAllTasks
-    ? tasks
-    : tasks.slice(0, MAX_VISIBLE_TASKS);
-  const nextDefense: UpcomingDefenseItem | undefined = upcomingDefenses[0];
-  const otherUpcoming = upcomingDefenses.slice(
-    1,
-    1 + MAX_VISIBLE_OTHER_UPCOMING,
-  );
-  const visibleWaiting = waitingItems.slice(0, MAX_VISIBLE_WAITING);
+    ? needsAttention
+    : needsAttention.slice(0, MAX_VISIBLE_TASKS);
+  const hiddenTaskCount = needsAttention.length - visibleTasks.length;
+  const recentNotifications = notifications.slice(0, MAX_VISIBLE_NOTIFICATIONS);
+  const visibleWaiting = waitingOnOthers.slice(0, MAX_VISIBLE_WAITING);
 
-  const notifications = Array.isArray(notificationsQuery.data)
-    ? notificationsQuery.data
-    : [];
-  const visibleNotifications = notifications.slice(
-    0,
-    MAX_VISIBLE_NOTIFICATIONS,
-  );
+  const kpiCards = [
+    {
+      label: "Upcoming Defenses",
+      value: kpis.upcomingDefenses,
+      supporting: "Future scheduled sessions assigned to you",
+      icon: CalendarClock,
+      href: undefined as string | undefined,
+    },
+    {
+      label: "Pending Tasks",
+      value: kpis.pendingTasks,
+      supporting: "Actions currently requiring you",
+      icon: ClipboardList,
+      href: undefined as string | undefined,
+    },
+    ...(canEvaluateEssays
+      ? [
+          {
+            label: "Pending Essay Evaluations",
+            value: pendingEssayCount,
+            supporting: "Applicant entrance exam essays awaiting grading",
+            icon: ClipboardCheck,
+            href: "/faculty/essay-evaluations",
+          },
+        ]
+      : []),
+  ];
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-[#e02b20]">Faculty Overview</h2>
-        <p className="text-sm text-[#333333]">
-          Manage your defense schedules, pending evaluations, and advisee
-          responsibilities.
-        </p>
-      </div>
+      <PageHeader
+        title="Dashboard"
+        description="Overview of your assigned defenses and academic responsibilities."
+        actions={
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={refresh}
+            disabled={refreshing}
+          >
+            <RefreshCw
+              className={cn("mr-2 h-4 w-4", refreshing && "animate-spin")}
+              aria-hidden="true"
+            />
+            Refresh
+          </Button>
+        }
+      />
 
-      {/* KPI Band */}
-      <div
-        data-guide="panelist-kpi-cards"
-        className={`grid grid-cols-1 gap-4 ${
-          canEvaluateEssays ? "md:grid-cols-3" : "md:grid-cols-2"
-        }`}
-      >
-        <Card className="border-gray-200 shadow-sm">
-          <CardContent className="flex items-center space-x-4 p-6">
-            <div className="rounded-lg bg-red-50 p-3 text-[#e02b20]">
-              <Calendar className="h-6 w-6" />
-            </div>
-            <div>
-              <p className="text-xs font-bold tracking-wider text-[#333333] uppercase">
-                Upcoming Defenses
-              </p>
-              <p className="text-2xl font-extrabold text-[#333333]">
-                {dashboardQuery.isLoading
-                  ? "—"
-                  : dashboardQuery.isError
-                    ? "—"
-                    : upcomingCount}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-gray-200 shadow-sm">
-          <CardContent className="flex items-center space-x-4 p-6">
-            <div className="rounded-lg bg-amber-50 p-3 text-[#f9a825]">
-              <FileSignature className="h-6 w-6 text-yellow-700" />
-            </div>
-            <div>
-              <p className="text-xs font-bold tracking-wider text-[#333333] uppercase">
-                Pending Tasks
-              </p>
-              <p className="text-2xl font-extrabold text-[#333333]">
-                {dashboardQuery.isLoading
-                  ? "—"
-                  : dashboardQuery.isError
-                    ? "—"
-                    : pendingCount}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {canEvaluateEssays && (
-          <Link href="/faculty/essay-evaluations" className="block">
-            <Card className="h-full border-gray-200 shadow-sm transition-colors hover:border-[#e02b20]/40 hover:bg-red-50/20">
-              <CardContent className="flex items-center justify-between p-6">
-                <div className="flex items-center space-x-4">
-                  <div className="rounded-lg bg-red-50 p-3 text-[#e02b20]">
-                    <ClipboardCheck className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold tracking-wider text-[#333333] uppercase">
-                      Pending Essay Evaluations
-                    </p>
-                    <p className="text-2xl font-extrabold text-[#333333]">
-                      {pendingEssayCount}
-                    </p>
-                  </div>
+      {/* 1. Summary KPIs */}
+      <section aria-label="Summary metrics" data-guide="panelist-kpi-cards">
+        <div
+          className={cn(
+            "grid grid-cols-1 gap-4",
+            kpiCards.length === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2",
+          )}
+        >
+          {kpiCards.map((kpi) => (
+            <Card key={kpi.label}>
+              <CardContent className="flex items-start justify-between gap-3">
+                <div className="min-w-0 space-y-1">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                    {kpi.label}
+                  </p>
+                  <p className="text-3xl font-bold tracking-tight text-[#333333]">
+                    {kpi.value}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {kpi.supporting}
+                  </p>
+                  {kpi.href ? (
+                    <Link
+                      href={kpi.href}
+                      className="inline-flex items-center pt-1 text-xs font-semibold text-[#e02b20] hover:underline"
+                    >
+                      Open Essay Evaluations
+                      <ChevronRight className="ml-0.5 h-3.5 w-3.5" />
+                    </Link>
+                  ) : null}
                 </div>
-                <ArrowRight className="h-4 w-4 text-[#e02b20]" />
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#e02b20]/10 text-[#e02b20]">
+                  <kpi.icon className="h-5 w-5" aria-hidden="true" />
+                </span>
               </CardContent>
             </Card>
-          </Link>
-        )}
-      </div>
+          ))}
+        </div>
+      </section>
 
-      {/* Main Two-Column Grid */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-        {/* Left: Needs Your Attention (7 cols) */}
-        <Card
-          data-guide="panelist-attention-list"
-          className="border-gray-200 shadow-sm lg:col-span-7"
-        >
-          <CardHeader className="flex flex-row items-center justify-between border-b border-gray-200 pb-4">
-            <div className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-[#e02b20]" />
-              <CardTitle className="text-lg font-bold text-[#333333]">
-                Needs Your Attention
-              </CardTitle>
-            </div>
-            {!dashboardQuery.isLoading && !dashboardQuery.isError && (
-              <Badge
-                variant="outline"
-                className="border-gray-200 text-xs font-semibold text-[#333333]"
-              >
-                {tasks.length} {tasks.length === 1 ? "item" : "items"}
-              </Badge>
-            )}
-          </CardHeader>
-          <CardContent className="p-0">
-            {dashboardQuery.isLoading ? (
-              <div className="p-8 text-center text-sm text-[#333333]">
-                Loading tasks…
-              </div>
-            ) : dashboardQuery.isError ? (
-              <div className="flex flex-col items-center gap-3 p-8 text-center">
-                <AlertCircle className="h-6 w-6 text-[#e02b20]" />
-                <p className="text-sm font-medium text-[#333333]">
-                  Could not load your pending tasks right now.
-                </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => dashboardQuery.refetch()}
-                >
-                  Retry
-                </Button>
-              </div>
-            ) : tasks.length === 0 ? (
-              <div className="flex flex-col items-center gap-2 p-10 text-center">
-                <CheckCircle2 className="h-8 w-8 text-green-600" />
-                <p className="text-sm font-semibold text-[#333333]">
-                  You have no pending actions right now.
-                </p>
-                <p className="max-w-sm text-xs text-[#333333]">
-                  New evaluations, signatures, and adviser reviews will appear
-                  here when they require your action.
-                </p>
-              </div>
-            ) : (
-              <div>
-                <div className="divide-y divide-gray-200">
-                  {visibleTasks.map((task) => {
-                    const badge = CATEGORY_BADGE[task.category];
-                    return (
-                      <div
-                        key={task.id}
-                        className="flex flex-col justify-between gap-3 p-4 transition-colors hover:bg-gray-50 sm:flex-row sm:items-center"
-                      >
-                        <div className="min-w-0 space-y-1">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <CategoryIcon category={task.category} />
-                            <p className="text-sm font-bold text-[#333333]">
-                              {task.title}
-                            </p>
-                            <Badge
-                              variant="outline"
-                              className={`text-[11px] font-semibold ${badge.className}`}
-                            >
-                              {badge.label}
-                            </Badge>
-                          </div>
-                          <p className="text-xs text-[#333333]">
-                            {task.studentName ? (
-                              <span className="font-semibold text-[#333333]">
-                                {task.studentName}
-                              </span>
-                            ) : null}
-                            {task.studentName && task.stage ? " · " : null}
-                            {task.stage ?? null}
-                            {(task.studentName || task.stage) &&
-                            task.responsibility
-                              ? " · "
-                              : null}
-                            <span>Role: {task.responsibility}</span>
-                          </p>
-                          <p className="text-xs text-[#333333]">
-                            {task.statusText}
-                            {task.date
-                              ? ` · ${formatWallDate(task.date)}`
-                              : ""}
-                          </p>
-                        </div>
-
-                        <div className="shrink-0">
-                          <Link
-                            href={task.href}
-                            className={cn(
-                              buttonVariants({ size: "sm" }),
-                              "bg-[#e02b20] text-white hover:bg-[#e02b20]/90",
-                            )}
-                          >
-                            {task.actionLabel}
-                            <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                          </Link>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {tasks.length > MAX_VISIBLE_TASKS && (
-                  <div className="border-t border-gray-200 px-4 py-3 text-right">
-                    <button
-                      type="button"
-                      onClick={() => setShowAllTasks((v) => !v)}
-                      className="text-xs font-bold text-[#e02b20] hover:underline"
-                    >
-                      {showAllTasks
-                        ? "Show fewer"
-                        : `View all (${tasks.length})`}
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Right: Active & Upcoming Defenses (5 cols) */}
-        <Card
-          data-guide="panelist-upcoming-list"
-          className="border-gray-200 shadow-sm lg:col-span-5"
-        >
-          <CardHeader className="flex flex-row items-center justify-between border-b border-gray-200 pb-4">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-[#e02b20]" />
-              <CardTitle className="text-lg font-bold text-[#333333]">
-                Active &amp; Upcoming Defenses
-              </CardTitle>
-            </div>
-            <Link
-              href="/faculty/defenses"
-              className="text-xs font-bold text-[#e02b20] hover:underline"
-            >
-              View All Defenses
-            </Link>
-          </CardHeader>
-          <CardContent className="space-y-4 p-4">
-            {dashboardQuery.isLoading ? (
-              <div className="p-6 text-center text-sm text-[#333333]">
-                Loading defense schedule…
-              </div>
-            ) : dashboardQuery.isError ? (
-              <div className="flex flex-col items-center gap-3 p-6 text-center">
-                <AlertCircle className="h-6 w-6 text-[#e02b20]" />
-                <p className="text-sm font-medium text-[#333333]">
-                  Could not load your defense schedule right now.
-                </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => dashboardQuery.refetch()}
-                >
-                  Retry
-                </Button>
-              </div>
-            ) : activeDefenses.length === 0 && upcomingDefenses.length === 0 ? (
-              <div className="p-8 text-center text-sm text-[#333333]">
-                No upcoming or active defenses are currently assigned to you.
-              </div>
-            ) : (
-              <>
-                {activeDefenses.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-xs font-bold tracking-wider text-[#e02b20] uppercase">
-                      Active Session Now
-                    </p>
-                    {activeDefenses.map((d) => (
-                      <div
-                        key={d.scheduleId}
-                        className="rounded-lg border border-red-200 bg-red-50/70 p-3.5"
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <p className="truncate text-sm font-bold text-[#333333]">
-                              {d.studentName}
-                            </p>
-                            <p className="text-xs text-[#333333]">
-                              {d.stageLabel} · Role: {d.roleLabel}
-                            </p>
-                          </div>
-                          <Badge className="shrink-0 bg-[#e02b20] text-[10px] text-white">
-                            {d.sessionStatusLabel}
-                          </Badge>
-                        </div>
-                        <div className="mt-3 flex justify-end">
-                          <Link
-                            href={d.href}
-                            className={cn(
-                              buttonVariants({ size: "sm" }),
-                              "bg-[#e02b20] text-white hover:bg-[#e02b20]/90",
-                            )}
-                          >
-                            Open Workspace
-                            <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                          </Link>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {nextDefense && (
-                  <div className="space-y-2">
-                    <p className="text-xs font-bold tracking-wider text-[#333333] uppercase">
-                      Next Scheduled Defense
-                    </p>
-                    <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-xs">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0">
-                          <p className="text-sm font-bold text-[#333333]">
-                            {nextDefense.studentName}
-                          </p>
-                          {nextDefense.programName && (
-                            <p className="truncate text-xs text-[#333333]">
-                              {nextDefense.programName}
-                            </p>
-                          )}
-                        </div>
-                        <Badge
-                          variant="outline"
-                          className="shrink-0 border-gray-200 text-[11px] font-semibold text-[#333333]"
-                        >
-                          {nextDefense.stageLabel}
-                        </Badge>
-                      </div>
-
-                      <div className="mt-3 space-y-1 text-xs text-[#333333]">
-                        <p className="flex items-center gap-1.5">
-                          <Clock className="h-3.5 w-3.5 text-[#e02b20]" />
-                          <span className="font-semibold text-[#333333]">
-                            {formatWallDate(nextDefense.defenseDate)}
-                          </span>
-                          <span>·</span>
-                          <span>{formatWallTime(nextDefense.defenseTime)}</span>
-                        </p>
-                        {nextDefense.venueOrLink && (
-                          <p className="flex items-center gap-1.5 truncate">
-                            <MapPin className="h-3.5 w-3.5 shrink-0 text-[#e02b20]" />
-                            <span className="truncate">
-                              {nextDefense.venueOrLink}
-                            </span>
-                          </p>
-                        )}
-                        <p className="text-[11px]">
-                          Role:{" "}
-                          <span className="font-semibold text-[#333333]">
-                            {nextDefense.roleLabel}
-                          </span>
-                        </p>
-                      </div>
-
-                      <div className="mt-3 flex justify-end">
-                        <Link
-                          href={nextDefense.href}
-                          className={cn(
-                            buttonVariants({ variant: "outline", size: "sm" }),
-                          )}
-                        >
-                          Open Defense Workspace
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {otherUpcoming.length > 0 && (
-                  <div className="space-y-2">
-                    <p className="text-xs font-bold tracking-wider text-[#333333] uppercase">
-                      Later Defenses
-                    </p>
-                    <div className="divide-y divide-gray-200 rounded-lg border border-gray-200">
-                      {otherUpcoming.map((item) => (
-                        <Link
-                          key={item.scheduleId}
-                          href={item.href}
-                          className="flex items-center justify-between gap-2 p-3 text-xs transition-colors hover:bg-gray-50"
-                        >
-                          <div className="min-w-0">
-                            <p className="truncate font-semibold text-[#333333]">
-                              {item.studentName} · {item.stageLabel}
-                            </p>
-                            <p className="text-[#333333]">
-                              {formatWallDate(item.defenseDate)} at{" "}
-                              {formatWallTime(item.defenseTime)} ·{" "}
-                              {item.roleLabel}
-                            </p>
-                          </div>
-                          <ArrowRight className="h-4 w-4 shrink-0 text-[#e02b20]" />
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Waiting on Others (renders only when non-empty) */}
-      {visibleWaiting.length > 0 && (
-        <Card className="border-gray-200 shadow-sm">
-          <CardHeader className="border-b border-gray-200 pb-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-base font-bold text-[#333333]">
-                  Waiting on Others
-                </CardTitle>
-                <p className="text-xs text-[#333333]">
-                  Your part is complete on these records; another role is
-                  responsible for the next step.
-                </p>
-              </div>
-              <Badge
-                variant="outline"
-                className="border-gray-200 text-xs text-[#333333]"
-              >
-                Read-only
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="divide-y divide-gray-200">
-              {visibleWaiting.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex flex-col justify-between gap-2 p-4 text-xs sm:flex-row sm:items-center"
-                >
-                  <div className="space-y-0.5">
-                    <p className="font-bold text-[#333333]">
-                      {item.studentName ?? "Student"} · {item.recordLabel}
-                    </p>
-                    <p className="text-[#333333]">
-                      Waiting for:{" "}
-                      <span className="font-semibold text-[#333333]">
-                        {item.requirement}
-                      </span>{" "}
-                      ({item.responsibleRole})
-                    </p>
-                    <p className="text-[#333333]">{item.statusText}</p>
-                  </div>
-                  {item.href && (
-                    <Link
-                      href={item.href}
-                      className="shrink-0 font-bold text-[#e02b20] hover:underline"
-                    >
-                      View Record
-                    </Link>
-                  )}
-                </div>
+      {/* 2. Needs Your Attention */}
+      <SectionCard
+        title="Needs Your Attention"
+        description="Your actionable academic responsibilities."
+        dataGuide="panelist-attention-list"
+        action={
+          needsAttention.length > 0 ? (
+            <Badge className="bg-(--earist-primary) text-white">
+              {needsAttention.length}{" "}
+              {needsAttention.length === 1 ? "task" : "tasks"}
+            </Badge>
+          ) : null
+        }
+      >
+        {needsAttention.length === 0 ? (
+          <EmptyState message="Nothing currently requires your action." />
+        ) : (
+          <div className="space-y-3">
+            <ul className="space-y-2">
+              {visibleTasks.map((task) => (
+                <TaskRow key={task.id} task={task} />
               ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Recent Notifications */}
-      <Card className="border-gray-200 shadow-sm">
-        <CardHeader className="flex flex-row items-center justify-between border-b border-gray-200 pb-4">
-          <div className="flex items-center space-x-2">
-            <Bell className="h-5 w-5 text-[#e02b20]" />
-            <CardTitle className="text-lg font-bold text-[#333333]">
-              Recent Notifications
-            </CardTitle>
-          </div>
-          <Link
-            href="/faculty/notifications"
-            className="text-xs font-bold text-[#e02b20] hover:underline"
-          >
-            View All Notifications
-          </Link>
-        </CardHeader>
-        <CardContent className="p-0">
-          {notificationsQuery.isLoading ? (
-            <div className="p-8 text-center text-sm text-[#333333]">
-              Loading notifications…
-            </div>
-          ) : notificationsQuery.isError ? (
-            <div className="flex flex-col items-center gap-3 p-8 text-center">
-              <AlertCircle className="h-6 w-6 text-[#e02b20]" />
-              <p className="text-sm font-medium text-[#333333]">
-                Could not load your notifications right now.
-              </p>
+            </ul>
+            {needsAttention.length > MAX_VISIBLE_TASKS ? (
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 size="sm"
-                onClick={() => notificationsQuery.refetch()}
+                onClick={() => setShowAllTasks((v) => !v)}
+                aria-expanded={showAllTasks}
               >
-                Retry
+                {showAllTasks
+                  ? "Show fewer tasks"
+                  : `Show ${hiddenTaskCount} more ${
+                      hiddenTaskCount === 1 ? "task" : "tasks"
+                    }`}
               </Button>
+            ) : null}
+          </div>
+        )}
+      </SectionCard>
+
+      {/* 3. Active Defense (conditional) */}
+      {activeDefenses.length > 0 ? (
+        <SectionCard
+          title="Active Defense"
+          description="Sessions currently in progress."
+        >
+          <ul className="space-y-2">
+            {activeDefenses.map((item) => (
+              <ActiveDefenseRow key={item.scheduleId} item={item} />
+            ))}
+          </ul>
+        </SectionCard>
+      ) : null}
+
+      {/* 4. Upcoming Defense Sessions */}
+      <SectionCard
+        title="Upcoming Defense Sessions"
+        description="Your next scheduled assigned defenses."
+        dataGuide="panelist-upcoming-list"
+        action={
+          <Link
+            href="/faculty/defenses"
+            className="text-xs font-semibold text-[#e02b20] hover:underline"
+          >
+            View All Defenses
+          </Link>
+        }
+      >
+        {!nextDefense ? (
+          <EmptyState message="No upcoming defenses are scheduled." />
+        ) : (
+          <div className="space-y-3">
+            <div className="rounded-xl border border-gray-100 bg-gray-50/50 p-4">
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                <Badge className="bg-[#e02b20] text-white">
+                  Next Defense
+                </Badge>
+                <Badge className="bg-amber-50 text-amber-700 border border-amber-200">
+                  {nextDefense.sessionStatusLabel}
+                </Badge>
+              </div>
+              <p className="text-base font-bold text-[#333333]">
+                {nextDefense.studentName}
+                {nextDefense.studentNumber
+                  ? ` · ${nextDefense.studentNumber}`
+                  : ""}
+              </p>
+              <p className="text-sm text-gray-500">
+                {nextDefense.stageLabel} · Your role: {nextDefense.roleLabel}
+                {nextDefense.programName ? ` · ${nextDefense.programName}` : ""}
+              </p>
+              <div className="mt-3 grid gap-1 text-xs text-gray-500 sm:grid-cols-3">
+                <p className="flex items-center gap-1.5">
+                  <CalendarClock
+                    className="h-3.5 w-3.5 shrink-0 text-[#e02b20]"
+                    aria-hidden="true"
+                  />
+                  {formatWallDate(nextDefense.defenseDate)}
+                </p>
+                <p className="flex items-center gap-1.5">
+                  <Clock className="h-3.5 w-3.5 shrink-0 text-[#e02b20]" aria-hidden="true" />
+                  {formatWallTime(nextDefense.defenseTime)}
+                </p>
+                <p className="flex items-center gap-1.5">
+                  <MapPin className="h-3.5 w-3.5 shrink-0 text-[#e02b20]" aria-hidden="true" />
+                  <span className="truncate">
+                    {nextDefense.venueOrLink || "To be announced"}
+                  </span>
+                </p>
+              </div>
+              <Link
+                href={toFacultyHref(nextDefense.href)}
+                className={cn(
+                  buttonVariants({ size: "sm" }),
+                  "mt-3 w-full bg-[#e02b20] text-white hover:bg-[#c62828] sm:w-auto",
+                )}
+              >
+                Open Defense Workspace
+                <ChevronRight className="ml-2 h-4 w-4" aria-hidden="true" />
+              </Link>
             </div>
-          ) : visibleNotifications.length === 0 ? (
-            <div className="p-8 text-center text-sm text-[#333333]">
-              You have no recent notifications.
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-200">
-              {visibleNotifications.map((n) => (
-                <div
-                  key={n.id}
-                  className="p-4 transition-colors hover:bg-gray-50"
-                >
-                  <div className="flex items-start justify-between">
-                    <p className="text-sm font-bold text-[#333333]">
-                      {n.title}
-                    </p>
-                    <span className="text-[10px] text-[#333333]">
-                      {formatWallDate(n.createdAt)}
-                    </span>
-                  </div>
-                  <p className="mt-1 text-xs text-[#333333]">{n.message}</p>
+
+            {otherUpcoming.length > 0 ? (
+              <ul className="space-y-2">
+                {otherUpcoming.map((item) => (
+                  <UpcomingDefenseSummary key={item.scheduleId} item={item} />
+                ))}
+              </ul>
+            ) : null}
+          </div>
+        )}
+      </SectionCard>
+
+      {/* 5. Waiting on Others */}
+      <SectionCard
+        title="Waiting on Others"
+        description="Records that cannot progress until another authorized actor acts."
+      >
+        {visibleWaiting.length === 0 ? (
+          <EmptyState message="Nothing is currently waiting on another actor." />
+        ) : (
+          <ul className="space-y-2">
+            {visibleWaiting.map((item) => (
+              <WaitingRow key={item.id} item={item} />
+            ))}
+          </ul>
+        )}
+      </SectionCard>
+
+      {/* 6. Recent Notifications */}
+      <SectionCard
+        title="Recent Notifications"
+        description="Your latest notification records."
+        action={
+          <Link
+            href="/faculty/notifications"
+            className="text-xs font-semibold text-[#e02b20] hover:underline"
+          >
+            View all notifications
+          </Link>
+        }
+      >
+        {notificationsLoading ? (
+          <div className="space-y-2" aria-busy="true">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <Skeleton key={i} className="h-14 w-full rounded-lg" />
+            ))}
+          </div>
+        ) : notificationsError ? (
+          <LoadError
+            label="Unable to load notifications"
+            onRetry={() => void refetchNotifications()}
+            retrying={notificationsFetching}
+            compact
+          />
+        ) : recentNotifications.length === 0 ? (
+          <EmptyState message="No notifications to show." />
+        ) : (
+          <ul className="space-y-2">
+            {recentNotifications.map((n) => (
+              <li
+                key={n.id}
+                className="rounded-xl border border-gray-100 bg-gray-50/50 p-3.5"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <p className="text-sm font-semibold text-[#333333]">
+                    {n.isRead === false ? (
+                      <span
+                        className="mr-2 inline-block h-2 w-2 rounded-full bg-[#e02b20] align-middle"
+                        aria-label="Unread"
+                      />
+                    ) : null}
+                    {n.title}
+                  </p>
+                  <span className="shrink-0 text-[11px] text-gray-500">
+                    {n.createdAt ? formatWallDate(n.createdAt.slice(0, 10)) : ""}
+                  </span>
                 </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                {n.message ? (
+                  <p className="mt-1 text-xs text-gray-500">
+                    {n.message}
+                  </p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        )}
+      </SectionCard>
     </div>
   );
 }

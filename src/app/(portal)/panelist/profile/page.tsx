@@ -1,183 +1,264 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { apiClientRequest } from "@/lib/api.client";
+import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/ui/page-header";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
+  CircleAlert,
+  RefreshCw,
+  UserCheck,
   User,
-  Briefcase,
-  CheckCircle2,
-  ClipboardCheck,
   GraduationCap,
+  ShieldCheck,
 } from "lucide-react";
-import { apiClientRequest } from "@/lib/api.client";
-import type { Panelist } from "@/types/index";
 
-function formatFacultyDisplayName(panelist: Panelist) {
-  const title = panelist.user?.title?.trim();
-  const first = panelist.user?.firstName?.trim() ?? "";
-  const last = panelist.user?.lastName?.trim() ?? "";
-  const suffix = panelist.user?.suffix?.trim();
-  const base = [title, first, last].filter(Boolean).join(" ");
-  return suffix ? `${base}, ${suffix}` : base;
+interface FacultyProfileResponse {
+  id: string;
+  isExternal: boolean;
+  isAvailableAsAdviser: boolean;
+  canEvaluateEssays?: boolean;
+  highestEducationalAttainment?: string | null;
+  officeAffiliation?: string | null;
+  specialization?: string | null;
+  user?: {
+    id: string;
+    title?: string | null;
+    firstName: string;
+    lastName: string;
+    suffix?: string | null;
+    email: string;
+  };
 }
 
-export default function PanelistProfilePage() {
-  const { data: panelist, isLoading } = useQuery<Panelist>({
+function formatFacultyName(user?: FacultyProfileResponse["user"]) {
+  if (!user) return "Faculty Member";
+  return [user.title, user.firstName, user.lastName, user.suffix]
+    .filter(Boolean)
+    .join(" ");
+}
+
+export default function FacultyProfilePage() {
+  const {
+    data: profile,
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+  } = useQuery<FacultyProfileResponse>({
     queryKey: ["panelistProfile"],
-    queryFn: async () => (await apiClientRequest("/panelists/me")) as Panelist,
+    queryFn: async () =>
+      (await apiClientRequest("/panelists/me")) as FacultyProfileResponse,
   });
 
-  if (isLoading) {
-    return (
-      <div className="p-8 text-center text-sm text-[#333333]">
-        Loading profile...
-      </div>
-    );
-  }
-
-  if (!panelist) {
-    return (
-      <div className="p-8 text-center text-sm text-[#e02b20]">
-        Failed to load profile.
-      </div>
-    );
-  }
-
-  const canAdvise = !panelist.isExternal && panelist.canAdvise !== false;
+  const isExternal = profile?.isExternal === true;
+  const canEvaluateEssays = profile?.canEvaluateEssays === true;
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-[#e02b20]">Faculty Profile</h2>
-        <p className="text-sm text-[#333333]">
-          View your institutional faculty classification, specialization, and
-          assigned academic permissions.
-        </p>
-      </div>
+      <PageHeader
+        title="Profile"
+        description="View your faculty profile and assigned academic access."
+      />
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <Card
-          data-guide="panelist-profile-card"
-          className="border-gray-200 shadow-sm"
-        >
-          <CardHeader className="border-b border-gray-200 bg-gray-50 pb-4">
-            <CardTitle className="flex items-center gap-2 text-lg font-bold text-[#333333]">
-              <User className="h-5 w-5 text-[#e02b20]" /> Faculty Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 p-6 text-sm">
-            <div>
-              <p className="text-xs font-bold tracking-wider text-gray-500 uppercase">
-                Full Name &amp; Academic Title
-              </p>
-              <p className="mt-1 text-base font-bold text-[#333333]">
-                {formatFacultyDisplayName(panelist)}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs font-bold tracking-wider text-gray-500 uppercase">
-                Email Address
-              </p>
-              <p className="mt-1 font-medium text-[#333333]">
-                {panelist.user?.email}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs font-bold tracking-wider text-gray-500 uppercase">
-                Specialization
-              </p>
-              <p className="mt-1 font-semibold text-[#333333]">
-                {panelist.specialization || "General"}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs font-bold tracking-wider text-gray-500 uppercase">
-                Office / Institution Affiliation
-              </p>
-              <p className="mt-1 flex items-center gap-1.5 font-medium text-[#333333]">
-                <Briefcase className="h-3.5 w-3.5 text-gray-400" />
-                {panelist.officeAffiliation || "EARIST Graduate School"}
-              </p>
-            </div>
+      {isLoading ? (
+        <div className="grid gap-6 md:grid-cols-2" aria-busy="true">
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-5 w-44" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Skeleton className="h-4 w-56" />
+              <Skeleton className="h-4 w-48" />
+              <Skeleton className="h-4 w-64" />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Skeleton className="h-5 w-44" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Skeleton className="h-5 w-52" />
+              <Skeleton className="h-5 w-48" />
+            </CardContent>
+          </Card>
+        </div>
+      ) : isError || !profile ? (
+        <Card className="max-w-2xl">
+          <CardContent className="flex flex-col items-start gap-2 py-6">
+            <p className="flex items-center gap-2 text-sm text-gray-500">
+              <CircleAlert
+                className="h-4 w-4 text-[#e02b20]"
+                aria-hidden="true"
+              />
+              Unable to load your faculty profile.
+            </p>
+            <button
+              type="button"
+              onClick={() => void refetch()}
+              disabled={isFetching}
+              className="inline-flex items-center text-sm font-semibold text-[#e02b20] hover:underline disabled:opacity-60"
+            >
+              <RefreshCw
+                className={cn(
+                  "mr-1.5 h-3.5 w-3.5",
+                  isFetching && "animate-spin",
+                )}
+                aria-hidden="true"
+              />
+              Retry
+            </button>
           </CardContent>
         </Card>
-
-        <Card
-          data-guide="faculty-access-badges"
-          className="border-gray-200 shadow-sm"
-        >
-          <CardHeader className="border-b border-gray-200 bg-gray-50 pb-4">
-            <CardTitle className="flex items-center gap-2 text-lg font-bold text-[#333333]">
-              <GraduationCap className="h-5 w-5 text-[#e02b20]" /> Classification
-              &amp; Academic Access
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 p-6 text-sm">
-            <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4">
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2">
+          {/* Personal & Academic Information */}
+          <Card data-guide="panelist-profile-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base font-bold text-[#333333]">
+                <User
+                  className="h-4 w-4 text-[#e02b20]"
+                  aria-hidden="true"
+                />
+                Faculty Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm">
               <div>
-                <p className="font-bold text-[#333333]">
-                  Faculty Classification
-                </p>
-                <p className="text-xs text-gray-500">
-                  Determines panelist vs. internal adviser eligibility
+                <p className="text-xs font-medium text-gray-500">Full Name</p>
+                <p className="font-semibold text-[#333333]">
+                  {formatFacultyName(profile.user)}
                 </p>
               </div>
-              {panelist.isExternal ? (
-                <Badge className="border-purple-200 bg-purple-100 text-purple-800">
-                  External Panelist
-                </Badge>
-              ) : (
-                <Badge className="border-blue-200 bg-blue-100 text-blue-800">
-                  Internal Faculty
-                </Badge>
-              )}
-            </div>
-
-            <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4">
               <div>
-                <p className="font-bold text-[#333333]">
-                  Thesis / Dissertation Adviser Eligibility
+                <p className="text-xs font-medium text-gray-500">
+                  Email Address
                 </p>
-                <p className="text-xs text-gray-500">
-                  Managed by the Graduate School Administrator
+                <p className="font-medium text-[#333333]">
+                  {profile.user?.email || "—"}
                 </p>
               </div>
-              {canAdvise ? (
-                <Badge className="border-emerald-200 bg-emerald-100 text-emerald-800">
-                  <CheckCircle2 className="mr-1 h-3 w-3" />
-                  Eligible Adviser
-                </Badge>
-              ) : (
-                <Badge variant="outline" className="text-gray-500">
-                  Panelist Only
-                </Badge>
-              )}
-            </div>
-
-            <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white p-4">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div>
+                  <p className="text-xs font-medium text-gray-500">
+                    Highest Qualification
+                  </p>
+                  <p className="font-medium text-[#333333]">
+                    {profile.highestEducationalAttainment || "Not specified"}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-gray-500">
+                    Specialization
+                  </p>
+                  <p className="font-medium text-[#333333]">
+                    {profile.specialization || "Not specified"}
+                  </p>
+                </div>
+              </div>
               <div>
-                <p className="font-bold text-[#333333]">
-                  Entrance Exam Essay Evaluation
+                <p className="text-xs font-medium text-gray-500">
+                  Office / College Affiliation
                 </p>
-                <p className="text-xs text-gray-500">
-                  Access to grade applicant entrance examination essays
+                <p className="font-medium text-[#333333]">
+                  {profile.officeAffiliation || "Not specified"}
                 </p>
               </div>
-              {panelist.canEvaluateEssays ? (
-                <Badge className="border-amber-200 bg-amber-100 text-amber-900">
-                  <ClipboardCheck className="mr-1 h-3 w-3" />
-                  Enabled
+            </CardContent>
+          </Card>
+
+          {/* Classification & Assigned Access */}
+          <Card data-guide="faculty-access-badges">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-base font-bold text-[#333333]">
+                <ShieldCheck
+                  className="h-4 w-4 text-[#e02b20]"
+                  aria-hidden="true"
+                />
+                Classification & Academic Access
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between gap-3 rounded-xl border border-gray-100 bg-gray-50/70 p-3.5">
+                <div className="space-y-0.5">
+                  <p className="text-sm font-semibold text-[#333333]">
+                    Faculty Classification
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {isExternal
+                      ? "External faculty member invited for defense committees"
+                      : "Internal EARIST Graduate School faculty member"}
+                  </p>
+                </div>
+                <Badge
+                  className={
+                    isExternal
+                      ? "bg-purple-50 text-purple-700 border border-purple-200"
+                      : "bg-blue-50 text-blue-700 border border-blue-200"
+                  }
+                >
+                  {isExternal ? "External Faculty" : "Internal Faculty"}
                 </Badge>
-              ) : (
-                <Badge variant="outline" className="text-gray-500">
-                  Not Assigned
+              </div>
+
+              <div className="flex items-center justify-between gap-3 rounded-xl border border-gray-100 bg-gray-50/70 p-3.5">
+                <div className="space-y-0.5">
+                  <p className="flex items-center gap-1.5 text-sm font-semibold text-[#333333]">
+                    <UserCheck className="h-4 w-4 text-[#e02b20]" />
+                    Thesis / Dissertation Adviser Eligibility
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {isExternal
+                      ? "External faculty cannot serve as thesis/dissertation advisers."
+                      : "Managed by the Graduate School Administrator."}
+                  </p>
+                </div>
+                <Badge
+                  className={
+                    isExternal
+                      ? "bg-gray-100 text-gray-600"
+                      : profile.isAvailableAsAdviser !== false
+                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                        : "bg-gray-100 text-gray-600"
+                  }
+                >
+                  {isExternal
+                    ? "Not Applicable"
+                    : profile.isAvailableAsAdviser !== false
+                      ? "Available"
+                      : "Not Available"}
                 </Badge>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-3 rounded-xl border border-gray-100 bg-gray-50/70 p-3.5">
+                <div className="space-y-0.5">
+                  <p className="flex items-center gap-1.5 text-sm font-semibold text-[#333333]">
+                    <GraduationCap className="h-4 w-4 text-[#e02b20]" />
+                    Entrance Exam Essay Evaluation
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {canEvaluateEssays
+                      ? "You are authorized to evaluate applicant entrance exam essays."
+                      : "Assigned by the Administrator to designated Program Chairs / Evaluators."}
+                  </p>
+                </div>
+                <Badge
+                  className={
+                    canEvaluateEssays
+                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                      : "bg-gray-100 text-gray-600"
+                  }
+                >
+                  {canEvaluateEssays ? "Enabled" : "Not Enabled"}
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
