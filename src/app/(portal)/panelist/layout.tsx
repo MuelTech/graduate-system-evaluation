@@ -106,7 +106,7 @@ export default function PanelistLayout({
   const canEvaluateEssays =
     profileData?.canEvaluateEssays ??
     sessionProfile?.canEvaluateEssays ??
-    true;
+    false;
 
   const navItems = [
     { href: "/faculty/dashboard", label: "Dashboard", icon: LayoutDashboard },

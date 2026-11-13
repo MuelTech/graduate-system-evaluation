@@ -91,7 +91,7 @@ const ROLE_OPTIONS: {
     value: "faculty",
     evalRole: "panelist",
     label: "Faculty",
-    badge: "Adviser, Panelist & Evaluator",
+    badge: "Adviser & Defense Panelist",
     targetPath: "/faculty/dashboard",
     icon: Award,
     credentialLabel: "Institutional Email",
@@ -101,7 +101,7 @@ const ROLE_OPTIONS: {
     highlights: [
       "Collaborative Defense Workspace (PDF Manuscript Annotation, Rubric Scoring & Rapporteur Report)",
       "My Advisees (Thesis Adviser Requests & Pre-Defense Manuscript Endorsements)",
-      "Entrance Exam Essay Evaluations & Digital E-Signatures",
+      "My Defenses, Digital E-Signatures & Graduate Research Repository",
     ],
     guideAttr: "login-panelist-card",
   },

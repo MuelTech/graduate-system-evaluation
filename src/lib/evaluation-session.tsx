@@ -86,7 +86,7 @@ export const EVALUATION_PERSONAS: Record<EvaluationRole, EvaluationUser> = {
       id: "panelist-eval-01",
       isExternal: false,
       isAvailableAsAdviser: true,
-      canEvaluateEssays: true,
+      canEvaluateEssays: false,
     },
   },
 };

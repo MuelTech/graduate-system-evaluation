@@ -12,7 +12,6 @@ import {
   RefreshCw,
   UserCheck,
   User,
-  GraduationCap,
   ShieldCheck,
 } from "lucide-react";
 
@@ -55,7 +54,6 @@ export default function FacultyProfilePage() {
   });
 
   const isExternal = profile?.isExternal === true;
-  const canEvaluateEssays = profile?.canEvaluateEssays === true;
 
   return (
     <div className="space-y-6">
@@ -230,29 +228,6 @@ export default function FacultyProfilePage() {
                     : profile.isAvailableAsAdviser !== false
                       ? "Available"
                       : "Not Available"}
-                </Badge>
-              </div>
-
-              <div className="flex items-center justify-between gap-3 rounded-xl border border-gray-100 bg-gray-50/70 p-3.5">
-                <div className="space-y-0.5">
-                  <p className="flex items-center gap-1.5 text-sm font-semibold text-[#333333]">
-                    <GraduationCap className="h-4 w-4 text-[#e02b20]" />
-                    Entrance Exam Essay Evaluation
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {canEvaluateEssays
-                      ? "You are authorized to evaluate applicant entrance exam essays."
-                      : "Assigned by the Administrator to designated Program Chairs / Evaluators."}
-                  </p>
-                </div>
-                <Badge
-                  className={
-                    canEvaluateEssays
-                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                      : "bg-gray-100 text-gray-600"
-                  }
-                >
-                  {canEvaluateEssays ? "Enabled" : "Not Enabled"}
                 </Badge>
               </div>
             </CardContent>

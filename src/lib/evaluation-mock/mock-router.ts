@@ -255,7 +255,7 @@ let panelistProfileState = {
   isExternal: false,
   isAvailableAsAdviser: true,
   canAdvise: true,
-  canEvaluateEssays: true,
+  canEvaluateEssays: false,
   specialization:
     "Educational Leadership, Curriculum Development, & Policy Research",
   officeAffiliation: "EARIST Graduate School — College of Education",

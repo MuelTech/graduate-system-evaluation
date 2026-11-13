@@ -322,7 +322,7 @@ export default function PanelistDashboard() {
   const canEvaluateEssays =
     profileData?.canEvaluateEssays ??
     session?.user?.facultyProfile?.canEvaluateEssays ??
-    true;
+    false;
 
   const { data: examApps = [] } = useQuery<ApiApplication[]>({
     queryKey: ["examRecords"],

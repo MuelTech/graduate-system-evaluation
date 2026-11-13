@@ -60,7 +60,7 @@ export const COMMON_PANELIST_SHELL_STEPS: GuideStep[] = [
       '[data-guide="faculty-sidebar-nav"], [data-guide="mobile-sidebar-toggle"]',
     title: "Faculty Portal Navigation",
     description:
-      "Use this sidebar (or tap the ≡ menu on mobile) to manage assigned oral defenses, supervise advisees, grade applicant entrance exam essays, and digitally sign official documents.",
+      "Use this sidebar (or tap the ≡ menu on mobile) to manage assigned oral defenses, supervise advisees, and digitally sign official documents.",
     placement: "right",
     roleContext: "panelist",
   },
@@ -770,7 +770,7 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
     routePattern: "/panelist/dashboard",
     pageTitle: "Faculty Dashboard Guide",
     subtitle:
-      "Unified workload overview for Defense Committee Chairpersons, Panel Members, Thesis Advisers, and Entrance Exam Evaluators.",
+      "Unified workload overview for Defense Committee Chairpersons, Panel Members, and Thesis Advisers.",
     autoShowOnFirstVisit: true,
     steps: [
       {
@@ -778,7 +778,7 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
         targetSelector: '[data-guide="panelist-kpi-cards"]',
         title: "Faculty Workload & KPI Summary",
         description:
-          "Summarizes active defense sessions, upcoming scheduled defenses, pending advisee manuscript reviews, and pending Entrance Exam Essay Evaluations.",
+          "Summarizes upcoming scheduled defenses and pending action items requiring your evaluation, manuscript review, or digital signature.",
         placement: "bottom",
       },
       {
@@ -786,7 +786,7 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
         targetSelector: '[data-guide="panelist-attention-list"]',
         title: "Actionable Tasks Needing Your Attention",
         description:
-          "Direct access to pending essay grading tasks, adviser requests, and documents awaiting your digital signature.",
+          "Direct access to active defense rubric evaluations, incoming Thesis Adviser Requests, pre-defense manuscript reviews, and documents awaiting your digital signature.",
         placement: "top",
       },
       {
@@ -819,7 +819,7 @@ export const ROUTE_GUIDE_DEFINITIONS: RouteGuideConfig[] = [
         targetSelector: '[data-guide="faculty-access-badges"]',
         title: "Classification & Academic Access Badges",
         description:
-          "Displays verified institutional privileges: Internal/External faculty status, Thesis Adviser eligibility, and Entrance Exam Essay Evaluation clearance.",
+          "Displays verified institutional privileges: Internal/External faculty status and Thesis / Dissertation Adviser eligibility.",
         placement: "top",
       },
     ],
