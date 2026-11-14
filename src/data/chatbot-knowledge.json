@@ -49,8 +49,8 @@
       "Anong graduate programs ang meron sa EARIST Cavite Campus?",
       "May Graduate School ba sa EARIST Cavite?"
     ],
-    "answerEn": "EARIST Cavite Campus (formerly EARIST-GASAT) was established on March 24, 1982 under Dr. Rodrigo Hipol and transferred to its 31,282-sqm NHA site in Gen. Mariano Alvarez, Cavite in 1986 (the 3-story main building began in March 1990). It offers three Graduate School programs: Doctor of Education major in Educational Management (Ed.D-EM), Master of Arts in Education major in Administration and Supervision (MAEd), and Master in Business Administration (MBA).",
-    "answerTl": "Itinatag ang EARIST Cavite Campus (dating EARIST-GASAT) noong March 24, 1982 sa GMA, Cavite at nalipat sa 31,282-sqm NHA site noong 1986. Ang mga Graduate programs sa Cavite Campus ay: Doctor of Education major in Educational Management (Ed.D-EM), Master of Arts in Education major in Administration and Supervision (MAEd), at Master in Business Administration (MBA).",
+    "answerEn": "EARIST Cavite Campus (formerly EARIST-GASAT) was established on March 24, 1982 under Dr. Rodrigo Hipol and transferred to its 31,282-sqm NHA site in Gen. Mariano Alvarez, Cavite in 1986. At the Cavite Campus, three graduate programs are offered: Doctor of Education major in Educational Management (Ed.D-EM), Master of Arts in Education major in Administration and Supervision (MAEd), and Master in Business Administration (MBA). Meanwhile, the main EARIST Manila Graduate School offers all 4 Doctoral programs (Ed.D-EM, Ph.D-IP, DPA, DBA) and 7 Master's programs (MAEd, MAIE, MBA, MPA, MAT, MAIP, MSM).",
+    "answerTl": "Itinatag ang EARIST Cavite Campus (dating EARIST-GASAT) noong March 24, 1982 sa GMA, Cavite at nalipat sa 31,282-sqm NHA site noong 1986. Nag-o-offer ang Cavite Campus ng tatlong graduate programs: Doctor of Education major in Educational Management (Ed.D-EM), Master of Arts in Education major in Administration and Supervision (MAEd), at Master in Business Administration (MBA). Sa main EARIST Manila campus naman ino-offer ang lahat ng 4 Doctoral programs (Ed.D-EM, Ph.D-IP, DPA, DBA) at 7 Master's programs (MAEd, MAIE, MBA, MPA, MAT, MAIP, MSM).",
     "relatedRoutes": [
       { "label": "Graduate Programs", "href": "/programs" },
       { "label": "About EARIST", "href": "/about" }
@@ -125,6 +125,41 @@
     "answerTl": "Istruktura (Sec. 4.0): Board of Trustees -> President -> EVP -> VPAF & VPAA -> Dean ng Graduate School -> Associate Dean -> Department Heads. Ang Graduate School Council (Sec. 14.0) ay binubuo ng Department Heads at GS Secretary kasama ang Dean bilang ex-officio Chair para sa pagbuo ng polisiya at pag-review ng kurikulum.",
     "relatedRoutes": [
       { "label": "About EARIST GS", "href": "/about" }
+    ]
+  },
+  {
+    "id": "programs-all-overview",
+    "category": "Curricular Programs",
+    "section": "Manual Sec. 5.0 (5.1 & 5.2) — Complete Doctoral and Master's Program Offerings",
+    "title": "Complete List of Graduate Programs Offered by EARIST (Doctoral & Master's)",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": [
+      "graduate programs",
+      "programs offered",
+      "offered by earist",
+      "all graduate programs",
+      "curricular programs",
+      "degree offerings",
+      "courses offered",
+      "doctoral programs",
+      "masters programs",
+      "complete list",
+      "anong programs",
+      "mga kurso",
+      "masteral",
+      "doctorate"
+    ],
+    "commonInquiries": [
+      "What graduate programs are offered by EARIST?",
+      "What degree programs does the EARIST Graduate School offer?",
+      "List all Master's and Doctoral programs at EARIST.",
+      "Ano-anong graduate programs o courses ang ino-offer sa EARIST?"
+    ],
+    "answerEn": "EARIST Graduate School offers 4 Doctoral Programs (PQF Level 8, Professional Track) and 7 Master's Programs (PQF Level 7, Academic Track):\n\nDoctoral Programs:\n1. Doctor of Education major in Educational Management (Ed.D-EM)\n2. Doctor of Philosophy in Industrial Psychology (Ph.D-IP)\n3. Doctor of Public Administration (DPA)\n4. Doctor of Business Administration (DBA)\n\nMaster's Programs:\n1. Master of Arts in Education (MAEd) — Majors in Administration & Supervision, Guidance & Counseling, and Special Education\n2. Master of Arts in Industrial Education (MAIE) — Major in Hotel, Restaurant and Management\n3. Master in Business Administration (MBA)\n4. Master in Public Administration (MPA)\n5. Master of Arts in Teaching (MAT) — Majors in Science, Mathematics, Electronics Technology, and Electrical Technology\n6. Master of Arts in Industrial Psychology (MAIP)\n7. Master of Science in Mathematics (MSM)\n\nEARIST Cavite Campus specifically offers Ed.D-EM, MAEd (Administration & Supervision), and MBA.",
+    "answerTl": "Nag-o-offer ang EARIST Graduate School ng 4 na Doctoral Programs (PQF Level 8) at 7 Master's Programs (PQF Level 7):\n\nDoctoral Programs:\n1. Doctor of Education major in Educational Management (Ed.D-EM)\n2. Doctor of Philosophy in Industrial Psychology (Ph.D-IP)\n3. Doctor of Public Administration (DPA)\n4. Doctor of Business Administration (DBA)\n\nMaster's Programs:\n1. Master of Arts in Education (MAEd) — Majors sa Administration & Supervision, Guidance & Counseling, at Special Education\n2. Master of Arts in Industrial Education (MAIE) — Major sa Hotel, Restaurant and Management\n3. Master in Business Administration (MBA)\n4. Master in Public Administration (MPA)\n5. Master of Arts in Teaching (MAT) — Majors sa Science, Mathematics, Electronics Technology, at Electrical Technology\n6. Master of Arts in Industrial Psychology (MAIP)\n7. Master of Science in Mathematics (MSM)\n\nSa EARIST Cavite Campus naman ay ino-offer ang Ed.D-EM, MAEd (Administration & Supervision), at MBA.",
+    "relatedRoutes": [
+      { "label": "View All Programs", "href": "/programs" },
+      { "label": "Register Account", "href": "/register" }
     ]
   },
   {
@@ -203,17 +238,34 @@
   {
     "id": "admission-general-requirements",
     "category": "Admissions & Alignment",
-    "section": "Manual Sec. 7.1 — General Admission Requirements",
-    "title": "Admission Requirements for Filipino Applicants & Transferees",
+    "section": "Manual Sec. 7.1–7.3 — Admission Requirements for Graduate Studies",
+    "title": "Admission Requirements for Graduate Studies (Filipino, Transferees & International)",
     "roles": ["public", "applicant", "admin"],
-    "keywords": ["admission requirements", "requirements", "egat", "interview", "tor", "transcript of records", "permit to study", "sabbatical", "marriage certificate", "psa", "honorable dismissal", "2x2", "kailangan sa pag-apply"],
+    "keywords": [
+      "admission requirements",
+      "admission requirements for graduate studies",
+      "graduate studies",
+      "requirements",
+      "egat",
+      "interview",
+      "tor",
+      "transcript of records",
+      "permit to study",
+      "sabbatical",
+      "marriage certificate",
+      "psa",
+      "honorable dismissal",
+      "2x2",
+      "kailangan sa pag-apply"
+    ],
     "commonInquiries": [
+      "What are the admission requirements for graduate studies?",
       "What are the general admission requirements to enter EARIST Graduate School?",
       "What documents must government employees, transferees, or married women submit?",
       "Ano ang mga requirements para makapag-apply sa EARIST Graduate School?"
     ],
-    "answerEn": "General Admission Requirements (Sec. 7.1): 1) Pass the EARIST Graduate Admission Test (EGAT) and Interview, 2) Official Transcript of Records (1 original, 1 photocopy), 3) Permit to Study / Sabbatical Leave (for government employees), 4) PSA-issued Marriage Certificate (for married female applicants), 5) Honorable Dismissal (for transferees), and 6) Two recent 2x2 ID pictures. Note: Former students previously issued Honorable Dismissal by EARIST Registrar will NOT be re-admitted.",
-    "answerTl": "Mga General Admission Requirements (Sec. 7.1): 1) Pumasa sa EGAT (Entrance Exam) at Interview, 2) Official TOR (1 original, 1 photocopy), 3) Permit to Study / Sabbatical Leave (para sa government employees), 4) PSA Marriage Certificate (kung married female applicant), 5) Honorable Dismissal (para sa transferees), at 6) Dalawang 2x2 ID picture. Tandaan: Hindi na muling tinatanggap ang dati nang nabigyan ng Honorable Dismissal ng EARIST Registrar.",
+    "answerEn": "Admission requirements for EARIST graduate studies include:\n1. Pass the EARIST Graduate Admission Test (EGAT) and Interview.\n2. Official Transcript of Records (1 original and 1 photocopy).\n3. Permit to Study or Sabbatical Leave (for government employees).\n4. PSA-issued Marriage Certificate (for married female applicants).\n5. Honorable Dismissal (for transferees; former EARIST students previously issued Honorable Dismissal by the EARIST Registrar cannot be re-admitted).\n6. Two (2) recent 2x2 ID pictures.\n\nAcademic & International Requirements: Master's applicants need a relevant Bachelor's degree (GWA 2.00 or better), while Doctoral applicants need a relevant Master's degree (GWA 1.75 or better) plus 5 years of related work experience for Ed.D-EM, DBA, and DPA. International applicants must also submit Embassy-validated credentials, a Bureau of Immigration student visa, an English Proficiency certificate (for non-English speakers), and proof of financial support.",
+    "answerTl": "Mga admission requirements para sa EARIST graduate studies:\n1. Pumasa sa EARIST Graduate Admission Test (EGAT) at Interview.\n2. Official Transcript of Records (1 original at 1 photocopy).\n3. Permit to Study o Sabbatical Leave (para sa government employees).\n4. PSA Marriage Certificate (para sa married female applicants).\n5. Honorable Dismissal (para sa transferees; hindi na muling tinatanggap ang dati nang nabigyan ng Honorable Dismissal ng EARIST Registrar).\n6. Dalawang (2) recent 2x2 ID pictures.\n\nPara sa academic qualifications: kailangan ng relevant Bachelor's degree (GWA 2.00 o mas mataas) sa Master's, at relevant Master's degree (GWA 1.75 o mas mataas) sa Doctoral (may dagdag na 5 years related work experience para sa Ed.D-EM, DBA, at DPA). Ang international students ay kailangan ding magpasa ng Embassy-validated credentials, student visa, English Proficiency certificate, at proof of financial support.",
     "relatedRoutes": [
       { "label": "Applicant Registration", "href": "/register" },
       { "label": "Admissions FAQ", "href": "/faq" }
@@ -276,6 +328,43 @@
     ]
   },
   {
+    "id": "admission-eligibility-masters-doctoral",
+    "category": "Admissions & Alignment",
+    "section": "Manual Sec. 7.1–7.3 — Master's and Doctoral Admission Eligibility",
+    "title": "Who Is Eligible to Apply for Master's and Doctoral Degree Programs",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": [
+      "eligible to apply",
+      "who is eligible",
+      "eligibility",
+      "masters degree",
+      "doctoral degree",
+      "bachelors degree",
+      "gwa 2.00",
+      "gwa 1.75",
+      "probationary",
+      "work experience",
+      "5 years",
+      "non-thesis",
+      "bridging",
+      "profed",
+      "sino ang eligible",
+      "qualified"
+    ],
+    "commonInquiries": [
+      "Who is eligible to apply for a master's degree?",
+      "Who is eligible to apply for a doctoral degree?",
+      "What are the qualifications to apply for Master's vs. Doctoral programs?",
+      "Sino ang eligible o pwedeng mag-apply sa Master's at Doctoral degree?"
+    ],
+    "answerEn": "Eligibility to apply for EARIST Graduate School programs:\n\nMaster's Degree Eligibility:\n1. Must hold a Bachelor's degree in a relevant field with a General Weighted Average (GWA) of 2.00 or better.\n2. Applicants below 2.00 may be admitted on probationary status, provided they complete 6 units with a minimum GWA of 1.75.\n3. Applicants with an unrelated field must complete a 9-unit Bridging Program; non-education graduates entering education-oriented programs need at least 18 units of Professional Education courses.\n4. Must pass the EGAT Entrance Examination and Interview and have no prior Honorable Dismissal issued by the EARIST Registrar.\n\nDoctoral Degree Eligibility:\n1. Must hold a Master's degree in a relevant field with a GWA of 1.75 or better.\n2. Applicants below 1.75 may be admitted on probationary status, provided they complete 6 units with a minimum GWA of 1.50.\n3. Doctor of Education (Ed.D-EM), Doctor of Business Administration (DBA), and Doctor of Public Administration (DPA) additionally require at least 5 years of related professional work experience (Ph.D-IP requires a Master's degree).\n4. Holders of non-thesis Master's degrees must first complete Methodology of Research, Thesis 1, and Thesis 2 before admission, and all applicants must pass EGAT and Interview.",
+    "answerTl": "Eligibility sa pag-apply sa EARIST Graduate School:\n\nPara sa Master's Degree:\n1. May Bachelor's degree sa kaugnay na larangan na may GWA na 2.00 o mas mataas.\n2. Kung kulang sa GWA, maaaring ma-admit nang probationary basta makatapos ng 6 units na may GWA na 1.75 o mas mataas.\n3. Kung hindi aligned ang field, kailangan ng 9-unit Bridging Program; para sa non-education graduates na papasok sa education programs, kailangan ng hindi bababa sa 18 units ng Professional Education courses.\n4. Kailangang pumasa sa EGAT at Interview at walang dating Honorable Dismissal mula sa EARIST Registrar.\n\nPara sa Doctoral Degree:\n1. May Master's degree sa kaugnay na larangan na may GWA na 1.75 o mas mataas (probationary: 6 units na may GWA 1.50 o mas mataas).\n2. Ang Ed.D-EM, DBA, at DPA ay nangangailangan din ng 5 years ng relevant professional work experience.\n3. Ang mga may non-thesis Master's degree ay kailangan munang kumuha ng Methodology of Research, Thesis 1, at Thesis 2 bago ma-admit, at kailangang pumasa sa EGAT at Interview.",
+    "relatedRoutes": [
+      { "label": "Program Alignment", "href": "/applicant/alignment" },
+      { "label": "Applicant Registration", "href": "/register" }
+    ]
+  },
+  {
     "id": "admission-bridging-profed-nonthesis",
     "category": "Admissions & Alignment",
     "section": "Manual Sec. 7.3.4–7.3.6 — Bridging Program, ProfEd Units & Non-Thesis Bridge",
@@ -292,6 +381,75 @@
     "answerTl": "Sec. 7.3.4–7.3.6: 1) Kung hindi aligned ang kurso (unrelated field), kailangan ng 9-unit Bridging Program. 2) Para sa non-education graduates na papasok sa education programs, kailangan ng hindi bababa sa 18 units ng Professional Education courses. 3) Ang non-thesis Master's holders na papasok sa Doctoral ay kailangan munang kumuha ng Methodology of Research, Thesis 1, at Thesis 2.",
     "relatedRoutes": [
       { "label": "Program Alignment Check", "href": "/applicant/alignment" }
+    ]
+  },
+  {
+    "id": "enrollment-how-to-requirements-eligibility",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 7.1–7.6 & System Guide — Graduate School Enrollment Process, Requirements & Eligibility",
+    "title": "How to Enroll, Enrollment Requirements & Eligibility in the Graduate School",
+    "roles": ["public", "applicant", "student", "admin"],
+    "keywords": [
+      "how can i enroll",
+      "how to enroll",
+      "enroll in the graduate school",
+      "requirements for enrollment",
+      "enrollment requirements",
+      "eligible to enroll",
+      "who is eligible to enroll",
+      "pinnacle enrollment",
+      "unit load",
+      "cor upload",
+      "paano mag-enroll",
+      "requirements sa enrollment"
+    ],
+    "commonInquiries": [
+      "How can I enroll in the Graduate School?",
+      "What are the requirements for enrollment?",
+      "Who is eligible to enroll in the Graduate School?",
+      "Paano mag-enroll sa Graduate School at ano ang mga kailangan?"
+    ],
+    "answerEn": "How to Enroll in EARIST Graduate School:\n1. Register in Pinnacle to get your Applicant ID, then complete registration on the GS-IS Registration page.\n2. Clear your Program Alignment check (or secure an approved Bridging Waiver if needed).\n3. Schedule and pass the EGAT Entrance Examination and Interview.\n4. Enroll your subjects in Pinnacle (up to 9 units max for new students, 12 units for continuing students, or 15 units for eligible full-time students with 1.50 average grade) and pay tuition and miscellaneous fees at Financial Management Services (FMS).\n5. Download your Certificate of Registration (COR) from Pinnacle and upload it on the COR Upload page in your Applicant Portal for Admin verification and promotion to Student status.\n\nEnrollment Requirements & Eligibility:\n1. Documentary requirements: Official TOR (1 original, 1 photocopy), Permit to Study/Sabbatical Leave (government employees), PSA Marriage Certificate (married female applicants), Honorable Dismissal (transferees), and two 2x2 ID photos (plus Embassy-validated credentials, student visa, English proficiency certificate, and proof of financial support for international students).\n2. Academic eligibility: Bachelor's degree with 2.00 GWA for Master's, or Master's degree with 1.75 GWA for Doctoral (5 years work experience for Ed.D-EM, DBA, DPA), passing EGAT & Interview, no simultaneous enrollment in multiple graduate programs (Dual Registration is prohibited), and no prior Honorable Dismissal from the EARIST Registrar.",
+    "answerTl": "Paano Mag-enroll sa EARIST Graduate School:\n1. Mag-register muna sa Pinnacle para makakuha ng Applicant ID, pagkatapos ay mag-register sa GS-IS Registration page.\n2. I-clear ang Program Alignment (o magpasa ng Bridging Waiver kung kailangan).\n3. Magpa-schedule at ipasa ang EGAT Entrance Exam at Interview.\n4. Mag-enroll ng subjects sa Pinnacle (max 9 units sa new students, 12 units sa continuing students, o hanggang 15 units kung eligible full-time student na may 1.50 grade) at magbayad sa Financial Management Services (FMS).\n5. I-download ang COR mula sa Pinnacle at i-upload sa COR Upload page ng Applicant Portal para ma-verify at ma-promote ka bilang Student.\n\nRequirements at Eligibility sa Enrollment:\n1. Mga dokumento: Official TOR (1 original, 1 photocopy), Permit to Study/Sabbatical Leave (kung government employee), PSA Marriage Certificate (kung married female applicant), Honorable Dismissal (kung transferee), dalawang 2x2 ID photos, at dagdag na Embassy validation, student visa, English proficiency, at financial support proof para sa international students.\n2. Eligibility: Relevant Bachelor's degree (2.00 GWA) sa Master's o Master's degree (1.75 GWA, plus 5 years work experience sa Ed.D-EM/DBA/DPA) sa Doctoral, pumasa sa EGAT & Interview, bawal ang sabay na enrollment sa dalawang graduate programs, at walang dating Honorable Dismissal mula sa EARIST.",
+    "relatedRoutes": [
+      { "label": "Register Now", "href": "/register" },
+      { "label": "COR Upload", "href": "/applicant/cor-upload" },
+      { "label": "Admissions FAQ", "href": "/faq" }
+    ]
+  },
+  {
+    "id": "enrollment-continuing-student-and-status-check",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 7.4, 7.9–7.11, 7.24, 15.1 & System Guide — Continuing Student Enrollment & Status Check",
+    "title": "Enrolling as a Continuing Student & Checking Your Enrollment Status",
+    "roles": ["applicant", "student", "faculty", "admin"],
+    "keywords": [
+      "continuing student",
+      "continuing graduate school student",
+      "old student",
+      "enroll as a continuing",
+      "check my enrollment status",
+      "enrollment status",
+      "officially enrolled",
+      "student profile",
+      "student dashboard",
+      "plan of coursework",
+      "retention gwa",
+      "status ng enrollment",
+      "continuing"
+    ],
+    "commonInquiries": [
+      "How do I enroll as a continuing Graduate School student?",
+      "How can I check my enrollment status?",
+      "Where can I see if I am officially enrolled?",
+      "Paano mag-enroll bilang continuing student at paano i-check ang enrollment status?"
+    ],
+    "answerEn": "How to Enroll as a Continuing Graduate School Student:\n1. Maintain the required retention GWA (2.00 or better for Master's, 1.75 or better for Doctoral) and remain within the Maximum Residence Rule (4 years for Master's, 6 years for Doctoral; approved Leave of Absence up to 1 year is excluded).\n2. Follow your adviser-approved Plan of Coursework submitted to the Graduate School Office.\n3. Enroll in your next term's courses through Pinnacle (up to 12 units for continuing students, or up to 15 units if full-time with 1+ year residency/study leave and 1.50 average grade). Once coursework is completed and you have passed the Written Comprehensive Exam, you must enroll in Thesis/Dissertation 1 (Title and Proposal) and Thesis/Dissertation 2 (Final Defense).\n4. Settle the corresponding tuition and miscellaneous fees via Financial Management Services (FMS) to receive your updated COR.\n\nHow to Check Your Enrollment Status:\n1. Applicants waiting for student promotion: Open the Applicant Dashboard or COR Upload page to track your Pinnacle enrollment, OCR scan, and Administrator verification status.\n2. Continuing Graduate Students: Sign in to the Student Portal and open the Student Profile page (displays your 'Officially Enrolled' badge, Student Number, enrollment date, and residency count) or Curriculum & Grades page, check your Pinnacle account, or inquire with the Graduate School Records Section.",
+    "answerTl": "Paano Mag-enroll Bilang Continuing Graduate School Student:\n1. Panatilihin ang maintaining GWA (2.00 o mas mataas sa Master's; 1.75 o mas mataas sa Doctoral) at tiyaking pasok sa Maximum Residence Rule (4 years sa Master's, 6 years sa Doctoral; hindi kasama sa bilang ang official LOA).\n2. Sundin ang Plan of Coursework na pirmado ng iyong adviser at nakahain sa GS Office.\n3. Mag-enroll ng subjects sa Pinnacle (hanggang 12 units para sa continuing/old students, o hanggang 15 units para sa full-time students na may 1+ year residency o study leave at 1.50 grade). Sa thesis stage, kailangan ding i-enroll ang Thesis/Dissertation 1 (Title & Proposal) at Thesis/Dissertation 2 (Final Defense).\n4. Magbayad ng tuition at miscellaneous fees sa Financial Management Services (FMS) para makuha ang bagong COR.\n\nPaano I-check ang Enrollment Status:\n1. Para sa Applicants na kaka-upload ng COR: Tingnan ang Applicant Dashboard o COR Upload page para sa verification status.\n2. Para sa Enrolled Students: Buksan ang Student Profile page (makikita ang 'Officially Enrolled' badge, Student Number, at residency standing) at Curriculum & Grades page, i-check sa Pinnacle, o makipag-ugnayan sa Graduate School Records Section.",
+    "relatedRoutes": [
+      { "label": "Student Profile", "href": "/student/profile" },
+      { "label": "Curriculum & Grades", "href": "/student/curriculum" },
+      { "label": "COR Upload", "href": "/applicant/cor-upload" }
     ]
   },
   {
@@ -722,17 +880,38 @@
   {
     "id": "policies-school-fees-discipline",
     "category": "Enrollment & Academic Policies",
-    "section": "Manual Sec. 8.0 & 9.0 — School Fees & Discipline",
-    "title": "Tuition Collection (FMS) and Graduate Student Discipline",
+    "section": "Manual Sec. 7.10.2, 7.12, 7.19.3, 8.0, 9.0 & 17.1 — School Fees, Tuition, Miscellaneous Fees & Discipline",
+    "title": "Tuition Fee, Miscellaneous Fee Collection (FMS), Exemptions & Student Discipline",
     "roles": ["public", "applicant", "student", "admin"],
-    "keywords": ["school fees", "tuition", "fms", "financial management services", "miscellaneous fees", "discipline", "infractions", "dismissal", "bayad", "matrikula"],
+    "keywords": [
+      "school fees",
+      "tuition",
+      "tuition fee",
+      "how much",
+      "fms",
+      "financial management services",
+      "miscellaneous",
+      "miscellaneous fee",
+      "miscellaneous fees",
+      "augmentation fee",
+      "matriculation",
+      "per unit",
+      "discipline",
+      "infractions",
+      "dismissal",
+      "bayad",
+      "matrikula",
+      "magkano"
+    ],
     "commonInquiries": [
+      "How much is the tuition fee for graduate studies?",
+      "How much is the miscellaneous fee?",
       "Which office collects tuition and fees in EARIST Graduate School?",
       "What disciplinary rules apply to graduate students?",
-      "Saan nagbabayad ng tuition/miscellaneous fees at anong discipline rules ang sinusunod?"
+      "Magkano ang tuition fee at miscellaneous fee sa EARIST Graduate School?"
     ],
-    "answerEn": "School Fees (Sec. 8.0): The Financial Management Services (FMS) handles collection of tuition and miscellaneous fees; students enrolling in coursework, thesis, or dissertation writing must pay corresponding fees. Discipline (Sec. 9.0): Graduate students must follow the disciplinary rules in the Undergraduate Student Handbook, with infractions punishable from warnings to dismissal.",
-    "answerTl": "School Fees (Sec. 8.0): Ang Financial Management Services (FMS) ang nangongolekta ng tuition at miscellaneous fees para sa coursework at thesis/dissertation. Discipline (Sec. 9.0): Sumusunod ang graduate students sa disciplinary rules ng Undergraduate Student Handbook (mula warning hanggang dismissal).",
+    "answerEn": "Tuition and Miscellaneous Fees Policy:\n1. The Graduate School Manual of Operations does not publish fixed peso rates per unit or exact miscellaneous fee figures, because official assessments are generated per term through Pinnacle upon enrollment and collected by EARIST Financial Management Services (FMS).\n2. Students enrolling in coursework, Thesis/Dissertation 1 (Title and Proposal), or Thesis/Dissertation 2 (Final Defense) must pay the corresponding tuition and miscellaneous fees assessed for the term.\n3. Class audits require full matriculation fees, and oral re-defense requires paying the panelists' fee.\n4. Fee exemptions & refunds: EARIST personnel are exempted from tuition and miscellaneous fees (but still pay augmentation fees), while elected FEGSSC officers (President, VP, Secretary, Treasurer, Auditor) may avail of an augmentation fee refund during their incumbency.\n\nFor the current semester's exact per-unit tuition rate and miscellaneous fee schedule, check your Pinnacle assessment or contact FMS / the Graduate School Office at earistofficial1945@gmail.com or (02) 7738 5059.\n\nStudent Discipline: Graduate students adhere to the disciplinary rules in the Undergraduate Student Handbook (penalties range from warnings to dismissal).",
+    "answerTl": "Patakaran sa Tuition at Miscellaneous Fees:\n1. Walang nakalagay na fixed peso table o eksaktong halaga per unit sa Graduate School Manual of Operations dahil ang opisyal na assessment ay lumalabas sa Pinnacle tuwing enrollment at kinokolekta ng Financial Management Services (FMS).\n2. Ang mag-e-enroll sa coursework, Thesis/Dissertation 1, at Thesis/Dissertation 2 ay kailangang magbayad ng kaukulang tuition at miscellaneous fees para sa term.\n3. Ang mag-o-audit ng klase ay magbabayad ng full matriculation fees, at sa oral re-defense ay may panelists' fee na babayaran ang candidate.\n4. Libre sa tuition at miscellaneous fees ang EARIST personnel (maliban sa augmentation fees), at may augmentation fee refund naman ang mga elected FEGSSC officers.\n\nPara sa eksaktong halaga ng tuition per unit at miscellaneous fees ngayong semester, tingnan ang iyong Pinnacle assessment o makipag-ugnayan sa FMS / GS Office sa earistofficial1945@gmail.com o (02) 7738 5059.\n\nDiscipline: Sumusunod ang graduate students sa disciplinary rules ng Undergraduate Student Handbook (mula warning hanggang dismissal).",
     "relatedRoutes": [
       { "label": "Admissions FAQ", "href": "/faq" }
     ]
@@ -889,17 +1068,31 @@
     "id": "system-apply-pinnacle-register",
     "category": "System Navigation & Portal Guide",
     "section": "System Guide — Public Registration & Pinnacle Workflow",
-    "title": "How to Apply & Register Using Your Pinnacle Applicant ID",
+    "title": "How to Apply for Admission & Register Using Your Pinnacle Applicant ID",
     "roles": ["public", "applicant"],
-    "keywords": ["how to apply", "apply", "register", "registration", "pinnacle", "applicant id", "sign up", "create account", "paano mag-apply", "mag-register"],
+    "keywords": [
+      "how to apply",
+      "apply for admission",
+      "apply",
+      "admission",
+      "register",
+      "registration",
+      "pinnacle",
+      "applicant id",
+      "sign up",
+      "create account",
+      "paano mag-apply",
+      "mag-register"
+    ],
     "commonInquiries": [
+      "How can I apply for admission to the Graduate School?",
       "How do I apply to EARIST Graduate School and create an account?",
       "What is a Pinnacle Applicant ID and where do I get one?",
       "Paano mag-apply at magparehistro sa EARIST Graduate School system?",
       "Ano yung Pinnacle Applicant ID?"
     ],
-    "answerEn": "To apply: 1) Register first in EARIST's Pinnacle Applicants Module to obtain your Pinnacle Applicant ID and submit initial enrollment requirements/payments. 2) Visit /register in this GS System to complete the 2-step Applicant Registration Wizard (Pinnacle Applicant ID, personal/undergrad info, program choice, and account setup). 3) Sign in at /login to view your Program Alignment, schedule your Entrance Exam, take the exam, and upload your COR after enrollment.",
-    "answerTl": "Para mag-apply: 1) Mag-register muna sa Pinnacle Applicants Module para makakuha ng Pinnacle Applicant ID. 2) Pumunta sa /register dito sa GS System para tapusin ang registration wizard. 3) Mag-sign in sa /login bilang Applicant para i-check ang Program Alignment, magpa-schedule at kumuha ng Entrance Exam, at mag-upload ng COR.",
+    "answerEn": "How to apply for admission to EARIST Graduate School:\n1. Register first in EARIST's Pinnacle Applicants Module to obtain your Pinnacle Applicant ID and complete initial documentary submission and application payments.\n2. Visit the GS-IS Registration page and complete the 2-step Applicant Registration Wizard using your Pinnacle Applicant ID, personal/undergraduate info, program choice, and account credentials.\n3. Sign in on the Sign In page as an Applicant to check your Program Alignment (or download a Bridging Waiver if misaligned), book your EGAT Entrance Exam schedule, take the exam and Interview, and upload your COR after enrolling.",
+    "answerTl": "Paano mag-apply para sa admission sa EARIST Graduate School:\n1. Mag-register muna sa Pinnacle Applicants Module para makakuha ng Pinnacle Applicant ID at maisumite ang initial requirements at application payments.\n2. Pumunta sa GS-IS Registration page at tapusin ang 2-step Applicant Registration Wizard gamit ang iyong Pinnacle Applicant ID, personal/undergrad info, program choice, at account setup.\n3. Mag-sign in sa Sign In page bilang Applicant para i-check ang Program Alignment (o mag-download ng Bridging Waiver kung kailangan), magpa-schedule ng EGAT Entrance Exam, kumuha ng exam at Interview, at mag-upload ng COR pagkatapos mag-enroll.",
     "relatedRoutes": [
       { "label": "Register Now", "href": "/register" },
       { "label": "Portal Login", "href": "/login" },

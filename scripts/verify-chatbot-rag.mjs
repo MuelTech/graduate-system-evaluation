@@ -481,6 +481,103 @@ const BENCHMARK_CASES = [
     expectConversational: true,
     maxReplyLength: 120,
   },
+  // --- Complete Programs, Admissions, Eligibility, Enrollment & Fees Audit ---
+  {
+    id: "Q59",
+    query: "What graduate programs are offered by EARIST?",
+    role: "public",
+    expectedLang: "en",
+    expectTop1Ids: ["programs-all-overview"],
+    expectedIds: ["programs-all-overview"],
+  },
+  {
+    id: "Q60",
+    query: "What are the admission requirements for graduate studies?",
+    role: "public",
+    expectedLang: "en",
+    expectTop1Ids: ["admission-general-requirements"],
+    expectedIds: ["admission-general-requirements"],
+  },
+  {
+    id: "Q61",
+    query: "How can I apply for admission to the Graduate School?",
+    role: "public",
+    expectedLang: "en",
+    expectTop1Ids: ["system-apply-pinnacle-register", "admission-general-requirements"],
+    expectedIds: ["system-apply-pinnacle-register", "admission-general-requirements"],
+  },
+  {
+    id: "Q62",
+    query: "Who is eligible to apply for a master's degree?",
+    role: "public",
+    expectedLang: "en",
+    expectTop1Ids: ["admission-eligibility-masters-doctoral"],
+    expectedIds: ["admission-eligibility-masters-doctoral"],
+  },
+  {
+    id: "Q63",
+    query: "Who is eligible to apply for a doctoral degree?",
+    role: "public",
+    expectedLang: "en",
+    expectTop1Ids: ["admission-eligibility-masters-doctoral"],
+    expectedIds: ["admission-eligibility-masters-doctoral"],
+  },
+  {
+    id: "Q64",
+    query: "How can I enroll in the Graduate School?",
+    role: "public",
+    expectedLang: "en",
+    expectTop1Ids: ["enrollment-how-to-requirements-eligibility"],
+    expectedIds: ["enrollment-how-to-requirements-eligibility"],
+  },
+  {
+    id: "Q65",
+    query: "What are the requirements for enrollment?",
+    role: "public",
+    expectedLang: "en",
+    expectTop1Ids: ["enrollment-how-to-requirements-eligibility"],
+    expectedIds: ["enrollment-how-to-requirements-eligibility"],
+  },
+  {
+    id: "Q66",
+    query: "Who is eligible to enroll in the Graduate School?",
+    role: "public",
+    expectedLang: "en",
+    expectTop1Ids: ["enrollment-how-to-requirements-eligibility", "admission-eligibility-masters-doctoral"],
+    expectedIds: ["enrollment-how-to-requirements-eligibility", "admission-eligibility-masters-doctoral"],
+  },
+  {
+    id: "Q67",
+    query: "How do I enroll as a continuing Graduate School student?",
+    role: "student",
+    expectedLang: "en",
+    expectTop1Ids: ["enrollment-continuing-student-and-status-check"],
+    expectedIds: ["enrollment-continuing-student-and-status-check"],
+  },
+  {
+    id: "Q68",
+    query: "How can I check my enrollment status?",
+    role: "applicant",
+    expectedLang: "en",
+    expectTop1Ids: ["enrollment-continuing-student-and-status-check"],
+    expectedIds: ["enrollment-continuing-student-and-status-check"],
+  },
+  {
+    id: "Q69",
+    query: "How much is the tuition fee for graduate studies?",
+    role: "public",
+    expectedLang: "en",
+    expectTop1Ids: ["policies-school-fees-discipline"],
+    expectedIds: ["policies-school-fees-discipline"],
+  },
+  {
+    id: "Q70",
+    query: "How much is the miscellaneous fee?",
+    role: "public",
+    expectedLang: "en",
+    expectTop1Ids: ["policies-school-fees-discipline"],
+    expectedIds: ["policies-school-fees-discipline"],
+  },
 ];
 
 let passed = 0;
@@ -515,8 +612,12 @@ for (const tc of BENCHMARK_CASES) {
     retrievalOk = result.isConversational === true && !result.isOutOfScope;
   } else {
     const retrievedIds = result.hits.map((h) => h.chunk.id);
+    const top1Ok = tc.expectTop1Ids
+      ? tc.expectTop1Ids.includes(retrievedIds[0])
+      : true;
     retrievalOk =
       !result.isOutOfScope &&
+      top1Ok &&
       tc.expectedIds.some((expectedId) => retrievedIds.includes(expectedId));
   }
 

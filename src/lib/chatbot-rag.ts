@@ -527,8 +527,8 @@ const SYNONYM_EXPANSIONS: Array<{ pattern: RegExp; tokens: string[] }> = [
     tokens: ["incomplete", "inc", "removal", "1", "year"],
   },
   {
-    pattern: /\b(tuition|matrikula|bayad|fees|magkano|fms)\b/i,
-    tokens: ["school", "fees", "tuition", "fms", "miscellaneous"],
+    pattern: /\b(tuition|matrikula|bayad|fees?|miscellaneous|augmentation|matriculation|magkano|how\s+much|fms)\b/i,
+    tokens: ["school", "fees", "tuition", "miscellaneous", "fms", "augmentation"],
   },
   {
     pattern: /\b(f2f|face[- ]to[- ]face|online class|blended|modality|modalities|synchronous|asynchronous)\b/i,
@@ -587,7 +587,8 @@ const SYNONYM_EXPANSIONS: Array<{ pattern: RegExp; tokens: string[] }> = [
     tokens: ["academic", "credentials", "diploma", "transcript", "clearance"],
   },
   {
-    pattern: /\b(grumadweyt|makapagtapos|graduation|graduate)\b/i,
+    pattern:
+      /\b(grumadweyt|makapagtapos|graduation|graduating|to\s+graduate|how\s+to\s+graduate|requirements\s+to\s+graduate|bago\s+grumadweyt)\b/i,
     tokens: ["graduation", "requirements", "publication", "output"],
   },
   {
@@ -660,6 +661,48 @@ const SYNONYM_EXPANSIONS: Array<{ pattern: RegExp; tokens: string[] }> = [
       "5",
       "steps",
       "journey",
+    ],
+  },
+  {
+    pattern:
+      /\b(programs?\s+offered|offered\s+programs?|graduate\s+programs?|curricular\s+programs?|courses?\s+offered|what\s+programs?|anong\s+(?:mga\s+)?(?:graduate\s+)?programs?|mga\s+kurso)\b/i,
+    tokens: [
+      "graduate",
+      "programs",
+      "offered",
+      "curricular",
+      "doctoral",
+      "masters",
+      "all",
+      "overview",
+    ],
+  },
+  {
+    pattern:
+      /\b(eligible|eligibility|qualified|who\s+can\s+(?:apply|enroll)|who\s+is\s+eligible|sino\s+ang\s+(?:pwedeng|maaaring)\s+(?:mag-?apply|mag-?enroll))\b/i,
+    tokens: [
+      "eligible",
+      "eligibility",
+      "qualifications",
+      "gwa",
+      "bachelors",
+      "masters",
+      "doctoral",
+      "work",
+      "experience",
+    ],
+  },
+  {
+    pattern:
+      /\b(enroll|enrollment|enrolling|mag-?enroll|pag-?enroll|continuing\s+student|old\s+student|enrollment\s+status)\b/i,
+    tokens: [
+      "enroll",
+      "enrollment",
+      "requirements",
+      "continuing",
+      "status",
+      "pinnacle",
+      "cor",
     ],
   },
 ];
@@ -1324,12 +1367,17 @@ export function buildGroundedResponseFallback(
 
   const replyParts: string[] = [];
 
-  // Prepend live portal/thesis status note when user asks about their own status/current page
+  // Prepend live portal/thesis status note only when a logged-in portal user asks about their own active status or current page
+  const portalRole = normalizeRole(activeRole);
+  const isPortalRole =
+    portalRole === "student" ||
+    portalRole === "applicant" ||
+    portalRole === "faculty";
   const isPersonalStatusQuery =
-    /\b(my|ko|akin|aking|status|ngayon|current|step|state|saan na|nasaa?n|this page|ditong page)\b/i.test(
+    /\b(my\s+(?:current|thesis|dissertation|defense|adviser|stage|step|progress)|status\s+ko|stage\s+ko|step\s+ko|adviser\s+ko|title\s+ko|nasaa?n\s+na\s+ako|anong\s+stage\s+ko|this\s+page|ditong\s+page)\b/i.test(
       retrieval.query,
     );
-  if (isPersonalStatusQuery && userContext?.pageTitle) {
+  if (isPortalRole && isPersonalStatusQuery && userContext?.pageTitle) {
     const scenarioNote = userContext.activeScenarioLabel
       ? ` (${userContext.activeScenarioLabel})`
       : "";
