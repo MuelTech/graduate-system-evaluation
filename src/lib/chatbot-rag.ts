@@ -48,8 +48,10 @@ export interface RetrievalResult {
   query: string;
   language: QueryLanguage;
   isGreeting: boolean;
+  isConversational: boolean;
   isIdentityQuery: boolean;
   isOutOfScope: boolean;
+  conversationalReply?: string;
   topScore: number;
   hits: RetrievalHit[];
 }
@@ -856,6 +858,100 @@ function normalizeRole(role?: string): KnowledgeRole | undefined {
   return undefined;
 }
 
+const QUESTION_OPENER_PREFIX =
+  /^(?:may(?:roon)?\s+(?:akong\s+)?(?:i?tatanong|tanong)|magtatanong\s+(?:lang|sana)|(?:pwede|puwede)\s+(?:bang\s+)?magtanong|tanong\s+(?:lang|ko\s+lang)|ask\s+(?:lang(?:\s+ako)?|ko\s+lang)|(?:i\s+have\s+(?:a\s+)?(?:quick\s+)?question|(?:can|may)\s+i\s+ask(?:\s+(?:a\s+)?(?:quick\s+)?question)?|quick\s+question))\b(?:\s+(?:ako|po|lang|sana|ko))*/i;
+
+const INTERROGATIVE_IN_REST =
+  /\b(?:ano|anong|paano|saan|kailan|ilan|ilang|magkano|sino|bakit|pwede\s+ba|puwede\s+ba|what|how|where|when|why|who|which|is\s+there|do\s+i|should\s+i|where\s+can)\b/i;
+
+function formatConversationalTopic(topic: string, isTagalog: boolean): string {
+  let formatted = topic
+    .replace(/\bthesis\s+(?:disertation|dissertation|disertasyon)\b/gi, isTagalog ? "thesis o dissertation" : "thesis or dissertation")
+    .replace(/\b(?:disertation|disertasyon|dissertasyon)\b/gi, "dissertation")
+    .replace(/\btesis\b/gi, "thesis")
+    .trim();
+
+  if (isTagalog) {
+    formatted = formatted.replace(/\bko$/i, "mo");
+  } else {
+    formatted = formatted.replace(/^my\s+/i, "your ");
+  }
+  return formatted;
+}
+
+function detectConversationalIntent(
+  trimmed: string,
+  language: QueryLanguage,
+  userContext?: UserLiveStateContext,
+): string | null {
+  const plain = trimmed.replace(/[!.,?]+$/g, "").trim();
+  if (!plain) return null;
+
+  const isTl = language === "tl" || language === "taglish";
+  const firstName = userContext?.userName?.trim().split(/\s+/)[0];
+
+  // 1. Gratitude ("Thanks!", "Salamat!", "Thank you po")
+  if (
+    /^(?:(?:ok(?:ay)?|sige|noted|got\s+it|alright)[,\s]+)?(?:many\s+|maraming\s+|super\s+)?(?:thanks?|thank\s+you(?:\s+(?:so|very)\s+much)?|tysm|ty|thx|salamat(?:\s+po)?|appreciate\s+it)(?:[,\s]+(?:po|din|rin|so\s+much|very\s+much|again|for\s+the\s+help|for\s+the\s+info|for\s+answering))?$/i.test(
+      plain,
+    )
+  ) {
+    return isTl
+      ? "Walang anuman! Sabihin mo lang kung may iba ka pang tanong."
+      : "You're welcome! Let me know anytime if you have another question.";
+  }
+
+  // 2. Hold / Pause ("Wait", "Wait lang", "Teka lang", "Hold on")
+  if (
+    /^(?:wait(?:\s+lang)?|teka(?:\s+lang)?|sandali(?:\s+lang)?|saglit(?:\s+lang)?|hold\s+on|one\s+(?:sec(?:ond)?|moment)|just\s+a\s+(?:sec(?:ond)?|moment))(?:\s+(?:po|ha|ah|muna|pls|please))?$/i.test(
+      plain,
+    )
+  ) {
+    return isTl
+      ? "Sige lang, take your time! Nandito lang ako kapag handa ka nang magtanong."
+      : "Sure, take your time! Just message me whenever you're ready.";
+  }
+
+  // 3. Simple Acknowledgments / Closings ("Ok", "Sige", "Noted", "Got it", "Bye")
+  if (
+    /^(?:ok(?:ay|i)?|sige|ge|cge|noted|copy|got\s+it|gets(?:\s+ko\s+na)?|i\s+see|alright|ahh?|oh+|nice|great|cool|good|wala\s+na(?:\s+po)?|none|nothing\s+else|that(?:'s|\s+is)\s+all|bye+|goodbye|paalam)(?:\s+(?:po|na|ah|ha|naman|din))?$/i.test(
+      plain,
+    )
+  ) {
+    return isTl
+      ? "Sige! Sabihin mo lang kung may iba ka pang gustong itanong."
+      : "Got it! Feel free to ask anytime if you need more help.";
+  }
+
+  // 4. Question Openers ("May tanong ako", "May tanong ako sa thesis disertation", "I have a question")
+  if (
+    QUESTION_OPENER_PREFIX.test(plain) &&
+    !/[?.!]\s*\S/.test(trimmed)
+  ) {
+    const rest = plain.replace(QUESTION_OPENER_PREFIX, "").trim();
+    if (!rest) {
+      return isTl
+        ? `Sige${firstName ? `, ${firstName}` : ""}! Ano ang gusto mong itanong?`
+        : `Sure${firstName ? `, ${firstName}` : ""}! What would you like to ask?`;
+    }
+
+    if (!INTERROGATIVE_IN_REST.test(rest)) {
+      const strippedTopic = rest
+        .replace(/^(?:po\s+)?(?:tungkol\s+sa|about|regarding|sa|on|for|re)\s+/i, "")
+        .trim();
+      const topicWords = strippedTopic.split(/\s+/).filter(Boolean);
+      if (strippedTopic && topicWords.length <= 6) {
+        const topic = formatConversationalTopic(strippedTopic, isTl);
+        return isTl
+          ? `Sige${firstName ? `, ${firstName}` : ""}! Ano ang tanong mo tungkol sa ${topic}?`
+          : `Sure${firstName ? `, ${firstName}` : ""}! What is your question about ${topic}?`;
+      }
+    }
+  }
+
+  return null;
+}
+
 /**
  * Retrieves the top-K relevant knowledge chunks using Hybrid Vector + Lexical scoring
  * and enforces the strict Scope Boundary Gate for out-of-scope queries.
@@ -864,6 +960,7 @@ export function retrieveKnowledgeChunks(
   query: string,
   activeRole?: string,
   topK = 4,
+  userContext?: UserLiveStateContext,
 ): RetrievalResult {
   const trimmed = query.trim();
   const language = detectQueryLanguage(trimmed);
@@ -873,6 +970,7 @@ export function retrieveKnowledgeChunks(
       query: trimmed,
       language,
       isGreeting: true,
+      isConversational: false,
       isIdentityQuery: false,
       isOutOfScope: false,
       topScore: 1,
@@ -885,8 +983,28 @@ export function retrieveKnowledgeChunks(
       query: trimmed,
       language,
       isGreeting: false,
+      isConversational: false,
       isIdentityQuery: true,
       isOutOfScope: false,
+      topScore: 1,
+      hits: [],
+    };
+  }
+
+  const conversationalReply = detectConversationalIntent(
+    trimmed,
+    language,
+    userContext,
+  );
+  if (conversationalReply) {
+    return {
+      query: trimmed,
+      language,
+      isGreeting: false,
+      isConversational: true,
+      isIdentityQuery: false,
+      isOutOfScope: false,
+      conversationalReply,
       topScore: 1,
       hits: [],
     };
@@ -902,6 +1020,7 @@ export function retrieveKnowledgeChunks(
       query: trimmed,
       language,
       isGreeting: false,
+      isConversational: false,
       isIdentityQuery: false,
       isOutOfScope: true,
       topScore: 0,
@@ -917,6 +1036,7 @@ export function retrieveKnowledgeChunks(
       query: trimmed,
       language,
       isGreeting: false,
+      isConversational: false,
       isIdentityQuery: false,
       isOutOfScope: true,
       topScore: 0,
@@ -1016,6 +1136,7 @@ export function retrieveKnowledgeChunks(
     query: trimmed,
     language,
     isGreeting: false,
+    isConversational: false,
     isIdentityQuery: false,
     isOutOfScope,
     topScore,
@@ -1136,6 +1257,14 @@ export function buildGroundedResponseFallback(
   if (retrieval.isGreeting) {
     return {
       reply: getGreetingReply(retrieval.language, activeRole),
+      citations: [],
+      relatedRoutes: [],
+    };
+  }
+
+  if (retrieval.isConversational && retrieval.conversationalReply) {
+    return {
+      reply: retrieval.conversationalReply,
       citations: [],
       relatedRoutes: [],
     };

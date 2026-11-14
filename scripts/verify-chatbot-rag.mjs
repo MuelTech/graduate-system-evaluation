@@ -433,29 +433,44 @@ const BENCHMARK_CASES = [
     expectedLang: "en",
     expectIdentityQuery: true,
   },
+  {
+    id: "Q53",
+    query: "Thanks!",
+    role: "public",
+    expectedLang: "en",
+    expectConversational: true,
+    maxReplyLength: 120,
+  },
+  {
+    id: "Q54",
+    query: "May tanong ako",
+    role: "student",
+    expectedLang: ["tl", "taglish"],
+    expectConversational: true,
+    maxReplyLength: 120,
+  },
+  {
+    id: "Q55",
+    query: "Wait",
+    role: "public",
+    expectedLang: "en",
+    expectConversational: true,
+    maxReplyLength: 120,
+  },
+  {
+    id: "Q56",
+    query: "May tanong ako sa thesis disertation",
+    role: "student",
+    expectedLang: "taglish",
+    expectConversational: true,
+    maxReplyLength: 120,
+  },
 ];
 
 let passed = 0;
 const failures = [];
 
 for (const tc of BENCHMARK_CASES) {
-  const result = rag.retrieveKnowledgeChunks(tc.query, tc.role, 4);
-  const langOk = Array.isArray(tc.expectedLang)
-    ? tc.expectedLang.includes(result.language)
-    : result.language === tc.expectedLang;
-
-  let retrievalOk = false;
-  if (tc.expectOutOfScope) {
-    retrievalOk = result.isOutOfScope === true && result.hits.length === 0;
-  } else if (tc.expectIdentityQuery) {
-    retrievalOk = result.isIdentityQuery === true && !result.isOutOfScope;
-  } else {
-    const retrievedIds = result.hits.map((h) => h.chunk.id);
-    retrievalOk =
-      !result.isOutOfScope &&
-      tc.expectedIds.some((expectedId) => retrievedIds.includes(expectedId));
-  }
-
   const mockUserContext =
     tc.role === "student"
       ? {
@@ -465,6 +480,30 @@ for (const tc of BENCHMARK_CASES) {
         }
       : { pageTitle: "EARIST Graduate School Home" };
 
+  const result = rag.retrieveKnowledgeChunks(
+    tc.query,
+    tc.role,
+    4,
+    mockUserContext,
+  );
+  const langOk = Array.isArray(tc.expectedLang)
+    ? tc.expectedLang.includes(result.language)
+    : result.language === tc.expectedLang;
+
+  let retrievalOk = false;
+  if (tc.expectOutOfScope) {
+    retrievalOk = result.isOutOfScope === true && result.hits.length === 0;
+  } else if (tc.expectIdentityQuery) {
+    retrievalOk = result.isIdentityQuery === true && !result.isOutOfScope;
+  } else if (tc.expectConversational) {
+    retrievalOk = result.isConversational === true && !result.isOutOfScope;
+  } else {
+    const retrievedIds = result.hits.map((h) => h.chunk.id);
+    retrievalOk =
+      !result.isOutOfScope &&
+      tc.expectedIds.some((expectedId) => retrievedIds.includes(expectedId));
+  }
+
   const fallbackResponse = rag.buildGroundedResponseFallback(
     result,
     tc.role,
@@ -472,12 +511,15 @@ for (const tc of BENCHMARK_CASES) {
   );
   const replyText = fallbackResponse.reply || "";
   const hasReply = Boolean(replyText.trim().length > 20);
+  const lengthOk = tc.maxReplyLength
+    ? replyText.length <= tc.maxReplyLength && !replyText.includes("\n\n")
+    : true;
   const cleanFormatOk =
     !/\*\*|###|---|`/.test(replyText) &&
     !/\b(?:Manual\s+)?Sec\.?\s*\d+/i.test(replyText) &&
     !/\bGemini\b|\blarge language model\b/i.test(replyText);
 
-  if (langOk && retrievalOk && hasReply && cleanFormatOk) {
+  if (langOk && retrievalOk && hasReply && lengthOk && cleanFormatOk) {
     passed++;
   } else {
     failures.push({
@@ -487,11 +529,18 @@ for (const tc of BENCHMARK_CASES) {
       detectedLang: result.language,
       expectedLang: tc.expectedLang,
       retrievalOk,
+      lengthOk,
       cleanFormatOk,
       isOutOfScope: result.isOutOfScope,
       topScore: Number(result.topScore.toFixed(4)),
       topHitIds: result.hits.map((h) => `${h.chunk.id}(${h.score.toFixed(3)})`),
-      expectedIds: tc.expectedIds ?? (tc.expectIdentityQuery ? ["IDENTITY"] : ["OUT_OF_SCOPE"]),
+      expectedIds:
+        tc.expectedIds ??
+        (tc.expectIdentityQuery
+          ? ["IDENTITY"]
+          : tc.expectConversational
+            ? ["CONVERSATIONAL"]
+            : ["OUT_OF_SCOPE"]),
     });
   }
 }

@@ -414,7 +414,12 @@ export function ChatbotWidget() {
       setMessages((prev) => [...prev, botMessage]);
     } catch {
       // Offline / client-only fallback using the exact same deterministic RAG knowledge store
-      const retrieval = retrieveKnowledgeChunks(trimmed, portalRole, 4);
+      const retrieval = retrieveKnowledgeChunks(
+        trimmed,
+        portalRole,
+        4,
+        userContext,
+      );
       const fallback = buildGroundedResponseFallback(
         retrieval,
         portalRole,

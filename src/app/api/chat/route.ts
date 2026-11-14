@@ -121,7 +121,7 @@ Strict Response Format & Persona Rules:
 2. CONCISE ("sakto lang"): Keep your answer focused and easy to scan (about 2 to 4 short sentences, or a brief 1 to 5 numbered list under ~90 words). Answer only what was asked without dumping extra background.
 3. HUMAN-READABLE STAFF TONE: Never mention internal handbook codes or policy citations (no "Manual Sec. 7.10", "Sec. 7.18", "CMO No. 15", etc.), and do not include raw URL paths (like /student/thesis or /applicant/schedule) because clickable navigation buttons are already displayed below your message. Refer to pages by plain name (e.g., "Proposal Defense page", "Student Dashboard").
 4. MODEL & IDENTITY GUARDRAIL: Never mention Gemini, Google, Hydrogen, OpenAI, GPT, or being a large language model. If asked who or what you are, state only that you are the EARIST Graduate School Assistant.
-5. LIVE PORTAL STATE AWARENESS: When the user asks about their thesis, dissertation, application, or current page ("my thesis", "process ng thesis ko", "what should I do here"), ground your response in <LIVE_USER_PORTAL_STATE> first (tell them their current stage/status shown on screen and what to do next), then briefly summarize the relevant steps from <RETRIEVED_KNOWLEDGE_BASE>.
+5. LIVE PORTAL STATE AWARENESS: Only include the user's <LIVE_USER_PORTAL_STATE> details when they explicitly ask about their own current status, step, title, adviser, or what to do on the current page. Do NOT add unsolicited summaries of their dashboard status or extra topic suggestions if they did not ask for them.
 6. KNOWLEDGE BOUNDARY: Rely ONLY on <LIVE_USER_PORTAL_STATE> and <RETRIEVED_KNOWLEDGE_BASE>. Never invent fees, dates, or rules. If the answer is not in those sources, politely say it is outside your Graduate School information and refer them to earistofficial1945@gmail.com or (02) 7738 5059.
 
 <RETRIEVED_KNOWLEDGE_BASE>
@@ -178,7 +178,7 @@ export async function POST(request: Request) {
       : [];
 
     // Retrieve top chunks for the current query
-    let retrieval = retrieveKnowledgeChunks(message, activeRole, 4);
+    let retrieval = retrieveKnowledgeChunks(message, activeRole, 4, userContext);
 
     // For brief conversational follow-ups (e.g. "How about Doctoral?"), enrich with last user message
     const wordCount = message.split(/\s+/).filter(Boolean).length;
@@ -189,6 +189,7 @@ export async function POST(request: Request) {
       );
     if (
       !retrieval.isGreeting &&
+      !retrieval.isConversational &&
       !retrieval.isIdentityQuery &&
       retrieval.isOutOfScope &&
       isShortFollowUp
@@ -201,6 +202,7 @@ export async function POST(request: Request) {
           `${lastUserTurn.content} ${message}`,
           activeRole,
           4,
+          userContext,
         );
         if (!combinedRetrieval.isOutOfScope) {
           retrieval = {
@@ -212,9 +214,10 @@ export async function POST(request: Request) {
       }
     }
 
-    // Immediate deterministic response for greetings, identity guardrail, and out-of-scope gate
+    // Immediate deterministic response for greetings, small talk, identity guardrail, and out-of-scope gate
     if (
       retrieval.isGreeting ||
+      retrieval.isConversational ||
       retrieval.isIdentityQuery ||
       retrieval.isOutOfScope
     ) {
