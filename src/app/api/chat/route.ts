@@ -2,9 +2,11 @@ import { NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 import {
   buildGroundedResponseFallback,
+  cleanAssistantReply,
   retrieveKnowledgeChunks,
   type RelatedRoute,
   type RetrievalResult,
+  type UserLiveStateContext,
 } from "@/lib/chatbot-rag";
 
 interface ChatHistoryMessage {
@@ -17,53 +19,110 @@ interface ChatRequestBody {
   role?: unknown;
   pathname?: unknown;
   history?: unknown;
+  userContext?: unknown;
 }
 
 const GEMINI_MODEL = "gemini-4-hydrogen";
+
+function parseUserContext(raw: unknown): UserLiveStateContext | undefined {
+  if (!raw || typeof raw !== "object") return undefined;
+  const obj = raw as Record<string, unknown>;
+  const pick = (key: string, maxLen = 400): string | undefined =>
+    typeof obj[key] === "string" && obj[key].trim()
+      ? obj[key].trim().slice(0, maxLen)
+      : undefined;
+
+  const ctx: UserLiveStateContext = {
+    userName: pick("userName", 120),
+    program: pick("program", 160),
+    pageTitle: pick("pageTitle", 120),
+    activeScenarioLabel: pick("activeScenarioLabel", 140),
+    activeScenarioDescription: pick("activeScenarioDescription", 280),
+    thesisSummary: pick("thesisSummary", 700),
+  };
+
+  return Object.values(ctx).some(Boolean) ? ctx : undefined;
+}
+
+function buildLivePortalStateBlock(
+  activeRole: string,
+  pathname: string,
+  userContext?: UserLiveStateContext,
+): string {
+  const lines = [
+    `- Active Portal Role: ${activeRole || "public"}`,
+    `- Current Page: ${userContext?.pageTitle || pathname || "Public Portal"}`,
+  ];
+
+  if (userContext?.userName) {
+    lines.push(`- Signed-in User: ${userContext.userName}`);
+  }
+  if (userContext?.program) {
+    lines.push(`- Program: ${userContext.program}`);
+  }
+  if (userContext?.activeScenarioLabel) {
+    const desc = userContext.activeScenarioDescription
+      ? ` — ${userContext.activeScenarioDescription}`
+      : "";
+    lines.push(
+      `- Active Status / View on This Page: ${userContext.activeScenarioLabel}${desc}`,
+    );
+  }
+  if (userContext?.thesisSummary) {
+    lines.push(`- Current Thesis / Milestone State: ${userContext.thesisSummary}`);
+  }
+
+  return lines.join("\n");
+}
 
 function buildSystemInstruction(
   retrieval: RetrievalResult,
   activeRole: string,
   pathname: string,
+  userContext?: UserLiveStateContext,
 ): string {
   const knowledgeContext = retrieval.hits
+    .slice(0, 2)
     .map((hit, idx) => {
-      const routes = hit.chunk.relatedRoutes
-        .map((r) => `${r.label} (${r.href})`)
-        .join(", ");
+      const cleanEn = cleanAssistantReply(hit.chunk.answerEn);
+      const cleanTl = cleanAssistantReply(hit.chunk.answerTl);
       return [
-        `[Source ${idx + 1}: ${hit.chunk.section} | Title: ${hit.chunk.title}]`,
-        `English Policy/Guide: ${hit.chunk.answerEn}`,
-        `Tagalog/Taglish Policy/Guide: ${hit.chunk.answerTl}`,
-        routes ? `Related System Routes: ${routes}` : "",
-      ]
-        .filter(Boolean)
-        .join("\n");
+        `[Source ${idx + 1}: ${hit.chunk.title}]`,
+        `English: ${cleanEn}`,
+        `Tagalog/Taglish: ${cleanTl}`,
+      ].join("\n");
     })
     .join("\n\n---\n\n");
 
   const languageRule =
     retrieval.language === "tl"
-      ? "Respond naturally in polite Tagalog (may use official English academic terms where standard, e.g., Title Defense, Comprehensive Exam)."
+      ? "Respond naturally in polite, everyday Tagalog like a helpful university office staff member."
       : retrieval.language === "taglish"
-        ? "Respond naturally in friendly, professional Taglish matching the user's conversational style."
-        : "Respond clearly and concisely in professional English.";
+        ? "Respond naturally in friendly, clear Taglish matching the user's conversational tone."
+        : "Respond clearly, politely, and concisely in plain English like a helpful university staff member.";
 
-  return `You are the official EARIST Graduate School AI Assistant for the Eulogio "Amang" Rodriguez Institute of Science and Technology (EARIST) Graduate School Information System.
+  const livePortalState = buildLivePortalStateBlock(
+    activeRole,
+    pathname,
+    userContext,
+  );
 
-Active User Context:
-- Portal Role: ${activeRole || "public"}
-- Current Page Path: ${pathname || "/"}
+  return `You are the official EARIST Graduate School Assistant — a warm, helpful Graduate School Office staff guide for EARIST.
+
+<LIVE_USER_PORTAL_STATE>
+${livePortalState}
+</LIVE_USER_PORTAL_STATE>
 
 Language Instruction:
 - ${languageRule}
 
-Strict Knowledge Boundary & Grounding Rules:
-1. Answer ONLY using facts explicitly stated in the <RETRIEVED_KNOWLEDGE_BASE> below.
-2. NEVER fabricate, guess, or extrapolate tuition amounts, dates, rules, policies, or system URLs not present in the retrieved sources.
-3. Cite the official Manual section (e.g., "Manual Sec. 7.15") or relevant system route (e.g., "/applicant/schedule") naturally in your answer when applicable.
-4. If the user's specific question is not covered by the retrieved sources, politely explain in their language that it is outside the official EARIST Graduate School Manual of Operations and System FAQs, and advise contacting earistofficial1945@gmail.com or (02) 7738 5059.
-5. Keep your reply concise, helpful, and structured with bullet points when listing steps or requirements.
+Strict Response Format & Persona Rules:
+1. PLAIN TEXT ONLY: Never use Markdown symbols (*, **, #, ###, ---, or backticks). For numbered steps, use simple plain lines like "1. Title Defense - ...".
+2. CONCISE ("sakto lang"): Keep your answer focused and easy to scan (about 2 to 4 short sentences, or a brief 1 to 5 numbered list under ~90 words). Answer only what was asked without dumping extra background.
+3. HUMAN-READABLE STAFF TONE: Never mention internal handbook codes or policy citations (no "Manual Sec. 7.10", "Sec. 7.18", "CMO No. 15", etc.), and do not include raw URL paths (like /student/thesis or /applicant/schedule) because clickable navigation buttons are already displayed below your message. Refer to pages by plain name (e.g., "Proposal Defense page", "Student Dashboard").
+4. MODEL & IDENTITY GUARDRAIL: Never mention Gemini, Google, Hydrogen, OpenAI, GPT, or being a large language model. If asked who or what you are, state only that you are the EARIST Graduate School Assistant.
+5. LIVE PORTAL STATE AWARENESS: When the user asks about their thesis, dissertation, application, or current page ("my thesis", "process ng thesis ko", "what should I do here"), ground your response in <LIVE_USER_PORTAL_STATE> first (tell them their current stage/status shown on screen and what to do next), then briefly summarize the relevant steps from <RETRIEVED_KNOWLEDGE_BASE>.
+6. KNOWLEDGE BOUNDARY: Rely ONLY on <LIVE_USER_PORTAL_STATE> and <RETRIEVED_KNOWLEDGE_BASE>. Never invent fees, dates, or rules. If the answer is not in those sources, politely say it is outside your Graduate School information and refer them to earistofficial1945@gmail.com or (02) 7738 5059.
 
 <RETRIEVED_KNOWLEDGE_BASE>
 ${knowledgeContext}
@@ -107,6 +166,7 @@ export async function POST(request: Request) {
       typeof body.role === "string" ? body.role.trim() : "public";
     const pathname =
       typeof body.pathname === "string" ? body.pathname.trim() : "/";
+    const userContext = parseUserContext(body.userContext);
     const history: ChatHistoryMessage[] = Array.isArray(body.history)
       ? body.history.filter(
           (item): item is ChatHistoryMessage =>
@@ -127,7 +187,12 @@ export async function POST(request: Request) {
       /\b(how about|what about|eh yung|eh sa|paano naman|how long|magkano|ilan|doctoral|masters)\b/i.test(
         message,
       );
-    if (retrieval.isOutOfScope && isShortFollowUp) {
+    if (
+      !retrieval.isGreeting &&
+      !retrieval.isIdentityQuery &&
+      retrieval.isOutOfScope &&
+      isShortFollowUp
+    ) {
       const lastUserTurn = [...history]
         .reverse()
         .find((turn) => turn.role === "user");
@@ -147,12 +212,20 @@ export async function POST(request: Request) {
       }
     }
 
-    // Immediate deterministic response for greetings and out-of-scope boundary enforcement
-    if (retrieval.isGreeting || retrieval.isOutOfScope) {
-      const fallback = buildGroundedResponseFallback(retrieval, activeRole);
+    // Immediate deterministic response for greetings, identity guardrail, and out-of-scope gate
+    if (
+      retrieval.isGreeting ||
+      retrieval.isIdentityQuery ||
+      retrieval.isOutOfScope
+    ) {
+      const fallback = buildGroundedResponseFallback(
+        retrieval,
+        activeRole,
+        userContext,
+      );
       return NextResponse.json({
         reply: fallback.reply,
-        citations: fallback.citations,
+        citations: [],
         relatedRoutes: fallback.relatedRoutes,
         language: retrieval.language,
         mode: "local-rag",
@@ -160,9 +233,6 @@ export async function POST(request: Request) {
       });
     }
 
-    const citations = Array.from(
-      new Set(retrieval.hits.slice(0, 3).map((h) => h.chunk.section)),
-    );
     const routeMap = new Map<string, RelatedRoute>();
     for (const hit of retrieval.hits.slice(0, 2)) {
       for (const route of hit.chunk.relatedRoutes) {
@@ -180,6 +250,7 @@ export async function POST(request: Request) {
         retrieval,
         activeRole,
         pathname,
+        userContext,
       );
       const input = buildConversationInput(message, history);
 
@@ -194,8 +265,8 @@ export async function POST(request: Request) {
         const geminiText = interaction.output_text?.trim();
         if (geminiText) {
           return NextResponse.json({
-            reply: geminiText,
-            citations,
+            reply: cleanAssistantReply(geminiText),
+            citations: [],
             relatedRoutes,
             language: retrieval.language,
             mode: "gemini-rag",
@@ -217,8 +288,8 @@ export async function POST(request: Request) {
           const generatedText = response.text?.trim();
           if (generatedText) {
             return NextResponse.json({
-              reply: generatedText,
-              citations,
+              reply: cleanAssistantReply(generatedText),
+              citations: [],
               relatedRoutes,
               language: retrieval.language,
               mode: "gemini-rag",
@@ -236,10 +307,14 @@ export async function POST(request: Request) {
     }
 
     // Deterministic Local RAG Fallback (works offline, without API key, or during quota limits)
-    const fallback = buildGroundedResponseFallback(retrieval, activeRole);
+    const fallback = buildGroundedResponseFallback(
+      retrieval,
+      activeRole,
+      userContext,
+    );
     return NextResponse.json({
       reply: fallback.reply,
-      citations: fallback.citations,
+      citations: [],
       relatedRoutes: fallback.relatedRoutes,
       language: retrieval.language,
       mode: "local-rag",
@@ -250,7 +325,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         reply:
-          "Sorry, I encountered a temporary issue processing your request. Please try again or visit /faq for Graduate School information.",
+          "Sorry, I encountered a temporary issue processing your request. Please try again or visit the System FAQ page.",
         citations: [],
         relatedRoutes: [{ label: "System FAQ", href: "/faq" }],
         language: "en",

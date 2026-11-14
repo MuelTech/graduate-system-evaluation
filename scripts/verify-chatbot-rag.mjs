@@ -426,6 +426,13 @@ const BENCHMARK_CASES = [
     expectedLang: "taglish",
     expectedIds: ["thesis-defense-stages-contents", "student-thesis-hub"],
   },
+  {
+    id: "Q52",
+    query: "Hi, what model are you?",
+    role: "public",
+    expectedLang: "en",
+    expectIdentityQuery: true,
+  },
 ];
 
 let passed = 0;
@@ -440,6 +447,8 @@ for (const tc of BENCHMARK_CASES) {
   let retrievalOk = false;
   if (tc.expectOutOfScope) {
     retrievalOk = result.isOutOfScope === true && result.hits.length === 0;
+  } else if (tc.expectIdentityQuery) {
+    retrievalOk = result.isIdentityQuery === true && !result.isOutOfScope;
   } else {
     const retrievedIds = result.hits.map((h) => h.chunk.id);
     retrievalOk =
@@ -447,10 +456,28 @@ for (const tc of BENCHMARK_CASES) {
       tc.expectedIds.some((expectedId) => retrievedIds.includes(expectedId));
   }
 
-  const fallbackResponse = rag.buildGroundedResponseFallback(result, tc.role);
-  const hasReply = Boolean(fallbackResponse.reply && fallbackResponse.reply.trim().length > 20);
+  const mockUserContext =
+    tc.role === "student"
+      ? {
+          userName: "Juan M. Dela Cruz",
+          pageTitle: "Proposal Defense",
+          activeScenarioLabel: "1. Pre-Defense Adviser Review",
+        }
+      : { pageTitle: "EARIST Graduate School Home" };
 
-  if (langOk && retrievalOk && hasReply) {
+  const fallbackResponse = rag.buildGroundedResponseFallback(
+    result,
+    tc.role,
+    mockUserContext,
+  );
+  const replyText = fallbackResponse.reply || "";
+  const hasReply = Boolean(replyText.trim().length > 20);
+  const cleanFormatOk =
+    !/\*\*|###|---|`/.test(replyText) &&
+    !/\b(?:Manual\s+)?Sec\.?\s*\d+/i.test(replyText) &&
+    !/\bGemini\b|\blarge language model\b/i.test(replyText);
+
+  if (langOk && retrievalOk && hasReply && cleanFormatOk) {
     passed++;
   } else {
     failures.push({
@@ -460,12 +487,24 @@ for (const tc of BENCHMARK_CASES) {
       detectedLang: result.language,
       expectedLang: tc.expectedLang,
       retrievalOk,
+      cleanFormatOk,
       isOutOfScope: result.isOutOfScope,
       topScore: Number(result.topScore.toFixed(4)),
       topHitIds: result.hits.map((h) => `${h.chunk.id}(${h.score.toFixed(3)})`),
-      expectedIds: tc.expectedIds ?? ["OUT_OF_SCOPE"],
+      expectedIds: tc.expectedIds ?? (tc.expectIdentityQuery ? ["IDENTITY"] : ["OUT_OF_SCOPE"]),
     });
   }
+}
+
+// Verify cleanAssistantReply sanitizer on raw LLM-style output
+const dirtySample =
+  "### Bago Magsimula\n* **Residency (Manual Sec. 7.10):** ayon sa Sec. 7.18: I am Gemini 4 Hydrogen, a large language model built by Google.\n---";
+const sanitizedSample = rag.cleanAssistantReply(dirtySample);
+if (
+  /\*\*|###|---|Sec\.\s*\d+|Gemini|large language model/i.test(sanitizedSample)
+) {
+  console.error("FAIL: cleanAssistantReply did not strip banned tokens:", sanitizedSample);
+  process.exit(1);
 }
 
 const accuracy = (passed / BENCHMARK_CASES.length) * 100;

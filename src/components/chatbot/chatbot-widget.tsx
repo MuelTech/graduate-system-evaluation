@@ -8,7 +8,6 @@ import {
   X,
   Send,
   Sparkles,
-  BookOpen,
   ArrowUpRight,
   RotateCcw,
 } from "lucide-react";
@@ -16,7 +15,17 @@ import {
   buildGroundedResponseFallback,
   retrieveKnowledgeChunks,
   type RelatedRoute,
+  type UserLiveStateContext,
 } from "@/lib/chatbot-rag";
+import {
+  useEvaluationRole,
+  type EvaluationUser,
+} from "@/lib/evaluation-session";
+import {
+  getScenario,
+  SCENARIO_DEFINITIONS,
+  type ScenarioPageKey,
+} from "@/lib/evaluation-mock/scenario-store";
 
 type PortalContextRole = "public" | "applicant" | "student" | "faculty";
 
@@ -25,16 +34,207 @@ interface Message {
   role: "user" | "bot";
   content: string;
   timestamp: Date | null;
-  citations?: string[];
   relatedRoutes?: RelatedRoute[];
   isOutOfScope?: boolean;
 }
 
 interface ChatApiResponse {
   reply: string;
-  citations?: string[];
   relatedRoutes?: RelatedRoute[];
   isOutOfScope?: boolean;
+}
+
+const APPROVED_THESIS_TITLE =
+  "Data-Driven Instructional Supervision and Digital Readiness of Public Secondary School Heads in the Division of Manila";
+const ASSIGNED_ADVISER = "Dr. Maria Clara R. Santos, EdD";
+
+function resolvePageMeta(pathname: string): {
+  pageTitle: string;
+  pageKey?: ScenarioPageKey;
+} {
+  if (pathname.startsWith("/applicant/dashboard")) {
+    return { pageTitle: "Applicant Dashboard", pageKey: "applicant-dashboard" };
+  }
+  if (pathname.startsWith("/applicant/alignment")) {
+    return { pageTitle: "Program Alignment", pageKey: "applicant-alignment" };
+  }
+  if (pathname.startsWith("/applicant/schedule")) {
+    return { pageTitle: "Entrance Exam Schedule", pageKey: "applicant-schedule" };
+  }
+  if (pathname.startsWith("/applicant/exam")) {
+    return { pageTitle: "Entrance Examination", pageKey: "applicant-exam" };
+  }
+  if (pathname.startsWith("/applicant/results")) {
+    return { pageTitle: "Entrance Exam Results", pageKey: "applicant-results" };
+  }
+  if (pathname.startsWith("/applicant/cor-upload")) {
+    return { pageTitle: "COR Upload", pageKey: "applicant-cor-upload" };
+  }
+  if (pathname.startsWith("/applicant/profile")) {
+    return { pageTitle: "Applicant Profile" };
+  }
+  if (pathname.startsWith("/applicant/notifications")) {
+    return { pageTitle: "Applicant Notifications" };
+  }
+  if (pathname.startsWith("/student/dashboard")) {
+    return { pageTitle: "Student Dashboard", pageKey: "student-dashboard" };
+  }
+  if (pathname.startsWith("/student/thesis/title-defense")) {
+    return { pageTitle: "Title Defense", pageKey: "title-defense" };
+  }
+  if (pathname.startsWith("/student/thesis/adviser-request")) {
+    return { pageTitle: "Thesis Adviser Request", pageKey: "adviser-request" };
+  }
+  if (pathname.startsWith("/student/thesis/proposal-defense")) {
+    return { pageTitle: "Proposal Defense", pageKey: "proposal-defense" };
+  }
+  if (pathname.startsWith("/student/thesis/strike")) {
+    return { pageTitle: "Plagiarism Check", pageKey: "strike" };
+  }
+  if (pathname.startsWith("/student/thesis/final-defense")) {
+    return { pageTitle: "Final Defense", pageKey: "final-defense" };
+  }
+  if (pathname.startsWith("/student/thesis")) {
+    return { pageTitle: "Thesis Journey Hub" };
+  }
+  if (pathname.startsWith("/student/repository/submit")) {
+    return {
+      pageTitle: "Research Databank Submission",
+      pageKey: "repository-submit",
+    };
+  }
+  if (pathname.startsWith("/student/repository")) {
+    return { pageTitle: "Student Thesis Repository" };
+  }
+  if (pathname.startsWith("/student/curriculum")) {
+    return { pageTitle: "Student Curriculum" };
+  }
+  if (pathname.startsWith("/student/journey")) {
+    return { pageTitle: "Academic Journey" };
+  }
+  if (pathname.startsWith("/student/profile")) {
+    return { pageTitle: "Student Profile" };
+  }
+  if (pathname.startsWith("/student/announcements")) {
+    return { pageTitle: "Student Announcements" };
+  }
+  if (pathname.startsWith("/student/notifications")) {
+    return { pageTitle: "Student Notifications" };
+  }
+  if (
+    pathname.startsWith("/faculty/defense-workspace") ||
+    pathname.startsWith("/panelist/defense-workspace")
+  ) {
+    return { pageTitle: "Defense Workspace", pageKey: "defense-workspace" };
+  }
+  if (
+    pathname.startsWith("/faculty/advisees") ||
+    pathname.startsWith("/panelist/advisees")
+  ) {
+    return { pageTitle: "My Advisees", pageKey: "advisees" };
+  }
+  if (
+    pathname.startsWith("/faculty/essay-evaluations/") ||
+    pathname.startsWith("/panelist/essay-evaluations/")
+  ) {
+    return {
+      pageTitle: "Essay Evaluation",
+      pageKey: "essay-evaluation-detail",
+    };
+  }
+  if (
+    pathname.startsWith("/faculty/defenses") ||
+    pathname.startsWith("/panelist/defenses")
+  ) {
+    return { pageTitle: "Assigned Defenses" };
+  }
+  if (
+    pathname.startsWith("/faculty/signatures") ||
+    pathname.startsWith("/panelist/signatures")
+  ) {
+    return { pageTitle: "E-Signatures" };
+  }
+  if (pathname.startsWith("/faculty") || pathname.startsWith("/panelist")) {
+    return { pageTitle: "Faculty Portal" };
+  }
+  if (pathname.startsWith("/programs")) return { pageTitle: "Graduate Programs" };
+  if (pathname.startsWith("/about")) {
+    return { pageTitle: "About EARIST Graduate School" };
+  }
+  if (pathname.startsWith("/repository")) {
+    return { pageTitle: "Public Research Repository" };
+  }
+  if (pathname.startsWith("/faq")) {
+    return { pageTitle: "Frequently Asked Questions" };
+  }
+  if (pathname.startsWith("/login")) return { pageTitle: "Portal Sign In" };
+  if (pathname.startsWith("/register")) {
+    return { pageTitle: "Applicant Registration" };
+  }
+  return { pageTitle: "EARIST Graduate School Home" };
+}
+
+function getScenarioLabel(pageKey: ScenarioPageKey): string {
+  const id = getScenario(pageKey);
+  const opt = SCENARIO_DEFINITIONS[pageKey]?.find((o) => o.id === id);
+  return opt?.label ?? id;
+}
+
+function buildLiveUserContext(
+  pathname: string,
+  portalRole: PortalContextRole,
+  persona: EvaluationUser,
+): UserLiveStateContext {
+  const { pageTitle, pageKey } = resolvePageMeta(pathname);
+  const activeScenarioId = pageKey ? getScenario(pageKey) : undefined;
+  const activeOption =
+    pageKey && activeScenarioId
+      ? SCENARIO_DEFINITIONS[pageKey]?.find((o) => o.id === activeScenarioId)
+      : undefined;
+
+  let thesisSummary: string | undefined;
+
+  if (portalRole === "student") {
+    const dashId = getScenario("student-dashboard");
+    if (pathname.startsWith("/student/dashboard") && dashId === "TITLE_ACTIVE") {
+      thesisSummary =
+        "Current Step: Title Defense (not yet submitted). Student needs to submit 3 proposed titles, Proposal Package PDF, current COR, and defense-fee receipt. Title not yet approved and adviser not yet assigned.";
+    } else if (
+      pathname.startsWith("/student/dashboard") &&
+      dashId === "COMPLETED_JOURNEY"
+    ) {
+      thesisSummary = `All 5 Thesis Journey milestones (Title Defense, Adviser Request, Proposal Defense, Plagiarism Check, Final Defense) are completed under approved title "${APPROVED_THESIS_TITLE}" with adviser ${ASSIGNED_ADVISER}. Ready for Research Databank archival.`;
+    } else {
+      const stepStates = [
+        `Title Defense: ${getScenarioLabel("title-defense")}`,
+        `Adviser Request: ${getScenarioLabel("adviser-request")}`,
+        `Proposal Defense: ${getScenarioLabel("proposal-defense")}`,
+        `Plagiarism Check: ${getScenarioLabel("strike")}`,
+        `Final Defense: ${getScenarioLabel("final-defense")}`,
+      ].join(" | ");
+      const overview = pathname.startsWith("/student/dashboard")
+        ? `Dashboard milestone view shows Title Defense and Adviser Request completed, and Proposal Defense scheduled under adviser ${ASSIGNED_ADVISER}. `
+        : "";
+      thesisSummary = `${overview}Approved Title: "${APPROVED_THESIS_TITLE}". Adviser: ${ASSIGNED_ADVISER}. Current step states — ${stepStates}.`;
+    }
+  } else if (portalRole === "applicant") {
+    thesisSummary = [
+      `Program Alignment: ${getScenarioLabel("applicant-alignment")}`,
+      `Exam Schedule: ${getScenarioLabel("applicant-schedule")}`,
+      `Entrance Exam: ${getScenarioLabel("applicant-exam")}`,
+      `Exam Results: ${getScenarioLabel("applicant-results")}`,
+      `COR Upload: ${getScenarioLabel("applicant-cor-upload")}`,
+    ].join(" | ");
+  }
+
+  return {
+    userName: portalRole !== "public" ? persona.name : undefined,
+    program: portalRole !== "public" ? persona.program : undefined,
+    pageTitle,
+    activeScenarioLabel: activeOption?.label,
+    activeScenarioDescription: activeOption?.description,
+    thesisSummary,
+  };
 }
 
 const ROLE_LABELS: Record<PortalContextRole, string> = {
@@ -91,6 +291,7 @@ function getWelcomeMessage(portalRole: PortalContextRole): string {
 
 export function ChatbotWidget() {
   const pathname = usePathname() || "/";
+  const { persona } = useEvaluationRole();
 
   const portalRole: PortalContextRole = useMemo(() => {
     if (pathname.startsWith("/applicant")) return "applicant";
@@ -182,6 +383,8 @@ export function ChatbotWidget() {
     setInput("");
     setIsTyping(true);
 
+    const userContext = buildLiveUserContext(pathname, portalRole, persona);
+
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -191,6 +394,7 @@ export function ChatbotWidget() {
           role: portalRole,
           pathname,
           history: historySnapshot,
+          userContext,
         }),
       });
 
@@ -204,7 +408,6 @@ export function ChatbotWidget() {
         role: "bot",
         content: data.reply,
         timestamp: new Date(),
-        citations: data.citations ?? [],
         relatedRoutes: data.relatedRoutes ?? [],
         isOutOfScope: data.isOutOfScope ?? false,
       };
@@ -212,13 +415,16 @@ export function ChatbotWidget() {
     } catch {
       // Offline / client-only fallback using the exact same deterministic RAG knowledge store
       const retrieval = retrieveKnowledgeChunks(trimmed, portalRole, 4);
-      const fallback = buildGroundedResponseFallback(retrieval, portalRole);
+      const fallback = buildGroundedResponseFallback(
+        retrieval,
+        portalRole,
+        userContext,
+      );
       const botMessage: Message = {
         id: generateId(),
         role: "bot",
         content: fallback.reply,
         timestamp: new Date(),
-        citations: fallback.citations,
         relatedRoutes: fallback.relatedRoutes,
         isOutOfScope: retrieval.isOutOfScope,
       };
@@ -316,23 +522,6 @@ export function ChatbotWidget() {
                     <p className="leading-relaxed whitespace-pre-line">
                       {message.content}
                     </p>
-
-                    {/* Citations */}
-                    {message.role === "bot" &&
-                      message.citations &&
-                      message.citations.length > 0 && (
-                        <div className="mt-2 flex flex-wrap gap-1 border-t border-black/5 pt-2">
-                          {message.citations.map((citation) => (
-                            <span
-                              key={citation}
-                              className="inline-flex items-center gap-1 rounded bg-white px-1.5 py-0.5 text-[10px] font-medium text-gray-600 ring-1 ring-gray-200"
-                            >
-                              <BookOpen className="h-2.5 w-2.5 text-(--earist-primary)" />
-                              {citation}
-                            </span>
-                          ))}
-                        </div>
-                      )}
 
                     {/* Clickable Navigation Links */}
                     {message.role === "bot" &&

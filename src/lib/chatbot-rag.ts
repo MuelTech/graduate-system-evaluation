@@ -27,6 +27,15 @@ export interface KnowledgeChunk {
   relatedRoutes: RelatedRoute[];
 }
 
+export interface UserLiveStateContext {
+  userName?: string;
+  program?: string;
+  pageTitle?: string;
+  activeScenarioLabel?: string;
+  activeScenarioDescription?: string;
+  thesisSummary?: string;
+}
+
 export interface RetrievalHit {
   chunk: KnowledgeChunk;
   score: number;
@@ -39,6 +48,7 @@ export interface RetrievalResult {
   query: string;
   language: QueryLanguage;
   isGreeting: boolean;
+  isIdentityQuery: boolean;
   isOutOfScope: boolean;
   topScore: number;
   hits: RetrievalHit[];
@@ -669,6 +679,9 @@ const EXPLICIT_OUT_OF_SCOPE_PATTERNS: RegExp[] = [
 const GREETING_PATTERN =
   /^(hi+|hello+|hey+|good\s*(morning|afternoon|evening)|magandang\s*(umaga|hapon|gabi)|kamusta|kumusta|help|tulong|patulong|start|menu)([!.,?\s]*)$/i;
 
+const IDENTITY_QUERY_PATTERN =
+  /\b(?:what|which|anong?|ano)\s+(?:ai\s+|language\s+)?(?:model|llm)\b.*\b(?:you|ka|mo|this|chatbot|assistant|ito|gamit)\b|\b(?:are\s+you|ikaw\s+ba(?:\s+ay|\s+si)?|is\s+this)\s+(?:an?\s+)?(?:gemini|chatgpt|gpt|claude|openai|anthropic|google\s+ai)\b|\b(?:gemini|chatgpt|claude)\s+ka\s+ba\b|\b(?:who\s+(?:made|built|created|trained|are)\s+you|sino\s+(?:ka|gumawa\s+sayo|nagprogram)|what\s+ai\s+are\s+you|ano\s+pangalan\s+mo|what\s+is\s+your\s+name)\b/i;
+
 function normalizeText(text: string): string {
   return text
     .toLowerCase()
@@ -860,6 +873,19 @@ export function retrieveKnowledgeChunks(
       query: trimmed,
       language,
       isGreeting: true,
+      isIdentityQuery: false,
+      isOutOfScope: false,
+      topScore: 1,
+      hits: [],
+    };
+  }
+
+  if (IDENTITY_QUERY_PATTERN.test(trimmed)) {
+    return {
+      query: trimmed,
+      language,
+      isGreeting: false,
+      isIdentityQuery: true,
       isOutOfScope: false,
       topScore: 1,
       hits: [],
@@ -876,6 +902,7 @@ export function retrieveKnowledgeChunks(
       query: trimmed,
       language,
       isGreeting: false,
+      isIdentityQuery: false,
       isOutOfScope: true,
       topScore: 0,
       hits: [],
@@ -890,6 +917,7 @@ export function retrieveKnowledgeChunks(
       query: trimmed,
       language,
       isGreeting: false,
+      isIdentityQuery: false,
       isOutOfScope: true,
       topScore: 0,
       hits: [],
@@ -988,10 +1016,90 @@ export function retrieveKnowledgeChunks(
     query: trimmed,
     language,
     isGreeting: false,
+    isIdentityQuery: false,
     isOutOfScope,
     topScore,
     hits: isOutOfScope ? [] : topHits.filter((h) => h.score >= 0.11),
   };
+}
+
+export function cleanAssistantReply(text: string): string {
+  let cleaned = text.replace(/\r\n/g, "\n");
+
+  // Guard against accidental LLM vendor or model disclosure
+  cleaned = cleaned
+    .replace(
+      /\bGemini(?:\s+\d+(?:\.\d+)?)?(?:\s+(?:Hydrogen|Pro|Flash|Ultra|Nano|Live|Omni))?\b/gi,
+      "EARIST Graduate School Assistant",
+    )
+    .replace(
+      /\b(?:a\s+)?large\s+language\s+model(?:\s+(?:built|trained|developed)\s+by\s+Google)?\b/gi,
+      "the official EARIST Graduate School virtual assistant",
+    );
+
+  // Strip Markdown formatting symbols (*, **, #, ---, `) so replies read as plain text
+  cleaned = cleaned
+    .replace(/^[ \t]*[-*_]{3,}[ \t]*$/gm, "")
+    .replace(/^[ \t]*#{1,6}[ \t]+/gm, "")
+    .replace(/^[ \t]*\*[ \t]+/gm, "- ")
+    .replace(/\*\*([^*\n]+)\*\*/g, "$1")
+    .replace(/\*([^*\n]+)\*/g, "$1")
+    .replace(/__([^_\n]+)__/g, "$1")
+    .replace(/[`*#]/g, "");
+
+  // Strip internal Manual section / CMO numbers so responses sound like GS Office staff
+  cleaned = cleaned
+    .replace(
+      /\s*\([^)]*(?:\bManual\s+Sec|\bSec(?:tion)?s?\.?\s*\d+|\bCMO\s*No\.?\s*\d+)[^)]*\)/gi,
+      "",
+    )
+    .replace(
+      /\b(?:Ayon\s+sa|Under|Sa\s+ilalim\s+ng|According\s+to|Per)\s+(?:the\s+)?(?:EARIST\s+Graduate\s+School\s+)?(?:Manual\s+of\s+Operations\s+)?(?:Manual\s+)?Sec(?:tion)?s?\.?\s*\d+(?:\.\d+)*(?:\s*(?:–|-|,|at|and|to)\s*\d+(?:\.\d+)*)*\s*[:,]?\s*/gi,
+      "",
+    )
+    .replace(
+      /\b(?:ayon\s+sa|sa\s+ilalim\s+ng)\s+Manual\s+of\s+Operations\s*[:,]?\s*/gi,
+      "",
+    )
+    .replace(
+      /\b(?:Manual\s+)?Sec(?:tion)?s?\.?\s*\d+(?:\.\d+)*(?:\s*(?:–|-|,|at|and|to)\s*\d+(?:\.\d+)*)*\s*[:\-–]?\s*/gi,
+      "",
+    )
+    .replace(/\bCMO\s*No\.?\s*\d+(?:,\s*s\.?\s*\d+)?\s*[:,]?\s*/gi, "");
+
+  cleaned = cleaned
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .replace(/\(\s*\)/g, "")
+    .replace(/\s+([.,:;?])/g, "$1")
+    .trim();
+
+  cleaned = cleaned.replace(
+    /(^|\n|:\s+)([a-z])/g,
+    (_, prefix: string, ch: string) => `${prefix}${ch.toUpperCase()}`,
+  );
+
+  return cleaned;
+}
+
+export function getIdentityReply(
+  language: QueryLanguage,
+  activeRole?: string,
+  userContext?: UserLiveStateContext,
+): string {
+  const roleLabel = normalizeRole(activeRole);
+  const pageHint = userContext?.pageTitle
+    ? ` Kasalukuyan kang nasa ${userContext.pageTitle}.`
+    : "";
+  const pageHintEn = userContext?.pageTitle
+    ? ` You are currently on ${userContext.pageTitle}.`
+    : "";
+
+  if (language === "tl" || language === "taglish") {
+    return `Ako ang EARIST Graduate School Assistant, ang official virtual guide ng system para sa admissions, academic policies, thesis process, at portal navigation${roleLabel ? ` (${roleLabel} view)` : ""}.${pageHint} Ano ang maitutulong ko sa inquiry mo ngayon?`;
+  }
+  return `I am the EARIST Graduate School Assistant, your virtual office guide for Graduate School admissions, policies, thesis procedures, and portal navigation${roleLabel ? ` (${roleLabel} view)` : ""}.${pageHintEn} How can I help you today?`;
 }
 
 export function getGreetingReply(
@@ -1000,16 +1108,16 @@ export function getGreetingReply(
 ): string {
   const roleLabel = normalizeRole(activeRole);
   if (language === "tl" || language === "taglish") {
-    return `Kumusta! Ako ang EARIST Graduate School AI Assistant${roleLabel ? ` (${roleLabel.toUpperCase()} view)` : ""}. Pwede kang magtanong sa English, Tagalog, o Taglish tungkol sa:\n\n• Admission requirements, Pinnacle ID, at Program Alignment\n• Entrance Exam schedule, format, at resulta\n• Graduate School policies (GWA, units, Compre Exam, LOA, toga colors)\n• 5-Step Thesis Journey (Title, Adviser, Proposal, STRIKE, Final Defense)\n• Paggamit ng portal at navigation`;
+    return `Kumusta! Ako ang EARIST Graduate School Assistant${roleLabel ? ` (${roleLabel} view)` : ""}. Maaari kang magtanong sa English, Tagalog, o Taglish tungkol sa admissions, academic policies, thesis process, o paggamit ng portal.`;
   }
-  return `Hello! I'm the EARIST Graduate School AI Assistant${roleLabel ? ` (${roleLabel.toUpperCase()} view)` : ""}. You can ask me in English, Tagalog, or Taglish about:\n\n• Admissions, Pinnacle ID & Program Alignment\n• Entrance Exam scheduling, coverage & results\n• Graduate School policies (GWA, unit load, Compre Exam, LOA, gown colors)\n• 5-Step Thesis Journey (Title, Adviser, Proposal, STRIKE, Final Defense)\n• System navigation across Applicant, Student & Faculty portals`;
+  return `Hello! I'm the EARIST Graduate School Assistant${roleLabel ? ` (${roleLabel} view)` : ""}. You can ask me in English, Tagalog, or Taglish about admissions, academic policies, thesis procedures, or navigating the portal.`;
 }
 
 export function getOutOfScopeFallbackReply(language: QueryLanguage): string {
   if (language === "tl" || language === "taglish") {
-    return "Paumanhin, ngunit ang iyong tanong ay labas sa saklaw ng opisyal na EARIST Graduate School Manual of Operations, configured FAQs, at system navigation.\n\nMaaari kang magtanong tungkol sa admissions, academic policies, thesis defense guidelines, graduate programs, o kung paano gamitin ang portal. Kung kailangan mo ng opisyal na tulong mula sa opisina, maaari kang makipag-ugnayan sa earistofficial1945@gmail.com o (02) 7738 5059.";
+    return "Paumanhin, pero labas sa impormasyon ng EARIST Graduate School at ng portal na ito ang iyong tanong.\n\nMaaari kang magtanong tungkol sa admissions, programs, academic policies, thesis process, o kung paano gamitin ang portal. Para sa iba pang concerns, makipag-ugnayan sa earistofficial1945@gmail.com o (02) 7738 5059.";
   }
-  return "I'm sorry, but your question is outside the configured knowledge base of the EARIST Graduate School Manual of Operations, official FAQs, and system navigation.\n\nPlease ask about Graduate School admissions, programs, academic policies, thesis/defense procedures, or portal features. For other official inquiries, please contact the Graduate School Office at earistofficial1945@gmail.com or (02) 7738 5059.";
+  return "I'm sorry, but that question is outside the official EARIST Graduate School guidelines and portal information.\n\nPlease ask about Graduate School admissions, programs, academic policies, thesis procedures, or portal navigation. For other inquiries, please contact the Graduate School Office at earistofficial1945@gmail.com or (02) 7738 5059.";
 }
 
 /**
@@ -1019,6 +1127,7 @@ export function getOutOfScopeFallbackReply(language: QueryLanguage): string {
 export function buildGroundedResponseFallback(
   retrieval: RetrievalResult,
   activeRole?: string,
+  userContext?: UserLiveStateContext,
 ): {
   reply: string;
   citations: string[];
@@ -1027,6 +1136,14 @@ export function buildGroundedResponseFallback(
   if (retrieval.isGreeting) {
     return {
       reply: getGreetingReply(retrieval.language, activeRole),
+      citations: [],
+      relatedRoutes: [],
+    };
+  }
+
+  if (retrieval.isIdentityQuery) {
+    return {
+      reply: getIdentityReply(retrieval.language, activeRole, userContext),
       citations: [],
       relatedRoutes: [],
     };
@@ -1058,8 +1175,25 @@ export function buildGroundedResponseFallback(
     ? primary.chunk.answerTl
     : primary.chunk.answerEn;
 
-  const replyParts = [primaryAnswer];
-  const citations = [primary.chunk.section];
+  const replyParts: string[] = [];
+
+  // Prepend live portal/thesis status note when user asks about their own status/current page
+  const isPersonalStatusQuery =
+    /\b(my|ko|akin|aking|status|ngayon|current|step|state|saan na|nasaa?n|this page|ditong page)\b/i.test(
+      retrieval.query,
+    );
+  if (isPersonalStatusQuery && userContext?.pageTitle) {
+    const scenarioNote = userContext.activeScenarioLabel
+      ? ` (${userContext.activeScenarioLabel})`
+      : "";
+    replyParts.push(
+      useTagalog
+        ? `Base sa kasalukuyan mong view sa ${userContext.pageTitle}${scenarioNote}:`
+        : `Based on your current view on ${userContext.pageTitle}${scenarioNote}:`,
+    );
+  }
+
+  replyParts.push(primaryAnswer);
   const routeMap = new Map<string, RelatedRoute>();
 
   for (const r of primary.chunk.relatedRoutes) {
@@ -1070,12 +1204,7 @@ export function buildGroundedResponseFallback(
     const secAnswer = useTagalog
       ? secondary.chunk.answerTl
       : secondary.chunk.answerEn;
-    replyParts.push(
-      useTagalog
-        ? `Dagdag na impormasyon (${secondary.chunk.title}):\n${secAnswer}`
-        : `Related detail (${secondary.chunk.title}):\n${secAnswer}`,
-    );
-    citations.push(secondary.chunk.section);
+    replyParts.push(secAnswer);
     for (const r of secondary.chunk.relatedRoutes) {
       if (!routeMap.has(r.href)) {
         routeMap.set(r.href, r);
@@ -1084,8 +1213,8 @@ export function buildGroundedResponseFallback(
   }
 
   return {
-    reply: replyParts.join("\n\n"),
-    citations: Array.from(new Set(citations)),
+    reply: cleanAssistantReply(replyParts.join("\n\n")),
+    citations: [],
     relatedRoutes: Array.from(routeMap.values()).slice(0, 3),
   };
 }
