@@ -1,0 +1,1250 @@
+[
+  {
+    "id": "history-earist-founding-laws",
+    "category": "History & Institutional Profile",
+    "section": "Manual Sec. 1.0 — Brief History of EARIST",
+    "title": "History and Charter Laws of EARIST (1945–1978)",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["history", "earist", "1945", "1946", "nagtahan", "ervhs", "pantaleon regala", "apolinario apilado", "hilario nudas", "ra 4072", "ra 5088", "earmsat", "ra 6595", "pd 1521", "chartered state college", "kasaysayan", "itinatag"],
+    "commonInquiries": [
+      "What is the brief history of EARIST?",
+      "What Republic Acts and Presidential Decree shaped EARIST?",
+      "When was EARIST founded and when did it move to Nagtahan?",
+      "Kailan itinatag ang EARIST at ano ang mga batas na nagpatibay dito?"
+    ],
+    "answerEn": "EARIST began in 1945 after the liberation of Manila as Eulogio Rodriguez Vocational High School (ERVHS) under Principal Pantaleon Regala, and acquired its Nagtahan, Sampaloc, Manila site on July 1, 1946. Key laws: RA 4072 (1964) created the Technical Education Department; RA 5088 (1967) renamed it EARMSAT; RA 6595 (1972) converted it to EARIST as a full-fledged college; and PD 1521 (June 11, 1978) converted EARIST into a chartered state college with a Board of Trustees and Dr. Hilario G. Nudas as its first President.",
+    "answerTl": "Itinatag ang EARIST noong 1945 bilang Eulogio Rodriguez Vocational High School (ERVHS) at nakuha ang site sa Nagtahan, Sampaloc, Manila noong July 1, 1946. Mahahalagang batas: RA 4072 (1964) Technical Education Dept; RA 5088 (1967) naging EARMSAT; RA 6595 (1972) naging kolehiyong EARIST; at PD 1521 (June 11, 1978) na nag-convert dito sa chartered state college kasama si Dr. Hilario G. Nudas bilang unang College President.",
+    "relatedRoutes": [
+      { "label": "About EARIST", "href": "/about" }
+    ]
+  },
+  {
+    "id": "history-earist-presidents",
+    "category": "History & Institutional Profile",
+    "section": "Manual Sec. 1.0 — EARIST College Presidents",
+    "title": "Past and Current Presidents of EARIST (1972–Present)",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["presidents", "nudas", "pada", "profeta", "casuga", "bautista", "caillo", "pillo", "mamaradlo", "rogelio mamaradlo", "presidente"],
+    "commonInquiries": [
+      "Who are the past and current Presidents of EARIST?",
+      "Who is the current President of EARIST?",
+      "Sino ang kasalukuyang presidente ng EARIST?"
+    ],
+    "answerEn": "EARIST Presidents from 1972 to present: Dr. Hilario G. Nudas (1972–1983), Dr. Frederick So. Pada (1983–1988), Dr. Lydia Profeta (1988–1992), Dr. Arturo P. Casuga (1992–1998), Dr. Maura V. Bautista (1998–2006), Dr. Eduardo S. Caillo (2006–2014), Dr. Editha V. Pillo (2014–2022), and Dr. Rogelio T. Mamaradlo (2022–present).",
+    "answerTl": "Mga naging Presidente ng EARIST: Dr. Hilario G. Nudas (1972–1983), Dr. Frederick So. Pada (1983–1988), Dr. Lydia Profeta (1988–1992), Dr. Arturo P. Casuga (1992–1998), Dr. Maura V. Bautista (1998–2006), Dr. Eduardo S. Caillo (2006–2014), Dr. Editha V. Pillo (2014–2022), at ang kasalukuyang Presidente ay si Dr. Rogelio T. Mamaradlo (2022–present).",
+    "relatedRoutes": [
+      { "label": "About EARIST", "href": "/about" }
+    ]
+  },
+  {
+    "id": "history-cavite-campus",
+    "category": "History & Institutional Profile",
+    "section": "Manual Sec. 1.0 & 2.0 — EARIST Cavite Campus",
+    "title": "EARIST Cavite Campus History and Graduate Programs",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["cavite", "gasat", "gma", "gen mariano alvarez", "satellite campus", "1982", "1986", "nha", "rodrigo hipol", "renato dragon", "cavite graduate"],
+    "commonInquiries": [
+      "What graduate programs are offered at EARIST Cavite Campus?",
+      "When was EARIST Cavite Campus established?",
+      "Anong graduate programs ang meron sa EARIST Cavite Campus?",
+      "May Graduate School ba sa EARIST Cavite?"
+    ],
+    "answerEn": "EARIST Cavite Campus (formerly EARIST-GASAT) was established on March 24, 1982 under Dr. Rodrigo Hipol and transferred to its 31,282-sqm NHA site in Gen. Mariano Alvarez, Cavite in 1986 (the 3-story main building began in March 1990). It offers three Graduate School programs: Doctor of Education major in Educational Management (Ed.D-EM), Master of Arts in Education major in Administration and Supervision (MAEd), and Master in Business Administration (MBA).",
+    "answerTl": "Itinatag ang EARIST Cavite Campus (dating EARIST-GASAT) noong March 24, 1982 sa GMA, Cavite at nalipat sa 31,282-sqm NHA site noong 1986. Ang mga Graduate programs sa Cavite Campus ay: Doctor of Education major in Educational Management (Ed.D-EM), Master of Arts in Education major in Administration and Supervision (MAEd), at Master in Business Administration (MBA).",
+    "relatedRoutes": [
+      { "label": "Graduate Programs", "href": "/programs" },
+      { "label": "About EARIST", "href": "/about" }
+    ]
+  },
+  {
+    "id": "history-graduate-school",
+    "category": "History & Institutional Profile",
+    "section": "Manual Sec. 2.0 — Brief History of the Graduate School",
+    "title": "Founding and Evolution of the EARIST Graduate School",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["graduate school history", "ged", "1974", "june 3 1974", "maie", "maed", "mat", "mabe", "morong rizal", "bot resolution 60", "cmo 36", "reunified", "2010"],
+    "commonInquiries": [
+      "When was the EARIST Graduate School founded and what were its first courses?",
+      "When did EARIST start offering doctoral programs?",
+      "Kailan nagsimula ang EARIST Graduate School?"
+    ],
+    "answerEn": "The Graduate Education Department (GED) was established in SY 1974–1975 under Sec. 2 of RA 6595 and PD 1524, launching on June 3, 1974 with four curricula: MAIE, MAED, MAT, and MABE. In Dec. 1980 it launched an extension in Morong, Rizal. Doctoral programs (Ed.D-IEM, Ed.D-EM) began in SY 1980–1981 via BOT Res. No. 60. After vertical articulation during AY 2002–2004 (CMO No. 36 s. 1998), the Graduate School was reunified in AY 2010–2011.",
+    "answerTl": "Itinatag ang Graduate Education Department (GED) noong SY 1974–1975 at opisyal na inilunsad noong June 3, 1974 na may 4 na unang kurso (MAIE, MAED, MAT, MABE). Sinimulan ang Doctoral programs noong SY 1980–1981 sa ilalim ng BOT Res. No. 60, at muling pinag-isa ang Graduate School noong AY 2010–2011.",
+    "relatedRoutes": [
+      { "label": "About EARIST GS", "href": "/about" }
+    ]
+  },
+  {
+    "id": "institutional-philosophy-vision-mission",
+    "category": "History & Institutional Profile",
+    "section": "Manual Sec. 3.1–3.3 — Philosophy, Vision & Mission",
+    "title": "EARIST Philosophy, Vision, and Mission",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["philosophy", "vision", "mission", "center of excellence", "plexus of knowledge", "bisyon", "misyon", "pilosopiya"],
+    "commonInquiries": [
+      "What is EARIST's Philosophy, Vision, and Mission?",
+      "Ano ang Vision at Mission ng EARIST?"
+    ],
+    "answerEn": "Philosophy (Sec. 3.1): Education is a plexus of knowledge and skills applied to the economic, social, and moral development of a self-actualized and productive citizenry. Vision (Sec. 3.2): EARIST is envisioned to be a center of excellence in trades, business, arts, and science and technology education. Mission (Sec. 3.3): Turn out vocationally, technically, technologically, and scientifically trained graduates who will be economically productive, self-sufficient, effective, responsible, and disciplined citizens of the Philippines.",
+    "answerTl": "Philosophy: Ang edukasyon ay pagsasanib ng kaalaman at kasanayan para sa pang-ekonomiya, panlipunan, at moral na pag-unlad ng produktibong mamamayan. Vision: Maging center of excellence sa trades, business, arts, at science and technology education. Mission: Makapagtapos ng mga bihasang graduates na produktibo, self-sufficient, epektibo, responsable, at disiplinadong Pilipino.",
+    "relatedRoutes": [
+      { "label": "About EARIST GS", "href": "/about" }
+    ]
+  },
+  {
+    "id": "institutional-gs-goals-quality-scope",
+    "category": "History & Institutional Profile",
+    "section": "Manual Sec. 3.4–3.6 — Graduate School Goals, Quality Policy & Scope",
+    "title": "Graduate School Goals, Quality Policy, and Campus Scope",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["goals", "quality policy", "scope", "manila and cavite", "leadership", "innovative research", "layunin ng graduate school"],
+    "commonInquiries": [
+      "What are the Goals and Quality Policy of the Graduate School?",
+      "Which campuses are covered by the Graduate School Manual of Operations?",
+      "Ano ang goals ng Graduate School at sakop ba nito ang Cavite?"
+    ],
+    "answerEn": "Graduate School Goals (Sec. 3.4): 1) Enhance professional and leadership competencies of educators, business/industry leaders, practitioners, and civil servants; 2) Contribute to knowledge and technologies through relevant, innovative research; 3) Promote positive values and attitudes for proactive, progressive, transformative leadership. Quality Policy (Sec. 3.5): Continual QMS improvement and regulatory compliance for highest customer satisfaction. Scope (Sec. 3.6): Applies to both EARIST Manila and EARIST Cavite campuses.",
+    "answerTl": "Mga Layunin ng Graduate School (Sec. 3.4): 1) Palakasin ang competencies ng educators, industry leaders, at civil servants; 2) Mag-ambag sa makabagong pananaliksik at teknolohiya; 3) Isulong ang transformative leadership. Sakop ng Manual na ito (Sec. 3.6) ang parehong EARIST Manila at EARIST Cavite campuses.",
+    "relatedRoutes": [
+      { "label": "About EARIST GS", "href": "/about" }
+    ]
+  },
+  {
+    "id": "organizational-structure-gsc",
+    "category": "History & Institutional Profile",
+    "section": "Manual Sec. 4.0 & 14.0 — Organizational Structure & Graduate School Council",
+    "title": "Organizational Hierarchy & Graduate School Council (GSC)",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["organizational structure", "org chart", "board of trustees", "president", "evp", "vpaa", "vpaf", "dean", "associate dean", "department heads", "graduate school council", "gsc"],
+    "commonInquiries": [
+      "What is the organizational structure of the EARIST Graduate School?",
+      "Who composes the Graduate School Council and what are its functions?",
+      "Sino ang bumubuo sa Graduate School Council at organizational structure?"
+    ],
+    "answerEn": "Structure (Sec. 4.0): Board of Trustees -> President -> Executive Vice President -> VPAF & VPAA -> Dean of the Graduate School -> Associate Dean -> Department Heads (for doctoral and master's specializations). Graduate School Council (Sec. 14.0): Composed of Department Heads and the GS Secretary with the GS Dean as ex-officio Chair, responsible for formulating GS policies, reviewing curricular matters, and advising the President via the VPAA.",
+    "answerTl": "Istruktura (Sec. 4.0): Board of Trustees -> President -> EVP -> VPAF & VPAA -> Dean ng Graduate School -> Associate Dean -> Department Heads. Ang Graduate School Council (Sec. 14.0) ay binubuo ng Department Heads at GS Secretary kasama ang Dean bilang ex-officio Chair para sa pagbuo ng polisiya at pag-review ng kurikulum.",
+    "relatedRoutes": [
+      { "label": "About EARIST GS", "href": "/about" }
+    ]
+  },
+  {
+    "id": "programs-doctoral",
+    "category": "Curricular Programs",
+    "section": "Manual Sec. 5.1 — Doctoral Programs (PQF Level 8)",
+    "title": "Doctoral Degree Offerings & Board Resolutions",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["doctoral", "doctorate", "phd", "phd-ip", "edd", "edd-em", "dpa", "dba", "pqf level 8", "professional track", "doctor"],
+    "commonInquiries": [
+      "What doctoral programs does EARIST offer?",
+      "Do you offer Ed.D, PhD, DBA, or DPA?",
+      "Anong mga Doctoral degree (PhD/EdD/DBA/DPA) ang ino-offer sa EARIST?"
+    ],
+    "answerEn": "EARIST Graduate School offers four Professional Track Doctoral Programs (PQF Level 8): 1) Doctor of Education major in Educational Management (Ed.D-EM, Board Res. No. 68, s. 2015), 2) Doctor of Philosophy in Industrial Psychology (PhD-IP, Board Res. No. 29, s. 2006), 3) Doctor of Public Administration (DPA, Board Res. No. 28, s. 2006), and 4) Doctor of Business Administration (DBA, Board Res. No. 28, s. 2006).",
+    "answerTl": "May apat (4) na Doctoral Programs (PQF Level 8, Professional Track) sa EARIST Graduate School: 1) Doctor of Education major in Educational Management (Ed.D-EM), 2) Doctor of Philosophy in Industrial Psychology (PhD-IP), 3) Doctor of Public Administration (DPA), at 4) Doctor of Business Administration (DBA).",
+    "relatedRoutes": [
+      { "label": "View All Programs", "href": "/programs" },
+      { "label": "Register Account", "href": "/register" }
+    ]
+  },
+  {
+    "id": "programs-masters-education-teaching",
+    "category": "Curricular Programs",
+    "section": "Manual Sec. 5.2 — Master's Programs in Education & Teaching (PQF Level 7)",
+    "title": "MAEd, MAIE, and MAT Graduate Programs & Majors",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["maed", "maie", "mat", "administration and supervision", "guidance and counseling", "special education", "hotel restaurant", "hrm", "science", "mathematics", "electronics", "electrical", "masters education"],
+    "commonInquiries": [
+      "What are the majors under MAEd, MAIE, and MAT?",
+      "Does EARIST offer Master of Arts in Education or Teaching?",
+      "Anong mga major ang available sa MAEd, MAIE, at MAT?"
+    ],
+    "answerEn": "Master's Education & Teaching Programs (PQF Level 7, Academic Track): • Master of Arts in Education (MAEd): majors in Administration & Supervision, Guidance & Counseling, and Special Education. • Master of Arts in Industrial Education (MAIE): major in Hotel, Restaurant and Management. • Master of Arts in Teaching (MAT): majors in Science, Mathematics, Electronics Technology, and Electrical Technology.",
+    "answerTl": "Mga Master's Programs sa Education at Teaching (PQF Level 7): • MAEd: Administration & Supervision, Guidance & Counseling, Special Education • MAIE: Hotel, Restaurant and Management • MAT: Science, Mathematics, Electronics Technology, at Electrical Technology.",
+    "relatedRoutes": [
+      { "label": "View All Programs", "href": "/programs" }
+    ]
+  },
+  {
+    "id": "programs-masters-business-public-math-psych",
+    "category": "Curricular Programs",
+    "section": "Manual Sec. 5.2 — MBA, MPA, MAIP, and MSM Programs (PQF Level 7)",
+    "title": "Business, Public Administration, Psychology, and Math Master's Programs",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["mba", "mpa", "maip", "msm", "business administration", "public administration", "industrial psychology", "ms mathematics", "masteral", "courses"],
+    "commonInquiries": [
+      "Does EARIST offer MBA, MPA, Industrial Psychology, or MS Mathematics?",
+      "What non-education Master's programs are offered at EARIST?",
+      "May MBA, MPA, Psychology, o MS Math ba sa EARIST Graduate School?"
+    ],
+    "answerEn": "Along with Education/Teaching programs, EARIST Graduate School offers four specialized Master's degrees (PQF Level 7, Academic Track): • Master in Business Administration (MBA, Board Res. No. 68, s. 2015) • Master in Public Administration (MPA) • Master of Arts in Industrial Psychology (MAIP, Board Res. No. 29, s. 2006) • Master of Science in Mathematics (MSM, Board Res. No. 30, s. 2000).",
+    "answerTl": "Bukod sa Education programs, nag-o-offer din ang EARIST Graduate School ng: • Master in Business Administration (MBA) • Master in Public Administration (MPA) • Master of Arts in Industrial Psychology (MAIP) • Master of Science in Mathematics (MSM). Bisitahin ang /programs para sa buong detalye.",
+    "relatedRoutes": [
+      { "label": "View All Programs", "href": "/programs" }
+    ]
+  },
+  {
+    "id": "faculty-qualifications-cmo15",
+    "category": "Curricular Programs",
+    "section": "Manual Sec. 6.0 — Faculty Requirements (CMO No. 15, s. 2019)",
+    "title": "Faculty Teaching and Thesis Advising Requirements",
+    "roles": ["public", "faculty", "admin", "student"],
+    "keywords": ["faculty requirements", "cmo 15", "professor", "doctoral degree", "doctoral units", "foreign degree", "ched certified", "cannot serve as thesis advisers"],
+    "commonInquiries": [
+      "What are the qualification requirements for Graduate School faculty members?",
+      "Can a faculty member with only doctoral units serve as a thesis adviser?",
+      "Ano ang requirements para maging professor o thesis adviser sa Graduate School?"
+    ],
+    "answerEn": "Under Sec. 6.0 (CMO No. 15, s. 2019): • Master's faculty must hold a doctoral degree in the discipline with refereed journal publications or recognized creative/tech outputs. Where there is a dearth of doctoral holders, master's holders with doctoral units and at least 1 publication may teach in Master's programs ONLY, but CANNOT serve as thesis advisers. • Doctoral faculty must hold a doctoral degree in the discipline with nationally/internationally indexed publications. • Foreign degrees must be CHED-certified.",
+    "answerTl": "Ayon sa Sec. 6.0 (CMO No. 15, s. 2019): Ang mga faculty sa Master's at Doctoral ay dapat may doctoral degree at refereed/indexed publications. Kung kulang ang doctoral holders, maaaring magturo sa Master's ang may doctoral units at 1 publication ngunit HINDI sila pwedeng maging thesis adviser. Ang foreign degrees ay dapat certified ng CHED.",
+    "relatedRoutes": [
+      { "label": "Faculty Profile", "href": "/faculty/profile" }
+    ]
+  },
+  {
+    "id": "admission-general-requirements",
+    "category": "Admissions & Alignment",
+    "section": "Manual Sec. 7.1 — General Admission Requirements",
+    "title": "Admission Requirements for Filipino Applicants & Transferees",
+    "roles": ["public", "applicant", "admin"],
+    "keywords": ["admission requirements", "requirements", "egat", "interview", "tor", "transcript of records", "permit to study", "sabbatical", "marriage certificate", "psa", "honorable dismissal", "2x2", "kailangan sa pag-apply"],
+    "commonInquiries": [
+      "What are the general admission requirements to enter EARIST Graduate School?",
+      "What documents must government employees, transferees, or married women submit?",
+      "Ano ang mga requirements para makapag-apply sa EARIST Graduate School?"
+    ],
+    "answerEn": "General Admission Requirements (Sec. 7.1): 1) Pass the EARIST Graduate Admission Test (EGAT) and Interview, 2) Official Transcript of Records (1 original, 1 photocopy), 3) Permit to Study / Sabbatical Leave (for government employees), 4) PSA-issued Marriage Certificate (for married female applicants), 5) Honorable Dismissal (for transferees), and 6) Two recent 2x2 ID pictures. Note: Former students previously issued Honorable Dismissal by EARIST Registrar will NOT be re-admitted.",
+    "answerTl": "Mga General Admission Requirements (Sec. 7.1): 1) Pumasa sa EGAT (Entrance Exam) at Interview, 2) Official TOR (1 original, 1 photocopy), 3) Permit to Study / Sabbatical Leave (para sa government employees), 4) PSA Marriage Certificate (kung married female applicant), 5) Honorable Dismissal (para sa transferees), at 6) Dalawang 2x2 ID picture. Tandaan: Hindi na muling tinatanggap ang dati nang nabigyan ng Honorable Dismissal ng EARIST Registrar.",
+    "relatedRoutes": [
+      { "label": "Applicant Registration", "href": "/register" },
+      { "label": "Admissions FAQ", "href": "/faq" }
+    ]
+  },
+  {
+    "id": "admission-international-students",
+    "category": "Admissions & Alignment",
+    "section": "Manual Sec. 7.1.7 — International Student Admission Requirements",
+    "title": "Requirements for International (Non-Filipino) Applicants",
+    "roles": ["public", "applicant", "admin"],
+    "keywords": ["international student", "foreign student", "non-filipino", "embassy", "student visa", "bureau of immigration", "english proficiency", "financial support", "foreigner"],
+    "commonInquiries": [
+      "What are the admission requirements for international or non-Filipino applicants?",
+      "Do foreign applicants need a student visa and English proficiency certificate?",
+      "Ano ang requirements kapag international student ang mag-a-apply?"
+    ],
+    "answerEn": "Under Sec. 7.1.7, international (Non-Filipino) applicants must: 1) Meet all basic admission requirements for Filipino students (EGAT, Interview, TOR, 2x2 photos), 2) Have school credentials validated by the appropriate Embassy, 3) Hold a valid student visa from the Bureau of Immigration, 4) Submit a Certificate of English Proficiency (for non-English-speaking students), and 5) Provide proof of financial support.",
+    "answerTl": "Ayon sa Sec. 7.1.7, ang mga international (Non-Filipino) applicants ay kailangang: 1) Kumpletuhin ang basic requirements (EGAT, Interview, TOR, 2x2 photos), 2) Magpa-validate ng credentials sa Embassy, 3) Magkaroon ng student visa mula sa Bureau of Immigration, 4) Magpasa ng Certificate of English Proficiency (kung non-English speaker), at 5) Magpakita ng proof of financial support.",
+    "relatedRoutes": [
+      { "label": "Applicant Registration", "href": "/register" }
+    ]
+  },
+  {
+    "id": "admission-by-track-experience",
+    "category": "Admissions & Alignment",
+    "section": "Manual Sec. 7.2 — Admission by Track",
+    "title": "Degree Prerequisites & 5-Year Work Experience Rule (Doctoral)",
+    "roles": ["public", "applicant", "admin"],
+    "keywords": ["admission by track", "academic track", "professional track", "work experience", "5 years", "bachelors degree", "masters degree", "edd", "dba", "dpa"],
+    "commonInquiries": [
+      "Is work experience required for Doctoral admission?",
+      "What degree is required for Academic Track vs. Professional Track?",
+      "Kailangan ba ng 5 years work experience sa EdD, DBA, o DPA?"
+    ],
+    "answerEn": "Under Sec. 7.2: • Academic Track (MAEd, MAIE, MAT, MSM, MAIP) requires a Bachelor's Degree. • Professional Track: Ph.D. in Industrial Psychology requires a Master's Degree; while Doctor of Education (Ed.D-EM), Doctor of Business Administration (DBA), and Doctor of Public Administration (DPA) require a Master's Degree PLUS five (5) years of professional work experience related to the degree applied for.",
+    "answerTl": "Ayon sa Sec. 7.2: Ang Master's programs (Academic Track) ay nangangailangan ng Bachelor's Degree. Sa Doctoral (Professional Track): ang Ph.D.-IP ay kailangan ng Master's Degree; habang ang Ed.D-EM, DBA, at DPA ay nangangailangan ng Master's Degree AT 5 taon (5 years) na relevant professional work experience.",
+    "relatedRoutes": [
+      { "label": "Graduate Programs", "href": "/programs" },
+      { "label": "Program Alignment", "href": "/applicant/alignment" }
+    ]
+  },
+  {
+    "id": "admission-gwa-probationary",
+    "category": "Admissions & Alignment",
+    "section": "Manual Sec. 7.3.1–7.3.3 — GWA Qualifications & Probationary Status",
+    "title": "Required Admission GWA and Probationary Admission Policy",
+    "roles": ["public", "applicant", "admin"],
+    "keywords": ["gwa", "general weighted average", "2.00", "1.75", "1.50", "probationary", "probation", "6 units", "cutoff", "grade requirement"],
+    "commonInquiries": [
+      "What GWA is required for Master's and Doctoral admission?",
+      "Can I still be admitted on probation if my GWA is below the cutoff?",
+      "Ano ang kailangang GWA para makapasok sa Master's o Doctoral at paano ang probationary status?"
+    ],
+    "answerEn": "Under Sec. 7.3.1–7.3.3: Master's applicants must hold a relevant Bachelor's degree with a GWA of 2.00 or better; Doctoral applicants must hold a relevant Master's degree with a GWA of 1.75 or better. Applicants who do not meet the required GWA may be admitted on probationary status, subject to completing six (6) units with a minimum GWA of 1.75 or better (Master's) or 1.50 or better (Doctoral).",
+    "answerTl": "Ayon sa Sec. 7.3: Kailangan ng GWA na 2.00 or better para sa Master's at 1.75 or better para sa Doctoral. Kung hindi umabot sa GWA, maaaring ma-admit nang probationary status pero kailangang makatapos ng 6 units na may minimum GWA na 1.75 (Master's) o 1.50 (Doctoral).",
+    "relatedRoutes": [
+      { "label": "Program Alignment", "href": "/applicant/alignment" },
+      { "label": "Applicant Dashboard", "href": "/applicant/dashboard" }
+    ]
+  },
+  {
+    "id": "admission-bridging-profed-nonthesis",
+    "category": "Admissions & Alignment",
+    "section": "Manual Sec. 7.3.4–7.3.6 — Bridging Program, ProfEd Units & Non-Thesis Bridge",
+    "title": "Bridging Program (9 Units), ProfEd (18 Units), and Non-Thesis Master's Rule",
+    "roles": ["public", "applicant", "student", "admin"],
+    "keywords": ["bridging", "9 units", "18 units", "profed", "professional education", "non-education", "unrelated field", "non-thesis", "thesis 1", "thesis 2", "methodology of research", "hindi aligned", "misaligned"],
+    "commonInquiries": [
+      "What if my undergraduate degree is unrelated to my graduate program?",
+      "How many Professional Education units are required for non-education graduates?",
+      "Can a non-thesis Master's graduate apply for a Doctoral program?",
+      "Paano pag hindi aligned yung bachelor's degree ko o non-thesis master's graduate ako?"
+    ],
+    "answerEn": "Under Sec. 7.3.4–7.3.6: 1) Unrelated fields of specialization require a 9-unit Bridging Program in a lower-level related curricular program. 2) Non-education graduates enrolling in education-oriented programs must earn at least 18 units of Professional Education courses. 3) Holders of non-thesis Master's degrees must enroll in Methodology of Research, Seminar in Thesis Writing / Thesis 1, and Thesis Writing / Thesis 2 before admission to a Doctoral program.",
+    "answerTl": "Sec. 7.3.4–7.3.6: 1) Kung hindi aligned ang kurso (unrelated field), kailangan ng 9-unit Bridging Program. 2) Para sa non-education graduates na papasok sa education programs, kailangan ng hindi bababa sa 18 units ng Professional Education courses. 3) Ang non-thesis Master's holders na papasok sa Doctoral ay kailangan munang kumuha ng Methodology of Research, Thesis 1, at Thesis 2.",
+    "relatedRoutes": [
+      { "label": "Program Alignment Check", "href": "/applicant/alignment" }
+    ]
+  },
+  {
+    "id": "policy-academic-load",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 7.4 — Academic Load",
+    "title": "Maximum Units Allowed per Semester (9, 12, or 15 Units)",
+    "roles": ["applicant", "student", "faculty", "admin"],
+    "keywords": ["academic load", "units", "max units", "9 units", "12 units", "15 units", "new student", "old student", "full-time", "sabbatical", "1.50", "ilang units"],
+    "commonInquiries": [
+      "What is the maximum number of units I can enroll in per semester?",
+      "How many units can new students vs. continuing students take?",
+      "Ilang units ang max load pag new student o old student?"
+    ],
+    "answerEn": "Under Sec. 7.4 Academic Load: • New Students: Maximum of nine (9) units per semester. • Old/Continuing Students: Maximum of twelve (12) units per semester. • Full-Time Students (at least 1 year of residency or on study/sabbatical leave): Up to fifteen (15) units per semester, provided they maintain an average grade of 1.50.",
+    "answerTl": "Ayon sa Sec. 7.4: • New Students: maximum na 9 units per semester. • Old Students: maximum na 12 units per semester. • Full-time students (may 1+ year residency o naka-study/sabbatical leave): pwedeng mag-enroll nang hanggang 15 units basta may average grade na 1.50.",
+    "relatedRoutes": [
+      { "label": "Curriculum Checklist", "href": "/student/curriculum" }
+    ]
+  },
+  {
+    "id": "policy-transfer-credits",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 7.5 — Transfer of Credits",
+    "title": "Crediting Transfer Units (Maximum 6 Units Within 5 Years)",
+    "roles": ["applicant", "student", "admin"],
+    "keywords": ["transfer of credits", "transfer", "transferee", "credited units", "6 units", "5 years", "excluding thesis", "pa-credit"],
+    "commonInquiries": [
+      "How many units can be credited for graduate transferees?",
+      "What are the conditions for transfer of credits?",
+      "Ilang units ang pwedeng i-credit kung transferee galing ibang university?"
+    ],
+    "answerEn": "Under Sec. 7.5, transferees may credit a maximum of six (6) units (excluding thesis units) in a Master's or Doctoral program provided: 1) The course is substantially the same in content as recommended by the Program Head and approved by the Dean, 2) It was taken within the last five (5) years prior to EARIST admission, and 3) It was not credited toward a previously obtained degree.",
+    "answerTl": "Ayon sa Sec. 7.5: Hanggang 6 units (hindi kasama ang thesis units) ang pwedeng i-credit sa transferees kung pareho ang content (aprubado ng Program Head at Dean), kinuha sa nakaraang 5 taon, at hindi pa na-credit sa ibang degree.",
+    "relatedRoutes": [
+      { "label": "Curriculum Checklist", "href": "/student/curriculum" }
+    ]
+  },
+  {
+    "id": "policy-dual-registration",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 7.6 — Dual Registration",
+    "title": "Prohibition on Simultaneous Enrollment in Multiple Graduate Programs",
+    "roles": ["public", "applicant", "student", "admin"],
+    "keywords": ["dual registration", "two programs", "multiple programs", "simultaneous enrollment", "dalawang course sabay"],
+    "commonInquiries": [
+      "Can I enroll in two graduate degree programs at the same time?",
+      "What is the policy on dual registration?",
+      "Pwede ba mag-enroll sa dalawang Master's o Doctoral program nang sabay?"
+    ],
+    "answerEn": "Under Sec. 7.6 (Dual Registration), simultaneous enrollment in multiple graduate programs is strictly prohibited.",
+    "answerTl": "Ayon sa Sec. 7.6, mahigpit na ipinagbabawal (strictly prohibited) ang sabay na pag-enroll sa dalawa o higit pang graduate programs.",
+    "relatedRoutes": [
+      { "label": "Browse Programs", "href": "/programs" }
+    ]
+  },
+  {
+    "id": "policy-class-attendance",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 7.7 — Class Attendance",
+    "title": "20% Unexcused Absence Drop Rule & Excused Absence Duties",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["attendance", "absences", "unexcused", "excused", "20%", "dropped", "absent"],
+    "commonInquiries": [
+      "What is the maximum allowed unexcused absences before getting dropped?",
+      "Do students with excused absences still need to submit coursework?",
+      "Ilang percent ng absences bago ma-drop sa klase?"
+    ],
+    "answerEn": "Under Sec. 7.7 Class Attendance: Students with unexcused absences amounting to 20% of total class hours in a semester or summer term will be dropped. Students with excused absences must still fulfill all coursework and assignments within the professor's timeline.",
+    "answerTl": "Ayon sa Sec. 7.7: Ma-da-drop ang estudyanteng may unexcused absences na umabot sa 20% ng total class hours sa isang semester o summer term. Kahit excused ang absence, kailangan pa ring tapusin ang lahat ng coursework sa timeline ng professor.",
+    "relatedRoutes": [
+      { "label": "Student Dashboard", "href": "/student/dashboard" }
+    ]
+  },
+  {
+    "id": "policy-dropping-courses",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 7.8 — Dropping of Courses",
+    "title": "Deadline and Procedure for Dropping Subjects",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["drop", "dropping", "midterm", "prescribed form", "registrar", "dean approval", "mag-drop ng subject"],
+    "commonInquiries": [
+      "How do I officially drop a graduate course and what is the deadline?",
+      "What happens if I drop a course after midterm exams?",
+      "Paano mag-drop ng subject at hanggang kailan pwede mag-drop?"
+    ],
+    "answerEn": "Under Sec. 7.8: Courses may be dropped with the Dean's approval BEFORE midterm exams by submitting a prescribed form to the Registrar's Office. Dropping a course AFTER midterms may result in a failing grade, subject to the instructor's discretion.",
+    "answerTl": "Ayon sa Sec. 7.8: Pwedeng mag-drop ng subject bago ang midterm exams basta may approval ng Dean at magpasa ng prescribed form sa Registrar's Office. Kapag nag-drop pagkatapos ng midterm, maaaring makakuha ng failing grade depende sa instructor.",
+    "relatedRoutes": [
+      { "label": "Student Dashboard", "href": "/student/dashboard" }
+    ]
+  },
+  {
+    "id": "policy-retention-gwa",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 7.9 — Retention Standards",
+    "title": "Minimum Maintaining GWA for Retention (2.00 Master's / 1.75 Doctoral)",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["retention", "maintain gwa", "maintaining grade", "2.00", "1.75", "disqualification", "kailangang grade"],
+    "commonInquiries": [
+      "What GWA must students maintain to stay in the Master's or Doctoral program?",
+      "What happens if a student fails to meet the retention GWA?",
+      "Anong maintaining GWA ang kailangan para hindi ma-disqualify sa Graduate School?"
+    ],
+    "answerEn": "Under Sec. 7.9 Retention: Master's students must maintain a GWA of 2.00 or better, and Doctoral students must maintain a GWA of 1.75 or better. Failure to meet these retention standards results in disqualification from the program.",
+    "answerTl": "Ayon sa Sec. 7.9: Dapat panatilihin ng Master's students ang GWA na 2.00 or better at ng Doctoral students ang GWA na 1.75 or better. Ang hindi pag-abot dito ay magreresulta sa disqualification sa program.",
+    "relatedRoutes": [
+      { "label": "Curriculum & Grades", "href": "/student/curriculum" }
+    ]
+  },
+  {
+    "id": "policy-residency-requirements",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 7.10 — Residency Requirements",
+    "title": "2-Semester Academic Residence & Thesis/Dissertation 1 & 2 Enrollment",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["residency", "two semesters", "thesis 1", "thesis 2", "dissertation 1", "dissertation 2", "academic residence"],
+    "commonInquiries": [
+      "How many semesters of academic residency are required before graduation?",
+      "Do I need to enroll in Thesis/Dissertation 1 and 2?",
+      "Ilang semester ang residency requirement sa EARIST Graduate School?"
+    ],
+    "answerEn": "Under Sec. 7.10, graduate degree candidates must complete at least two (2) semesters of academic residence at EARIST before graduation, and must be enrolled in Thesis/Dissertation 1 (Title and Proposal) and Thesis/Dissertation 2 (Final Defense) during those terms with corresponding tuition and miscellaneous fees.",
+    "answerTl": "Ayon sa Sec. 7.10: Kailangang makakumpleto ng hindi bababa sa 2 semesters ng academic residence sa EARIST bago grumadweyt, at dapat naka-enroll sa Thesis/Dissertation 1 (Title & Proposal) at Thesis/Dissertation 2 (Final Defense) na may kaukulang bayad.",
+    "relatedRoutes": [
+      { "label": "Academic Journey", "href": "/student/journey" }
+    ]
+  },
+  {
+    "id": "policy-maximum-residence-rule",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 7.11 — Length of Study (Maximum Residence Rule)",
+    "title": "Maximum Residence Rule: 4 Years (Master's) and 6 Years (Doctoral)",
+    "roles": ["student", "applicant", "faculty", "admin"],
+    "keywords": ["maximum residence", "mrr", "length of study", "4 years", "6 years", "extended absence", "revised curriculum", "ilang taon matapos"],
+    "commonInquiries": [
+      "How many years do I have to finish my Master's or Doctoral degree (Maximum Residence Rule)?",
+      "What happens if a student returns after an extended absence?",
+      "Ilang taon ang maximum residency para tapusin ang Master's at Doctoral?"
+    ],
+    "answerEn": "Under Sec. 7.11 (Maximum Residence Rule): Master's programs must be completed within four (4) years and Doctoral programs within six (6) years from initial enrollment. Students returning after an extended absence may need to follow the revised curriculum or re-enroll as new students.",
+    "answerTl": "Ayon sa Sec. 7.11 (Maximum Residence Rule): Dapat matapos ang Master's program sa loob ng 4 na taon (4 years) at ang Doctoral program sa loob ng 6 na taon (6 years) mula sa unang enrollment. Ang babalik matapos ang mahabang pagliban ay maaaring sumunod sa bagong curriculum o mag-re-enroll.",
+    "relatedRoutes": [
+      { "label": "Academic Journey", "href": "/student/journey" }
+    ]
+  },
+  {
+    "id": "policy-class-audit",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 7.12 — Class Audit",
+    "title": "Auditing Graduate Courses (No Grade / No Credit)",
+    "roles": ["student", "applicant", "admin"],
+    "keywords": ["class audit", "audit course", "no credit", "matriculation"],
+    "commonInquiries": [
+      "Can students audit classes in EARIST Graduate School and will they receive grades?",
+      "Pwede ba mag-audit ng subject sa Graduate School?"
+    ],
+    "answerEn": "Under Sec. 7.12, students may audit courses after paying full matriculation fees, but audited courses will NOT receive grades or academic credits.",
+    "answerTl": "Ayon sa Sec. 7.12, maaaring mag-audit ng klase pagkatapos magbayad ng full matriculation fees, ngunit walang grade o credit na matatanggap para sa audited courses.",
+    "relatedRoutes": [
+      { "label": "Curriculum", "href": "/student/curriculum" }
+    ]
+  },
+  {
+    "id": "policy-leave-of-absence",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 7.13 — Leave of Absence (LOA)",
+    "title": "Filing a Leave of Absence (Max 1 Year, Excluded from MRR)",
+    "roles": ["student", "admin"],
+    "keywords": ["leave of absence", "loa", "1 academic year", "mrr", "pause study", "mag-loa"],
+    "commonInquiries": [
+      "How long can a graduate student file a Leave of Absence (LOA)?",
+      "Does an approved LOA count against the Maximum Residence Rule?",
+      "Paano mag-file ng LOA at binibilang ba ito sa Maximum Residence Rule?"
+    ],
+    "answerEn": "Under Sec. 7.13: Students may file for a Leave of Absence (LOA) for a period not exceeding one (1) academic year. LOA requests must be approved by the GS Dean and submitted to the Registrar's Office. An official LOA is NOT counted toward the Maximum Residence Rule (MRR).",
+    "answerTl": "Ayon sa Sec. 7.13: Pwedeng mag-file ng Leave of Absence (LOA) nang hindi lalagpas sa 1 academic year, aprubado ng GS Dean at ipapasa sa Registrar. HINDI binibilang ang opisyal na LOA sa Maximum Residence Rule.",
+    "relatedRoutes": [
+      { "label": "Student Profile", "href": "/student/profile" }
+    ]
+  },
+  {
+    "id": "policy-change-of-program-shifting",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 7.14 & System Policy — Change of Program / Shifting",
+    "title": "Shifting Graduate Programs and Post-Title Proposal Restriction",
+    "roles": ["student", "applicant", "admin"],
+    "keywords": ["change of program", "shift", "shifting", "shifting form", "credit previous courses", "title proposal", "lilipat ng course", "palit program"],
+    "commonInquiries": [
+      "Can I change or shift my graduate program after enrolling?",
+      "When is program shifting prohibited?",
+      "Pwede ba mag-shift ng program o course pagkatapos mag-enroll?"
+    ],
+    "answerEn": "Under Sec. 7.14: Students wishing to shift programs must submit a Graduate School Shifting Form and secure approval from the Dean; courses from the previous program may be credited if aligned and taken within the past 5 years. However, students who have completed Title Proposal are NOT allowed to shift programs (and per system policy, enrolled students cannot change programs once locked under Schema v8).",
+    "answerTl": "Ayon sa Sec. 7.14: Kailangan ng Graduate School Shifting Form at approval ng Dean (pwedeng ma-credit ang aligned courses sa nakaraang 5 taon). Ngunit HINDI na pwedeng mag-shift ang nakatapos na ng Title Proposal (at sa system policy, hindi na maaaring palitan ang program ng enrolled students).",
+    "relatedRoutes": [
+      { "label": "Student Profile", "href": "/student/profile" },
+      { "label": "System FAQ", "href": "/faq" }
+    ]
+  },
+  {
+    "id": "policy-comprehensive-examination",
+    "category": "Comprehensive Exam & Grading",
+    "section": "Manual Sec. 7.15 & 12.1.3–12.1.5 — Written Comprehensive Examination",
+    "title": "Comprehensive Exam Schedule, 75% Passing Score & 3-Attempt Limit",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["comprehensive exam", "compre", "75%", "foundation", "major", "cognate", "retake", "second chance", "third time", "disqualify", "program chair", "bagsak sa compre"],
+    "commonInquiries": [
+      "What subjects are covered and what is the passing rate for the Written Comprehensive Exam?",
+      "What happens if I fail one component or fail the Comprehensive Exam three times?",
+      "Ano ang passing score sa Comprehensive Exam at ilang beses pwedeng mag-retake?"
+    ],
+    "answerEn": "Under Sec. 7.15: Written Comprehensive Exams are administered at the end of the semester and intersession terms covering Foundation, Major, and Cognate courses. Passing score is at least 75% of total points. Students who fail any component retake only the failed course(s) once; those failing a whole/component exam the first time get a second chance. Failing the third (3rd) time—whole or component—permanently disqualifies the student from the Graduate School. Checked by the Program Chair; certificates of rating are released by the GS Office.",
+    "answerTl": "Ayon sa Sec. 7.15: Ang Comprehensive Exam ay ibinibigay sa dulo ng semester/intersession (Foundation, Major, at Cognate courses) at 75% ang passing score. Kapag bumagsak sa bahagi o buong exam, may pagkakataon mag-retake; ngunit kapag bumagsak sa ikatlong (3rd) pagkakataon, permanently disqualified na sa Graduate School.",
+    "relatedRoutes": [
+      { "label": "Academic Journey", "href": "/student/journey" },
+      { "label": "Title Defense", "href": "/student/thesis/title-defense" }
+    ]
+  },
+  {
+    "id": "policy-grading-system",
+    "category": "Comprehensive Exam & Grading",
+    "section": "Manual Sec. 7.16.1 — Graduate Grading System",
+    "title": "Master's and Doctoral Numerical & Percentage Grading Scale",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["grading system", "grade", "97-100", "1.00", "1.25", "1.50", "1.75", "2.00", "5.00", "drp", "passing grade", "failed", "marka"],
+    "commonInquiries": [
+      "What is the grading scale in EARIST Graduate School for Master's and Doctoral?",
+      "What percentage score is failing in Master's vs. Doctoral programs?",
+      "Ano ang grading system at passing grade sa Master's at Doctoral?"
+    ],
+    "answerEn": "Sec. 7.16.1 Grading Scale: • Master's: 97–100 = 1.00 (Excellent), 94–96 = 1.25 (Very Good), 91–93 = 1.50 (Good), 88–90 = 1.75 (Fair), 85–87 = 2.00 (Passed), 84 & below = 5.00 (Failed). • Doctoral: 97–100 = 1.00 (Excellent), 94–96 = 1.25 (Very Good), 91–93 = 1.50 (Good), 88–90 = 1.75 (Passed), 87 & below = 5.00 (Failed). Both also use DRP (Dropped) and INC (Incomplete).",
+    "answerTl": "Grading System (Sec. 7.16.1): • Master's: 97–100 (1.00 Excellent), 94–96 (1.25), 91–93 (1.50), 88–90 (1.75), 85–87 (2.00 Passed), 84 pababa (5.00 Failed). • Doctoral: 97–100 (1.00), 94–96 (1.25), 91–93 (1.50), 88–90 (1.75 Passed), 87 pababa (5.00 Failed). Ginagamit din ang DRP at INC.",
+    "relatedRoutes": [
+      { "label": "Curriculum & Grades", "href": "/student/curriculum" }
+    ]
+  },
+  {
+    "id": "policy-inc-removal",
+    "category": "Comprehensive Exam & Grading",
+    "section": "Manual Sec. 7.16.2–7.16.3 — Incomplete (INC) Grade & Removal",
+    "title": "Rules for Receiving and Removing an Incomplete (INC) Grade",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["inc", "incomplete", "removal", "1 year", "one year", "1.0", "completion"],
+    "commonInquiries": [
+      "When is an INC grade given and how long do I have to complete it?",
+      "Can a student get a 1.0 grade after removing an INC?",
+      "Ilang taon ang palugit para ma-complete ang INC at pwede bang makakuha ng 1.0?"
+    ],
+    "answerEn": "Under Sec. 7.16.2–7.16.3: An 'INC' grade is given to a student with passing class standing who misses the final exam or requirements due to illness or valid reasons. Removal of 'INC' must be completed within one (1) year, and a student shall NOT be given a removal grade of 1.0.",
+    "answerTl": "Ayon sa Sec. 7.16.2–7.16.3: Binibigay ang 'INC' kung pasado ang class standing ngunit hindi nakapag-final exam o nakakumpleto dahil sa sakit o valid reason. Dapat itong ma-remove sa loob ng 1 taon (1 year), at HINDI maaaring bigyan ng removal grade na 1.0.",
+    "relatedRoutes": [
+      { "label": "Curriculum & Grades", "href": "/student/curriculum" }
+    ]
+  },
+  {
+    "id": "thesis-eligibility-timeline",
+    "category": "Thesis & Defense Pipeline",
+    "section": "Manual Sec. 7.17 — Application & Completion Timeline for Defense",
+    "title": "Title Defense Eligibility and Thesis/Dissertation Defense Timeframes",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["thesis eligibility", "comprehensive exam first", "4 semesters", "2 years", "6 semesters", "3 years", "final defense deadline"],
+    "commonInquiries": [
+      "When can a student apply for Title Defense?",
+      "How many semesters are allowed from passing Compre to Final Defense?",
+      "Kailangan ba munang pumasa sa Compre bago mag-Title Defense at ilang sem bago ang Final Defense?"
+    ],
+    "answerEn": "Under Sec. 7.17: Students may apply for Title Defense after passing the Written Comprehensive Examination. The thesis/dissertation must proceed to Final Defense within four (4) semesters (2 years) for Master's programs or six (6) semesters (3 years) for Doctoral programs.",
+    "answerTl": "Ayon sa Sec. 7.17: Pwedeng mag-apply para sa Title Defense pagkatapos maipasa ang Comprehensive Exam. Kailangang makapag-Final Defense sa loob ng 4 semesters (2 years) para sa Master's o 6 semesters (3 years) para sa Doctoral.",
+    "relatedRoutes": [
+      { "label": "Title Defense", "href": "/student/thesis/title-defense" },
+      { "label": "Thesis Hub", "href": "/student/thesis" }
+    ]
+  },
+  {
+    "id": "thesis-defense-stages-contents",
+    "category": "Thesis & Defense Pipeline",
+    "section": "Manual Sec. 7.18 — Title, Proposal & Final Defense Requirements",
+    "title": "Required Manuscript Contents for Title, Proposal & Final Defense",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["title defense", "proposal defense", "final defense", "three proposed titles", "chapters 1-3", "chapters 1-5", "abstract", "cv", "curriculum vitae"],
+    "commonInquiries": [
+      "What do I need to present/include in Title Defense, Proposal Defense, and Final Defense?",
+      "Which chapters are required for Proposal Defense vs. Final Defense?",
+      "Ano ang laman ng manuscript sa Title, Proposal, at Final Defense?"
+    ],
+    "answerEn": "Sec. 7.18 Defense Process: 1) Title Defense: Student presents three (3) proposed titles for evaluation. 2) Proposal Defense: Manuscript includes title page, table of contents, Chapters 1–3, references, appendix, and CV. 3) Final Defense: Manuscript includes title page, certification/approval/acceptance page, abstract, acknowledgment, dedication, table of contents, Chapters 1–5, references, appendix, and CV.",
+    "answerTl": "Tatlong Defense Stages (Sec. 7.18): 1) Title Defense: magpre-present ng 3 proposed titles. 2) Proposal Defense: title page, TOC, Chapters 1–3, references, appendix, at CV. 3) Final Defense: buong manuscript mula title page, certification/approval/acceptance, abstract, ack, dedication, TOC, Chapters 1–5, references, appendix, at CV.",
+    "relatedRoutes": [
+      { "label": "Title Defense", "href": "/student/thesis/title-defense" },
+      { "label": "Proposal Defense", "href": "/student/thesis/proposal-defense" },
+      { "label": "Final Defense", "href": "/student/thesis/final-defense" }
+    ]
+  },
+  {
+    "id": "thesis-oral-defense-redefense",
+    "category": "Thesis & Defense Pipeline",
+    "section": "Manual Sec. 7.19 — Rules Governing the Oral Defense",
+    "title": "Oral Defense Conduct, Final Rating, and Re-Defense Fee Rule",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["oral defense", "re-defense", "redefense", "panelists fee", "final rating", "third stage"],
+    "commonInquiries": [
+      "What are the rules governing Oral Defense and Re-defense?",
+      "Who pays the panelists' fee in a re-defense?",
+      "Ano ang patakaran sa re-defense at sino ang magbabayad ng panelists' fee?"
+    ],
+    "answerEn": "Under Sec. 7.19: The oral defense is the highest academic exercise for candidates and must be treated with dignity. Panel members provide a final rating determining the student's success. If the panel decides a re-defense is needed, the candidate must pay the panelists' fee for re-defense in the third stage.",
+    "answerTl": "Ayon sa Sec. 7.19: Ang panel members ang magbibigay ng final rating. Kung magpasya ang panel ng examiners na kailangan ng re-defense, ang candidate ang magbabayad ng panelists' fee para sa re-defense sa third stage.",
+    "relatedRoutes": [
+      { "label": "Final Defense", "href": "/student/thesis/final-defense" },
+      { "label": "Faculty Defenses", "href": "/faculty/defenses" }
+    ]
+  },
+  {
+    "id": "thesis-adviser-selection-ratio",
+    "category": "Thesis & Defense Pipeline",
+    "section": "Manual Sec. 7.20 — Thesis/Dissertation Adviser",
+    "title": "Adviser Selection, Qualifications & 1:5 Student-to-Adviser Ratio",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["thesis adviser", "adviser ratio", "1:5", "5 students", "doctoral degree", "after title defense", "panel of examiners", "advisee limit"],
+    "commonInquiries": [
+      "When and how is a Thesis Adviser selected?",
+      "How many advisees can one faculty adviser handle per semester?",
+      "Kailan pipili ng Thesis Adviser at ilang estudyante ang limit per adviser?"
+    ],
+    "answerEn": "Under Sec. 7.20: An adviser is selected among the panel of examiners AFTER the Title Defense stage. Advisers must hold a relevant doctoral degree and expertise in the field. The adviser-to-student ratio is capped at one (1) faculty member per maximum of five (5) students per semester (inclusive of in-campus and off-campus students).",
+    "answerTl": "Ayon sa Sec. 7.20: Pinipili ang thesis adviser mula sa panel of examiners pagkatapos ng Title Defense. Dapat ay may relevant doctoral degree ang adviser, at maximum na 5 estudyante lang (1:5 ratio, in-campus at off-campus combined) ang maaaring hawakan per semester.",
+    "relatedRoutes": [
+      { "label": "Adviser Request", "href": "/student/thesis/adviser-request" },
+      { "label": "Faculty Advisees", "href": "/faculty/advisees" }
+    ]
+  },
+  {
+    "id": "thesis-manuscript-submission-deadlines",
+    "category": "Thesis & Defense Pipeline",
+    "section": "Manual Sec. 7.21 — Manuscript Submission & Defense Schedules",
+    "title": "7-Day Manuscript Deadline & Academic Council Cutoff Dates",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["7 days", "seven days", "1 month", "2 weeks", "academic council", "defense invitation", "manuscript submission deadline", "ilang araw bago defense"],
+    "commonInquiries": [
+      "How many days before my defense should I submit my manuscript?",
+      "What are the deadlines relative to the Academic Council meetings for graduation?",
+      "Ilang araw bago ang scheduled defense dapat magpasa ng manuscript?"
+    ],
+    "answerEn": "Under Sec. 7.21: 1) Students must submit their manuscript at least seven (7) days before the scheduled defense. 2) The GS Office issues official invitations to panelists. 3) To qualify for graduation, Final Defense must happen at least one (1) month before the GS Academic Council meeting, and final manuscript submission must be at least two (2) weeks before the Institute Academic Council meeting.",
+    "answerTl": "Ayon sa Sec. 7.21: Dapat ipasa ang manuscript nang hindi bababa sa 7 araw (7 days) bago ang defense. Para maka-qualify sa graduation, kailangang matapos ang Final Defense nang 1 month bago ang GS Academic Council meeting at maipasa ang manuscript nang 2 weeks bago ang Institute Academic Council meeting.",
+    "relatedRoutes": [
+      { "label": "Proposal Defense", "href": "/student/thesis/proposal-defense" },
+      { "label": "Final Defense", "href": "/student/thesis/final-defense" }
+    ]
+  },
+  {
+    "id": "thesis-committees-format-coursework",
+    "category": "Thesis & Defense Pipeline",
+    "section": "Manual Sec. 7.22–7.24 — Statistical, Language, Ethics, Format & Plan of Coursework",
+    "title": "Statistics Consultancy, Language Editor, Ethics Review & Plan of Coursework",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["statistical treatment", "statistics consultancy", "language editor", "plagiarism and research ethics", "human participant", "animal", "ms mathematics", "plan of coursework", "format", "style"],
+    "commonInquiries": [
+      "Are language editing, statistics review, and ethics clearance required for thesis manuscripts?",
+      "What is the Plan of Coursework and how does MS Mathematics formatting differ?",
+      "Kailangan ba ng statistician, language editor, at ethics committee review?"
+    ],
+    "answerEn": "Sec. 7.22–7.24: Students handle statistical analysis independently or consult the Statistics Consultancy Committee; manuscripts must be edited by the Language Editor Committee; and human/animal participant research requires Plagiarism and Research Ethics Committee review. All theses follow the Manual for Thesis/Dissertation Writing (MS Mathematics adopts discipline-specific chapter structure). Students must also submit a Plan of Coursework (foundation, major, cognate, timeline, bridging if any) approved by their adviser to the GS Office.",
+    "answerTl": "Sec. 7.22–7.24: Kailangang dumaan ang manuscript sa Language Editor Committee, at sa Statistics Consultancy Committee kung kailangan ng tulong sa statistics. Kung may human/animal participants, kailangan ang Plagiarism & Research Ethics Committee review. Kailangan ding magpasa ng Plan of Coursework na pirmado ng adviser sa GS Office.",
+    "relatedRoutes": [
+      { "label": "STRIKE & Clearance", "href": "/student/thesis/strike" },
+      { "label": "Curriculum", "href": "/student/curriculum" }
+    ]
+  },
+  {
+    "id": "graduation-requirements-publication",
+    "category": "Graduation & Credentials",
+    "section": "Manual Sec. 7.25 — Graduation Requirements & Student Output",
+    "title": "Graduation Requirements & Mandatory Journal Publication",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["graduation requirements", "graduate", "publication", "refereed journal", "indexed journal", "juried creative work", "theory-building", "practice-based", "signed copies", "clearance", "paano grumadweyt"],
+    "commonInquiries": [
+      "What are the complete requirements to graduate from EARIST Graduate School?",
+      "Is publishing a journal article required before graduation?",
+      "Ano-ano ang kailangan bago makapagtapos sa Master's o Doctoral program?"
+    ],
+    "answerEn": "Under Sec. 7.25, candidates must: 1) Complete all prescribed coursework, 2) Pass both written comprehensive and oral examinations, 3) Submit required signed copies of the thesis/dissertation, 4) Clear all financial and administrative obligations, AND 5) Fulfill publication output: Master's (Academic Track) requires a thesis + at least 1 publication in a refereed journal or juried creative outlet; Doctoral requires a publicly defended dissertation (theory-building for Ph.D-IP; practice-based for Ed.D, DBA, DPA) + publication in a nationally/internationally indexed journal or juried outlet.",
+    "answerTl": "Graduation Requirements (Sec. 7.25): 1) Tapusin lahat ng coursework, 2) Ipasa ang Written Comprehensive Exam at Oral Defense, 3) Magpasa ng signed thesis/dissertation copies, 4) Mag-clear ng financial/administrative obligations, AT 5) Mag-publish ng kahit 1 research article sa refereed journal (Master's) o nationally/internationally indexed journal (Doctoral).",
+    "relatedRoutes": [
+      { "label": "Submit to Repository", "href": "/student/repository/submit" },
+      { "label": "Academic Journey", "href": "/student/journey" }
+    ]
+  },
+  {
+    "id": "graduation-academic-costume",
+    "category": "Graduation & Credentials",
+    "section": "Manual Sec. 7.26 — Academic Costume",
+    "title": "Academic Gown / Toga Colors per Graduate Program",
+    "roles": ["student", "public", "faculty", "admin"],
+    "keywords": ["academic costume", "gown", "toga", "navy blue", "royal blue", "white", "yellow gold", "green", "kulay ng toga"],
+    "commonInquiries": [
+      "What is the color of the academic gown or toga for each Master's and Doctoral program?",
+      "Anong kulay ng toga / gown para sa MAEd, MBA, MPA, MSM, o EdD?"
+    ],
+    "answerEn": "Official Academic Gown Colors (Sec. 7.26): • Navy Blue: Ph.D. in Industrial Psychology (Ph.D-IP) • Royal Blue: Doctor of Education (Ed.D-EM), MAEd, MAIE (HRM), and MAT • White: Doctor of Public Administration (DPA) and Master in Public Administration (MPA) • Yellow Gold: Doctor of Business Administration (DBA) and Master in Business Administration (MBA) • Green: MS in Mathematics (MSM) and MA in Industrial Psychology (MAIP).",
+    "answerTl": "Mga opisyal na kulay ng Academic Gown/Toga (Sec. 7.26): • Navy Blue: Ph.D-IP • Royal Blue: Ed.D-EM, MAEd, MAIE-HRM, MAT • White: DPA at MPA • Yellow Gold: DBA at MBA • Green: MS Mathematics at MA Industrial Psychology.",
+    "relatedRoutes": [
+      { "label": "View Programs", "href": "/programs" }
+    ]
+  },
+  {
+    "id": "graduation-credentials-release",
+    "category": "Graduation & Credentials",
+    "section": "Manual Sec. 7.27 — Academic Credentials",
+    "title": "Requirements for Releasing Diplomas and Official Transcripts",
+    "roles": ["student", "admin"],
+    "keywords": ["credentials", "diploma", "transcript", "tor", "clearance", "thesis distribution", "endorsement", "release diploma"],
+    "commonInquiries": [
+      "What do I need to submit to claim my graduate diploma and transcript?",
+      "Ano ang kailangan para ma-release ang diploma at TOR pagkatapos ng graduation?"
+    ],
+    "answerEn": "Under Sec. 7.27, academic credentials (diplomas and official transcripts) are released upon submitting: 1) Clearance from all school offices, and 2) Proof of thesis/dissertation endorsement and distribution.",
+    "answerTl": "Ayon sa Sec. 7.27, ire-release ang diploma at transcript kapag naipasa na ang: 1) Clearance mula sa lahat ng opisina ng paaralan, at 2) Proof ng thesis/dissertation endorsement at distribution.",
+    "relatedRoutes": [
+      { "label": "Repository Submission", "href": "/student/repository/submit" }
+    ]
+  },
+  {
+    "id": "policies-school-fees-discipline",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 8.0 & 9.0 — School Fees & Discipline",
+    "title": "Tuition Collection (FMS) and Graduate Student Discipline",
+    "roles": ["public", "applicant", "student", "admin"],
+    "keywords": ["school fees", "tuition", "fms", "financial management services", "miscellaneous fees", "discipline", "infractions", "dismissal", "bayad", "matrikula"],
+    "commonInquiries": [
+      "Which office collects tuition and fees in EARIST Graduate School?",
+      "What disciplinary rules apply to graduate students?",
+      "Saan nagbabayad ng tuition/miscellaneous fees at anong discipline rules ang sinusunod?"
+    ],
+    "answerEn": "School Fees (Sec. 8.0): The Financial Management Services (FMS) handles collection of tuition and miscellaneous fees; students enrolling in coursework, thesis, or dissertation writing must pay corresponding fees. Discipline (Sec. 9.0): Graduate students must follow the disciplinary rules in the Undergraduate Student Handbook, with infractions punishable from warnings to dismissal.",
+    "answerTl": "School Fees (Sec. 8.0): Ang Financial Management Services (FMS) ang nangongolekta ng tuition at miscellaneous fees para sa coursework at thesis/dissertation. Discipline (Sec. 9.0): Sumusunod ang graduate students sa disciplinary rules ng Undergraduate Student Handbook (mula warning hanggang dismissal).",
+    "relatedRoutes": [
+      { "label": "Admissions FAQ", "href": "/faq" }
+    ]
+  },
+  {
+    "id": "policies-gad-diversity-pwd",
+    "category": "Enrollment & Academic Policies",
+    "section": "Manual Sec. 10.0 — Gender and Development (GAD), PWD & Special Needs",
+    "title": "GAD, Safe Spaces Act, PWD Accommodations & Special Needs Support",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["gad", "gender and development", "safe spaces act", "ra 11313", "ra 7877", "anti-sexual harassment", "vawc", "bullying", "pwd", "disability", "ramps", "extended time", "special needs", "counseling"],
+    "commonInquiries": [
+      "What accommodations are provided for Persons with Disabilities (PWD) and students with special needs?",
+      "What Gender and Development (GAD) and anti-harassment policies apply?",
+      "Anong tulong o accommodation ang meron para sa PWD o special needs students?"
+    ],
+    "answerEn": "Under Sec. 10.0, EARIST GS integrates GAD across programs and enforces an accessible grievance mechanism under RA 11313 (Safe Spaces Act), RA 7877 (Anti-Sexual Harassment), VAWC, and anti-bullying laws. For PWDs, it provides ramps, elevators, specialized equipment, assistive technologies, extended assessment times, and alternative format materials. Students with special needs receive personalized academic plans and tailored counseling/mental health support.",
+    "answerTl": "Sa Sec. 10.0, ipinapatupad ang GAD, Safe Spaces Act (RA 11313), at RA 7877 na may malinaw na grievance redress mechanism. Para sa PWDs, may ramps, elevators, assistive tech, extended assessment time, at alternative formats. Para sa students with special needs, may personalized academic plans at counseling support.",
+    "relatedRoutes": [
+      { "label": "About EARIST GS", "href": "/about" }
+    ]
+  },
+  {
+    "id": "publications-gs-journal",
+    "category": "Publications & Research Ethics",
+    "section": "Manual Sec. 11.0 — Graduate School Journal Publications",
+    "title": "Journal Submission Guidelines (APA 7th, 5,000–8,000 Words, Peer Review)",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["journal", "publication", "call for papers", "january", "july", "apa 7th", "5000", "8000", "double-blind", "peer review", "cc by-nc-nd", "open access", "mentoring", "workshops"],
+    "commonInquiries": [
+      "How do I publish in the EARIST Graduate School journal and what are the formatting rules?",
+      "When are calls for papers announced and when are journal issues released?",
+      "Paano mag-submit ng research paper sa EARIST GS Journal?"
+    ],
+    "answerEn": "Under Sec. 11.0: The EARIST GS Journal follows CHED accreditation standards and publishes biannually (January and July), with Calls for Papers announced at least 3 months ahead. Manuscripts from students, faculty, and external experts must use APA 7th Edition format (5,000–8,000 words + title page, abstract, keywords) and include a plagiarism report. Submissions undergo GS Research Committee screening and double-blind peer review, and are published Open Access (CC BY-NC-ND, authors retain copyright). Workshops, mentoring, and designated funding/awards are also provided.",
+    "answerTl": "Ayon sa Sec. 11.0: Dalawang beses kada taon (January at July) naglalabas ng journal ang EARIST GS, at 3 months bago ito ang Call for Papers. Kailangang naka-APA 7th Edition (5,000–8,000 words) at may plagiarism report. Dumadaan ito sa double-blind peer review at open access (CC BY-NC-ND).",
+    "relatedRoutes": [
+      { "label": "Research Repository", "href": "/repository" },
+      { "label": "Student Repository", "href": "/student/repository" }
+    ]
+  },
+  {
+    "id": "supervision-pr-records",
+    "category": "Publications & Research Ethics",
+    "section": "Manual Sec. 12.0, 13.0 & 15.0 — Supervision, Public Relations & GS Records Section",
+    "title": "Dean Supervision, Official Channels & GS Records Section",
+    "roles": ["public", "student", "faculty", "admin"],
+    "keywords": ["supervision", "faculty loading", "panelist selection", "bulletin", "facebook page", "records section", "announcements", "seminars"],
+    "commonInquiries": [
+      "Who prepares faculty loading and selects defense panelists?",
+      "Where does the Graduate School post official announcements and what does the Records Section handle?",
+      "Sino ang pumipili ng defense panelists at ano ang hawak ng GS Records Section?"
+    ],
+    "answerEn": "Sec. 12.0–15.0: Department Heads prepare faculty loading (certified by the GS Dean, recommended by VPAA, approved by the President) and recommend qualified defense panelists. Official updates are disseminated via the Bulletin, Research Journal, official GS Facebook Page, seminars/workshops, and portal Announcements. The GS Records Section manages enrollment/academic records, faculty workloads/class schedules, secure thesis storage, and credential issuance.",
+    "answerTl": "Sec. 12.0–15.0: Ang Department Heads ang naghahanda ng faculty loading (certified ng Dean, recommended ng VPAA, approved ng President) at nagrerekomenda ng defense panelists. Ang opisyal na updates ay nasa Bulletin, Research Journal, official GS Facebook Page, at portal Announcements.",
+    "relatedRoutes": [
+      { "label": "Student Announcements", "href": "/student/announcements" },
+      { "label": "Faculty Announcements", "href": "/faculty/announcements" }
+    ]
+  },
+  {
+    "id": "research-ethics-ai-policy",
+    "category": "Publications & Research Ethics",
+    "section": "Manual Sec. 15 — Research Ethics & AI Use Policy",
+    "title": "Policy on Ethical Use of AI (ChatGPT, Grammarly) in Graduate Research",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["ai ethics", "artificial intelligence", "chatgpt", "grammarly", "generative ai", "ra 10173", "data privacy act", "disclosure", "peer review", "sanctions", "pwede ba ai sa thesis"],
+    "commonInquiries": [
+      "Can students or faculty use AI tools like ChatGPT or Grammarly in thesis research?",
+      "What are the prohibited uses of AI and sanctions under the EARIST AI Ethics Policy?",
+      "Pwede ba gumamit ng ChatGPT o AI tools sa paggawa ng thesis o research?"
+    ],
+    "answerEn": "Sec. 15 AI Research Ethics Policy applies to all students, faculty, and researchers: • Acceptable use: Data analysis/visualization, NLP literature review assistance, simulations, and editing/language enhancement (e.g., ChatGPT, Grammarly)—provided researchers transparently disclose AI tools in methodology/writing and comply with RA 10173 (Data Privacy Act of 2012). • Prohibited: Fabricating data, plagiarizing, generating results without human oversight, replacing authorship, or replacing human judgment in peer review. • Violations lead to investigation and sanctions (output revision, research suspension, or institutional penalties).",
+    "answerTl": "Sec. 15 AI Policy: Pinapayagan ang AI tools para sa data analysis, literature review assistance, at editing (hal. ChatGPT, Grammarly) BASTA may malinaw na disclosure at acknowledgment at sumusunod sa Data Privacy Act (RA 10173). MAHIGPIT NA IPINAGBABAWAL ang paggawa ng pekeng data, plagiarism, at pagpapalit sa authorship o human peer review. May imbestigasyon at sanction ang paglabag.",
+    "relatedRoutes": [
+      { "label": "STRIKE Plagiarism Check", "href": "/student/thesis/strike" }
+    ]
+  },
+  {
+    "id": "learning-modalities",
+    "category": "Learning Modalities & Scholarships",
+    "section": "Manual Sec. 16.0 — Learning Modalities",
+    "title": "Face-to-Face, Blended, and Online Learning Options",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["learning modalities", "face-to-face", "f2f", "blended learning", "online learning", "synchronous", "asynchronous", "online class", "may online class ba"],
+    "commonInquiries": [
+      "Does EARIST Graduate School offer online or blended classes?",
+      "What learning modalities are available?",
+      "May online class ba o pure face-to-face ang Graduate School?"
+    ],
+    "answerEn": "Under Sec. 16.0, EARIST Graduate School offers three flexible learning modalities: 1) Face-to-Face Learning (traditional classroom instruction), 2) Blended Learning (hybrid in-person + digital tools), and 3) Online Learning (fully online courses with both real-time synchronous sessions and flexible-deadline asynchronous sessions).",
+    "answerTl": "Ayon sa Sec. 16.0, may tatlong learning modalities sa Graduate School: 1) Face-to-Face Learning, 2) Blended Learning (hybrid in-person at online), at 3) Online Learning (parehong may real-time synchronous classes at self-paced asynchronous sessions).",
+    "relatedRoutes": [
+      { "label": "Explore Programs", "href": "/programs" }
+    ]
+  },
+  {
+    "id": "scholarships-awards-privileges",
+    "category": "Learning Modalities & Scholarships",
+    "section": "Manual Sec. 17.0 — Scholarships, Awards & Privileges",
+    "title": "Fee Exemptions, FEGSSC Officer Refunds, Awards & Faculty Privileges",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["scholarship", "tuition exemption", "earist personnel", "cna", "fegssc", "augmentation fee", "refund", "best thesis", "valedictorian", "page", "faculty travel", "discount"],
+    "commonInquiries": [
+      "Are there scholarships or tuition discounts for EARIST personnel or student council officers?",
+      "What graduation awards and institutional privileges does the Graduate School offer?",
+      "May scholarship o fee refund ba para sa EARIST employees o FEGSSC officers?"
+    ],
+    "answerEn": "Sec. 17.0: • Scholarships/Exemptions: EARIST personnel are exempted from tuition and miscellaneous fees (but still pay augmentation fees) and may avail of CNA educational assistance. Elected FEGSSC officers (President, VP, Secretary, Treasurer, Auditor) may avail of an augmentation fee refund during incumbency. • Awards: Best thesis/dissertation per program, Best research paper, Best presenter (national/international fora), and Class Valedictorian (Master's & Doctoral). • Privileges: Institutional PAGE membership and GS funding for faculty seminar/workshop registration and travel.",
+    "answerTl": "Sec. 17.0: • Scholarships/Exemptions: Libre sa tuition at miscellaneous fees ang EARIST personnel (maliban sa augmentation fees). Ang elected officers ng FEGSSC (President, VP, Secretary, Treasurer, Auditor) ay may refund sa augmentation fees habang nakaupo sa pwesto. • Awards: Best thesis/dissertation, Best research paper, Best presenter, at Class Valedictorian. • Privileges: PAGE membership at travel/registration support para sa mga faculty seminars.",
+    "relatedRoutes": [
+      { "label": "About EARIST GS", "href": "/about" }
+    ]
+  },
+  {
+    "id": "creative-work-agenda-incentives",
+    "category": "Creative Works & OSH",
+    "section": "Manual Sec. 19.0 — Research & Creative Work Agenda, Incentives & Honoraria",
+    "title": "Creative Work Incentives (₱5,000–₱30,000), Evaluator Honoraria & IP/MOA Rules",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["creative work", "incentive", "honoraria", "software", "copyrighted", "literary", "theatre", "music", "dance", "digital arts", "moa", "royalties", "ip rights", "september", "cash reward"],
+    "commonInquiries": [
+      "What are the cash incentives for creative works and copyrighted software?",
+      "What are the honoraria rates for Creative Work evaluators?",
+      "When is the call for Creative Work Incentive applications and what are the MOA/IP rules?",
+      "Magkano ang cash incentive para sa copyrighted software o published creative outputs?"
+    ],
+    "answerEn": "Sec. 19.0 Creative Work Incentives: • Literary, Theatre, Music & Dance: ₱15,000 (international) / ₱10,000 (Philippine). • Digital/Media Arts awards: ₱20,000 (international) / ₱10,000 (national) / ₱5,000 (local/regional). • Copyrighted digital system/software adapted by institutions/industry: ₱20,000 (used by EARIST or national industry), ₱30,000 (international), ₱10,000 (MSME/local). Evaluator Honoraria: Faculty ₱500 (Chair/External), ₱400 (Internal), ₱100 (Secretariat); Graduate Student ₱400/₱300/₱100. Calls open first week of September; EARIST must be sole affiliation and co-author/assignor with a signed MOA.",
+    "answerTl": "Sec. 19.0 Creative Work Cash Incentives: ₱10,000–₱15,000 (Literary, Theatre, Music, Dance), ₱5,000–₱20,000 (Digital/Media Arts), at ₱10,000–₱30,000 (Copyrighted Digital System/Software na ginagamit ng EARIST o industry). May evaluator honoraria din (₱100–₱500). Tuwing 1st week ng September ang call for applications at kailangang EARIST ang sole affiliation at co-author/assignor.",
+    "relatedRoutes": [
+      { "label": "Faculty Profile", "href": "/faculty/profile" },
+      { "label": "Student Repository", "href": "/student/repository" }
+    ]
+  },
+  {
+    "id": "osh-safety-health-policy",
+    "category": "Creative Works & OSH",
+    "section": "Manual Sec. 20.0 & 21.0 — Occupational Safety & Health (OSH) & Separability",
+    "title": "OSH Policy (RA 11058), Emergency Drills, PPE & Safety Audits",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["osh", "occupational safety", "health", "ra 11058", "dole 198", "ppe", "emergency drill", "ert", "first aid", "physical exam", "mental health", "quarterly audit", "separability"],
+    "commonInquiries": [
+      "What are EARIST Graduate School's Occupational Safety and Health (OSH) policies?",
+      "How often are emergency drills and safety audits held?",
+      "Ano ang patakaran sa safety, emergency drills, at OSH sa Graduate School?"
+    ],
+    "answerEn": "Under Sec. 20.0 (RA 11058 and DOLE DO 198 s. 2018), the Graduate School enforces zero-tolerance safety standards: regular building/lab inspections, mandatory training & PPE for hazardous/chemical/biological lab work, fire/earthquake/evacuation drills at least twice annually, trained Emergency Response Teams (ERTs), first aid & clinic tie-ups, annual physical exams for staff/faculty, mental health counseling, incident reporting, and quarterly safety audits by the OSH Committee. Sec. 21.0 contains the Separability Clause.",
+    "answerTl": "Sa ilalim ng Sec. 20.0 (RA 11058 & DOLE DO 198 s. 2018), ipinapatupad ang PPE sa lab, fire/earthquake/evacuation drills (2x kada taon), ERTs, first aid, annual physical exam para sa faculty/staff, mental health counseling, at quarterly safety audits. Nasa Sec. 21.0 naman ang Separability Clause.",
+    "relatedRoutes": [
+      { "label": "About EARIST", "href": "/about" }
+    ]
+  },
+  {
+    "id": "system-apply-pinnacle-register",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Public Registration & Pinnacle Workflow",
+    "title": "How to Apply & Register Using Your Pinnacle Applicant ID",
+    "roles": ["public", "applicant"],
+    "keywords": ["how to apply", "apply", "register", "registration", "pinnacle", "applicant id", "sign up", "create account", "paano mag-apply", "mag-register"],
+    "commonInquiries": [
+      "How do I apply to EARIST Graduate School and create an account?",
+      "What is a Pinnacle Applicant ID and where do I get one?",
+      "Paano mag-apply at magparehistro sa EARIST Graduate School system?",
+      "Ano yung Pinnacle Applicant ID?"
+    ],
+    "answerEn": "To apply: 1) Register first in EARIST's Pinnacle Applicants Module to obtain your Pinnacle Applicant ID and submit initial enrollment requirements/payments. 2) Visit /register in this GS System to complete the 2-step Applicant Registration Wizard (Pinnacle Applicant ID, personal/undergrad info, program choice, and account setup). 3) Sign in at /login to view your Program Alignment, schedule your Entrance Exam, take the exam, and upload your COR after enrollment.",
+    "answerTl": "Para mag-apply: 1) Mag-register muna sa Pinnacle Applicants Module para makakuha ng Pinnacle Applicant ID. 2) Pumunta sa /register dito sa GS System para tapusin ang registration wizard. 3) Mag-sign in sa /login bilang Applicant para i-check ang Program Alignment, magpa-schedule at kumuha ng Entrance Exam, at mag-upload ng COR.",
+    "relatedRoutes": [
+      { "label": "Register Now", "href": "/register" },
+      { "label": "Portal Login", "href": "/login" },
+      { "label": "Admissions FAQ", "href": "/faq" }
+    ]
+  },
+  {
+    "id": "system-login-portals-roles",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Login & User Roles",
+    "title": "Signing In, Password Reset & User Portal Roles",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["login", "sign in", "password", "forgot password", "user roles", "portal", "applicant", "student", "faculty", "panelist", "admin", "student number", "paano mag-login"],
+    "commonInquiries": [
+      "How do I log in to the Applicant, Student, or Faculty portal?",
+      "What are the different user roles in the Graduate School system?",
+      "How do I reset a forgotten password?",
+      "Paano mag-log in at ano ang mga portal sa sistema?"
+    ],
+    "answerEn": "Go to /login to access your portal. Applicants log in using their registered credentials, Students sign in using their confirmed Student Number + password (promoted after COR verification), Faculty/Panelists access defense/advisee/essay tools, and Administrators manage admissions, exam slots, and records. Use 'Forgot your password?' on /login if needed. In this Evaluation Edition, /login provides direct 1-click entry for Applicant, Graduate Student, and Faculty.",
+    "answerTl": "Pumunta sa /login para makapasok sa portal. May 4 na pangunahing roles: Applicant (admissions & exam), Student (5-step thesis journey), Faculty/Panelist (defenses, advisees, essay grading), at Administrator (verification & records). Sa Evaluation Edition na ito, pwedeng i-select sa /login ang Applicant, Graduate Student, o Faculty.",
+    "relatedRoutes": [
+      { "label": "Sign In (/login)", "href": "/login" }
+    ]
+  },
+  {
+    "id": "applicant-dashboard-profile-notifications",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Applicant Dashboard, Profile & Notifications",
+    "title": "Tracking Application Status & Updating Applicant Profile",
+    "roles": ["applicant", "public"],
+    "keywords": ["applicant dashboard", "applicant profile", "applicant notifications", "application status", "progress stepper", "bento grid"],
+    "commonInquiries": [
+      "Where can an applicant track application progress and notifications?",
+      "How do I view or edit my applicant personal and academic profile?",
+      "Saan makikita ang progress ng application ko sa Applicant Portal?"
+    ],
+    "answerEn": "In the Applicant Portal: • /applicant/dashboard shows your Applicant Progress Stepper and 6-card Application Status Bento Grid. • /applicant/profile displays and lets you manage your personal and undergraduate academic details. • /applicant/notifications lists all admission, waiver, exam, and COR updates.",
+    "answerTl": "Sa Applicant Portal: Tingnan ang iyong Progress Stepper at status cards sa /applicant/dashboard, i-check o i-update ang personal/academic info sa /applicant/profile, at basahin ang admission updates sa /applicant/notifications.",
+    "relatedRoutes": [
+      { "label": "Applicant Dashboard", "href": "/applicant/dashboard" },
+      { "label": "Applicant Profile", "href": "/applicant/profile" },
+      { "label": "Notifications", "href": "/applicant/notifications" }
+    ]
+  },
+  {
+    "id": "applicant-program-alignment-waiver",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Program Alignment & Bridging Waiver",
+    "title": "Checking Program Alignment & Downloading Bridging Course Waiver",
+    "roles": ["applicant", "public", "admin"],
+    "keywords": ["program alignment", "alignment check", "bridging waiver", "waiver", "pending waiver", "blocked exam", "misaligned", "download waiver"],
+    "commonInquiries": [
+      "Where do I check my Program Alignment status and download the Bridging Waiver?",
+      "Why is Entrance Exam scheduling blocked when alignment is pending waiver?",
+      "Saan makikita ang Program Alignment status at paano i-download ang Bridging Waiver?"
+    ],
+    "answerEn": "Go to /applicant/alignment to check if your bachelor's/previous degree aligns with your chosen graduate program. If aligned, you can proceed straight to scheduling your exam. If misaligned, your status is 'Pending Bridging Waiver'—exam scheduling stays blocked until you download the Bridging Course Waiver from /applicant/alignment and receive Graduate School Office approval.",
+    "answerTl": "Pumunta sa /applicant/alignment para makita kung aligned ang previous degree mo. Kapag hindi aligned ('Pending Bridging Waiver'), naka-block muna ang exam scheduling hanggang ma-download mo ang Bridging Waiver form doon at maaprubahan ng GS Office.",
+    "relatedRoutes": [
+      { "label": "Program Alignment", "href": "/applicant/alignment" },
+      { "label": "Exam Schedule", "href": "/applicant/schedule" }
+    ]
+  },
+  {
+    "id": "applicant-exam-schedule-booking",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Entrance Examination Scheduling",
+    "title": "Booking an Entrance Exam Slot (Table & Calendar Views)",
+    "roles": ["applicant", "public", "admin"],
+    "keywords": ["exam schedule", "book exam", "exam slot", "calendar view", "table view", "schedule entrance exam", "paano mag-book ng exam"],
+    "commonInquiries": [
+      "How do I book my Entrance Examination schedule slot?",
+      "Where can I see available Entrance Exam dates?",
+      "Paano magpa-schedule ng Entrance Exam at saan makikita ang slots?"
+    ],
+    "answerEn": "After clearing Program Alignment, visit /applicant/schedule. You can switch between Table View and Calendar View to see real-time available exam schedules (date, time, room/modality, remaining seats) and reserve your preferred Entrance Examination slot.",
+    "answerTl": "Kapag cleared na sa Program Alignment, pumunta sa /applicant/schedule. Pwede kang mamili gamit ang Table View o Calendar View at mag-reserve ng available Entrance Exam slot.",
+    "relatedRoutes": [
+      { "label": "Exam Scheduling", "href": "/applicant/schedule" },
+      { "label": "Entrance Exam", "href": "/applicant/exam" }
+    ]
+  },
+  {
+    "id": "applicant-exam-execution-engine",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Interactive Entrance Examination",
+    "title": "Taking the Entrance Exam (72 MCQs, Graduate Essay, Timer & Auto-Save)",
+    "roles": ["applicant", "public"],
+    "keywords": ["entrance exam", "take exam", "72 mcq", "essay", "timer", "auto-save", "question navigator", "submission receipt", "appeal", "exam engine"],
+    "commonInquiries": [
+      "How does the online Entrance Examination work in the Applicant Portal?",
+      "How many questions and sections are in the Entrance Exam?",
+      "Ilang items ang Entrance Exam sa portal at paano ito sagutan?"
+    ],
+    "answerEn": "Open /applicant/exam on your scheduled exam window. The exam engine includes: • 72 Multiple Choice Questions (with stimulus passages/figures) • 1 Graduate Essay prompt with live word counter • Live countdown timer • Clickable Question Navigator grid • Auto-save drafts • Official submission receipt (plus an appeal view if blocked/expired).",
+    "answerTl": "Buksan ang /applicant/exam para kunin ang Entrance Exam. Mayroon itong 72 Multiple Choice Questions (may reading passages/figures), 1 Graduate Essay na may word counter, live countdown timer, Question Navigator grid, auto-save, at submission receipt.",
+    "relatedRoutes": [
+      { "label": "Take Entrance Exam", "href": "/applicant/exam" },
+      { "label": "Exam Results", "href": "/applicant/results" }
+    ]
+  },
+  {
+    "id": "applicant-exam-results",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Entrance Exam Results",
+    "title": "Viewing Exam Score Breakdown (MCQ + Essay + Passing Threshold)",
+    "roles": ["applicant", "faculty", "admin"],
+    "keywords": ["exam results", "score breakdown", "passing threshold", "reconsidered", "awaiting essay evaluation", "passed exam", "resulta ng exam"],
+    "commonInquiries": [
+      "Where do I check my Entrance Exam results and score breakdown?",
+      "Why does my exam status show Awaiting Essay Evaluation?",
+      "Saan makikita ang Entrance Exam results at kung pasado ako?"
+    ],
+    "answerEn": "Visit /applicant/results to view your score breakdown combining your auto-scored MCQ items (out of 72) and Faculty-evaluated Graduate Essay score against the passing threshold. Possible statuses include Passed, Passed (Reconsidered), Awaiting Essay Evaluation, or Did Not Meet Threshold.",
+    "answerTl": "Pumunta sa /applicant/results para makita ang score breakdown ng iyong auto-scored MCQ (out of 72) at Faculty-evaluated Essay score. Kung 'Awaiting Essay Evaluation', hinihintay pa ang grade ng Faculty evaluator para sa essay mo.",
+    "relatedRoutes": [
+      { "label": "View Exam Results", "href": "/applicant/results" },
+      { "label": "Upload COR", "href": "/applicant/cor-upload" }
+    ]
+  },
+  {
+    "id": "applicant-cor-upload-promotion",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — COR Upload & Student Promotion",
+    "title": "Uploading Your Certificate of Registration (COR) & Role Promotion",
+    "roles": ["applicant", "student", "admin"],
+    "keywords": ["cor", "certificate of registration", "cor upload", "ocr", "5mb", "pdf", "jpg", "png", "student number", "promote to student", "pinnacle enrollment"],
+    "commonInquiries": [
+      "How do I upload my Certificate of Registration (COR) and get promoted to Student?",
+      "What file types and max file size are allowed for COR upload?",
+      "Paano mag-upload ng COR pagkatapos mag-enroll sa Pinnacle?"
+    ],
+    "answerEn": "After passing the Entrance Exam and enrolling in Pinnacle, download your COR and upload it at /applicant/cor-upload (accepted formats: PDF, JPG, PNG; max size: 5MB). The system extracts details via OCR for Administrator verification. Once verified, your account is promoted to Student and you receive your confirmed Student Number to log in to the Student Portal.",
+    "answerTl": "Pagkatapos pumasa sa Entrance Exam at mag-enroll sa Pinnacle, i-upload ang iyong COR (PDF, JPG, o PNG; max 5MB) sa /applicant/cor-upload. Gumagamit ang system ng OCR at ive-verify ito ng Admin; pagkatapos ay ma-pro-promote ka sa Student role at ibibigay ang iyong Student Number.",
+    "relatedRoutes": [
+      { "label": "Upload COR", "href": "/applicant/cor-upload" },
+      { "label": "Sign In (/login)", "href": "/login" }
+    ]
+  },
+  {
+    "id": "student-core-pages",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Student Dashboard, Curriculum, Journey & Announcements",
+    "title": "Navigating Student Dashboard, Profile, Curriculum, Journey & Memos",
+    "roles": ["student"],
+    "keywords": ["student dashboard", "student profile", "curriculum", "academic journey", "announcements", "notifications", "gpa", "completed units"],
+    "commonInquiries": [
+      "Where can Students check their curriculum checklist, GPA, and Academic Journey?",
+      "Where do Students view announcements and notifications?",
+      "Saan makikita ng Student ang grades, curriculum checklist, at announcements?"
+    ],
+    "answerEn": "Student Portal navigation: • /student/dashboard — active thesis milestone, upcoming defense, and notifications • /student/profile — academic & contact profile • /student/curriculum — degree curriculum checklist, enrolled/completed units, GPA • /student/journey — visual Academic & Thesis Journey timeline • /student/announcements — official GS memos • /student/notifications — read/unread alerts.",
+    "answerTl": "Sa Student Portal: Tingnan ang summary sa /student/dashboard, subjects at GPA sa /student/curriculum, Academic Journey timeline sa /student/journey, official memos sa /student/announcements, at alerts sa /student/notifications.",
+    "relatedRoutes": [
+      { "label": "Student Dashboard", "href": "/student/dashboard" },
+      { "label": "Curriculum", "href": "/student/curriculum" },
+      { "label": "Academic Journey", "href": "/student/journey" }
+    ]
+  },
+  {
+    "id": "student-thesis-hub",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Student Thesis Journey Hub",
+    "title": "Overview of the 5-Step Thesis Journey in the Student Portal",
+    "roles": ["student", "faculty"],
+    "keywords": ["thesis hub", "thesis journey", "5 steps", "thesis pipeline", "step 1", "step 5", "ano mga steps sa thesis"],
+    "commonInquiries": [
+      "What are the 5 steps of the Student Thesis Journey?",
+      "Where can I access all thesis milestones in the Student Portal?",
+      "Ano ang 5 steps sa Thesis Journey sa Student Portal?"
+    ],
+    "answerEn": "Visit /student/thesis to view the 5-Step Thesis Journey: Step 1) Title Defense (/student/thesis/title-defense), Step 2) Adviser Request (/student/thesis/adviser-request), Step 3) Proposal Defense (/student/thesis/proposal-defense), Step 4) STRIKE Plagiarism Check (/student/thesis/strike), and Step 5) Final Defense (/student/thesis/final-defense), followed by Thesis Repository Archival (/student/repository/submit).",
+    "answerTl": "Sa /student/thesis makikita ang 5-Step Thesis Journey: 1) Title Defense, 2) Adviser Request, 3) Proposal Defense, 4) STRIKE Plagiarism Check, at 5) Final Defense—bago ang pag-submit sa Thesis Repository.",
+    "relatedRoutes": [
+      { "label": "Thesis Hub", "href": "/student/thesis" },
+      { "label": "Title Defense", "href": "/student/thesis/title-defense" }
+    ]
+  },
+  {
+    "id": "student-title-defense-guide",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Step 1: Title Defense",
+    "title": "Applying for Title Defense & Uploading Required Documents",
+    "roles": ["student", "faculty"],
+    "keywords": ["apply title defense", "title defense", "three proposed titles", "comprehensive exam certificate", "defense form", "3 titles"],
+    "commonInquiries": [
+      "How do I apply for Title Defense and what files are required?",
+      "Where do I check my Title Defense schedule and approved title?",
+      "Paano mag-apply ng Title Defense at ano ang mga kailangang i-upload?"
+    ],
+    "answerEn": "Go to /student/thesis/title-defense to submit your Title Defense application. Required documents: Certificate of Comprehensive Exam (Passed), current semester COR, Application for Defense form, and Three (3) Proposed Titles. The page tracks review status, scheduled committee & venue, and the approved title + Rapporteur Report summary.",
+    "answerTl": "Pumunta sa /student/thesis/title-defense at i-upload ang: Certificate of Comprehensive Exam (Passed), kasalukuyang COR, Application for Defense form, at Tatlong (3) Proposed Titles. Dito rin makikita ang schedule, panelists, at approved title.",
+    "relatedRoutes": [
+      { "label": "Title Defense", "href": "/student/thesis/title-defense" }
+    ]
+  },
+  {
+    "id": "student-adviser-request-guide",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Step 2: Thesis Adviser Request",
+    "title": "Browsing Faculty Advisers, E-Signing & Tracking GS-020 Approval",
+    "roles": ["student", "faculty"],
+    "keywords": ["adviser request", "gs-020", "request adviser", "e-signature", "digital signature", "faculty directory", "adviser approval"],
+    "commonInquiries": [
+      "How do I submit an Adviser Request and track digital signatures?",
+      "Where can students download their approved Adviser Request form?",
+      "Paano mag-request ng Thesis Adviser at i-track ang approval sa portal?"
+    ],
+    "answerEn": "Open /student/thesis/adviser-request to browse eligible faculty advisers (showing specialization and available slots under the 1:5 cap), submit your official Adviser Request form with your digital e-signature, monitor approvals across Adviser -> Program Chair -> Dean, and preview/download the signed official PDF.",
+    "answerTl": "Buksan ang /student/thesis/adviser-request para pumili ng adviser mula sa faculty directory, mag-submit ng Adviser Request na may digital e-signature, subaybayan ang approval ng Adviser/Chair/Dean, at i-download ang pirmadong PDF.",
+    "relatedRoutes": [
+      { "label": "Adviser Request", "href": "/student/thesis/adviser-request" }
+    ]
+  },
+  {
+    "id": "student-proposal-final-defense-guide",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Steps 3 & 5: Proposal & Final Defense + Rapporteur Report",
+    "title": "2-Step Defense Workflow (Adviser Endorsement -> Application) & Rapporteur Report",
+    "roles": ["student", "faculty"],
+    "keywords": ["proposal defense", "final defense", "2-step", "adviser endorsement", "pre-defense manuscript", "rapporteur report", "rap report", "revisions"],
+    "commonInquiries": [
+      "How does the 2-step workflow in Proposal Defense and Final Defense work?",
+      "What is a Rapporteur Report (RAP Report) and where is it viewed?",
+      "Paano mag-apply sa Proposal Defense o Final Defense at saan makikita ang RAP Report?"
+    ],
+    "answerEn": "On /student/thesis/proposal-defense and /student/thesis/final-defense, students complete 2 steps: 1) Submit manuscript for Adviser Pre-Defense Review & Endorsement; 2) Once endorsed, file the official Defense Application. Both pages show the Defense Schedule, Panel Committee, and the signed Rapporteur Report (RAP Report) containing panel evaluations and required revisions.",
+    "answerTl": "Sa /student/thesis/proposal-defense at /student/thesis/final-defense, may 2 steps: 1) Ipasa muna ang manuscript para sa Adviser Pre-Defense Review & Endorsement; 2) Kapag endorsed na, isumite ang Defense Application. Dito rin makikita ang schedule, panel committee, at Rapporteur Report (RAP Report).",
+    "relatedRoutes": [
+      { "label": "Proposal Defense", "href": "/student/thesis/proposal-defense" },
+      { "label": "Final Defense", "href": "/student/thesis/final-defense" }
+    ]
+  },
+  {
+    "id": "student-strike-plagiarism-guide",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Step 4: STRIKE Plagiarism & Similarity Check",
+    "title": "STRIKE Plagiarism Check (<20% Similarity Threshold) & Clearance",
+    "roles": ["student", "faculty", "admin"],
+    "keywords": ["strike", "plagiarism", "similarity", "20%", "below 20%", "clearance certificate", "similarity index", "paano mag-strike"],
+    "commonInquiries": [
+      "What is STRIKE and what similarity percentage is required to pass?",
+      "Where do students upload their manuscript for plagiarism checking?",
+      "Ano ang passing similarity percentage sa STRIKE plagiarism check?"
+    ],
+    "answerEn": "Visit /student/thesis/strike to submit your manuscript to STRIKE, the integrated plagiarism detection system. Your similarity score must be BELOW 20% to pass and receive your STRIKE Clearance Certificate, which is required before advancing to Final Defense.",
+    "answerTl": "Pumunta sa /student/thesis/strike para i-submit ang iyong manuscript sa STRIKE plagiarism check. Kailangang mas mababa sa 20% (<20%) ang similarity index para pumasa at makuha ang STRIKE Clearance Certificate bago mag-Final Defense.",
+    "relatedRoutes": [
+      { "label": "STRIKE Check", "href": "/student/thesis/strike" },
+      { "label": "Final Defense", "href": "/student/thesis/final-defense" }
+    ]
+  },
+  {
+    "id": "system-repository-archive",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Thesis & Research Repository",
+    "title": "Browsing Published Theses & Submitting Final Archival Copy",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["repository", "research repository", "published thesis", "abstracts", "archive thesis", "submit repository", "full text"],
+    "commonInquiries": [
+      "Can visitors browse the Research Repository without logging in?",
+      "Where do graduating students submit their final thesis for archival?",
+      "Paano maghanap ng published theses o mag-upload ng final thesis sa Repository?"
+    ],
+    "answerEn": "Published thesis titles, authors, abstracts, and citations can be browsed publicly at /repository without logging in (full-text viewing requires portal sign-in at /student/repository or /faculty/repository). After passing Final Defense and completing revisions, students archive their final manuscript at /student/repository/submit.",
+    "answerTl": "Maaaring mag-browse ng published titles, authors, at abstracts nang walang login sa /repository (kailangan ng login para sa full-text sa /student/repository o /faculty/repository). Pagkatapos ng Final Defense, sa /student/repository/submit ipinapasa ang final archival copy.",
+    "relatedRoutes": [
+      { "label": "Public Repository", "href": "/repository" },
+      { "label": "Student Repository", "href": "/student/repository" },
+      { "label": "Submit Final Thesis", "href": "/student/repository/submit" }
+    ]
+  },
+  {
+    "id": "faculty-defenses-workspace-guide",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Faculty Defenses & Collaborative Defense Workspace",
+    "title": "Evaluating Defenses: PDF Annotation, Rubric Scoring, Rapporteur Report & Verdict",
+    "roles": ["faculty", "admin"],
+    "keywords": ["faculty", "panelist", "defenses", "defense workspace", "pdf annotation", "rubric scoring", "rapporteur report", "verdict", "chairperson", "faculty dashboard"],
+    "commonInquiries": [
+      "Where do Faculty panelists find their assigned defenses and evaluate manuscripts?",
+      "What features are inside the Collaborative Defense Workspace?",
+      "Saan mag-a-annotate ng manuscript at maglalagay ng rubric score ang Panelist?"
+    ],
+    "answerEn": "Faculty/Panelists view all assigned Title, Proposal, and Final defenses at /faculty/defenses (and KPIs on /faculty/dashboard). Clicking 'Open Defense Workspace' opens a split-screen workspace featuring: • Left pane: Interactive PDF Manuscript Viewer with highlight/comment annotations • Right pane: Rubric Evaluation & Scoring with auto-save, Official Rapporteur Report Editor (for the Chair), and Committee Verdict + E-Signature tracking.",
+    "answerTl": "Makikita sa /faculty/defenses ang lahat ng assigned defenses ng Faculty/Panelist. I-click ang 'Open Defense Workspace' para magamit ang split-screen PDF Manuscript Annotation, Rubric Scoring, Official Rapporteur Report editor, at Verdict/E-Signature controls.",
+    "relatedRoutes": [
+      { "label": "Faculty Dashboard", "href": "/faculty/dashboard" },
+      { "label": "My Defenses", "href": "/faculty/defenses" }
+    ]
+  },
+  {
+    "id": "faculty-advisees-essays-signatures-guide",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Faculty Advisees, Essay Evaluations & E-Signatures",
+    "title": "Grading Applicant Essays, Managing Advisees & E-Signature Sign-Offs",
+    "roles": ["faculty", "admin"],
+    "keywords": ["essay evaluation", "grade essay", "advisees", "my advisees", "endorse manuscript", "signatures", "e-signature", "sign rap", "pending essays"],
+    "commonInquiries": [
+      "Where do Faculty members grade Entrance Exam essays?",
+      "How do Thesis Advisers endorse manuscripts and sign Rapporteur Reports?",
+      "Saan nag-grade ng Applicant essays at nag-a-approve ng advisees ang Faculty?"
+    ],
+    "answerEn": "Faculty workflows: • /faculty/essay-evaluations — Review and score Applicant Entrance Exam essays (automatically updates total admission score). • /faculty/advisees — Approve/decline incoming Adviser Requests and endorse advisee manuscripts before Proposal/Final Defense. • /faculty/signatures — Upload/draw e-signature specimen and digitally sign pending Adviser Requests and Rapporteur Reports.",
+    "answerTl": "Sa Faculty Portal: • /faculty/essay-evaluations para mag-grade ng Entrance Exam essays; • /faculty/advisees para mag-approve ng adviser requests at mag-endorse ng manuscripts; • /faculty/signatures para mag-manage ng e-signature at pumirma sa pending documents.",
+    "relatedRoutes": [
+      { "label": "Essay Evaluations", "href": "/faculty/essay-evaluations" },
+      { "label": "My Advisees", "href": "/faculty/advisees" },
+      { "label": "E-Signatures", "href": "/faculty/signatures" }
+    ]
+  },
+  {
+    "id": "admin-role-overview",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Administrator Responsibilities",
+    "title": "Administrator Verification, Scheduling & Governance Functions",
+    "roles": ["admin", "faculty", "student", "applicant"],
+    "keywords": ["admin", "administrator", "gs staff", "cor verification", "promote student", "waiver approval", "exam slots", "user management", "role management"],
+    "commonInquiries": [
+      "What are the Administrator's responsibilities in the EARIST Graduate System?",
+      "Who verifies CORs, manages exam schedules, and approves waivers?",
+      "Ano ang trabaho o sakop ng Administrator sa sistema?"
+    ],
+    "answerEn": "Administrators (GS Office staff) oversee institutional verification and system administration: 1) Verifying Applicant COR uploads (OCR review) and promoting applicants to Students with Student Numbers; 2) Approving Bridging Course Waivers; 3) Managing Entrance Exam slots, schedules, and defense panel assignments; and 4) Managing user roles, announcements, and repository archival approvals. (Note: This UI/UX Evaluation Edition focuses evaluation testing on Applicant, Student, and Faculty portals.)",
+    "answerTl": "Ang Administrator (GS Office staff) ang nagve-verify ng mga na-upload na COR para ma-promote sa Student role, nag-a-approve ng Bridging Waivers, nagse-set ng Entrance Exam slots at defense schedules, at namamahala sa users at announcements. (Paalala: Sa Evaluation Edition na ito, ang Applicant, Student, at Faculty portals ang bukas para sa UI/UX testing.)",
+    "relatedRoutes": [
+      { "label": "Portal Sign In", "href": "/login" },
+      { "label": "System FAQ", "href": "/faq" }
+    ]
+  },
+  {
+    "id": "system-contact-evaluation-guides",
+    "category": "System Navigation & Portal Guide",
+    "section": "System Guide — Contact Details & Evaluation Guides",
+    "title": "EARIST Graduate School Contact Info, Location & Page Guide Tools",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["contact", "email", "phone", "address", "manila", "nagtahan", "sampaloc", "office", "page guide", "scenario switcher", "saan ang earist", "contact number"],
+    "commonInquiries": [
+      "How can I contact the EARIST Graduate School Office?",
+      "Where is the EARIST Main Campus located?",
+      "How do I use the Scenario Switcher and Page Guide in this Evaluation Edition?",
+      "Ano ang address, email, at telephone number ng EARIST Graduate School?"
+    ],
+    "answerEn": "EARIST Graduate School Contact Info: • Address: Nagtahan St., Sampaloc, Manila, 1008 Metro Manila (satellite campus in GMA, Cavite) • Email: earistofficial1945@gmail.com / gs@earist.edu.ph • Phone: (02) 7738 5059 / (02) 8534-8267. Evaluation Tools: Use the Scenario Switcher bar on multi-stage pages to preview every workflow stage, and click 'Page Guide' in the header for step-by-step directional callouts.",
+    "answerTl": "Contact Info ng EARIST: • Address: Nagtahan St., Sampaloc, Manila, 1008 Metro Manila (at Cavite Campus sa GMA, Cavite) • Email: earistofficial1945@gmail.com / gs@earist.edu.ph • Phone: (02) 7738 5059 / (02) 8534-8267. Sa Evaluation Edition na ito, gamitin ang Scenario Switcher bar para ma-preview ang lahat ng states at ang 'Page Guide' button para sa step-by-step guide.",
+    "relatedRoutes": [
+      { "label": "Contact Section", "href": "/#contact" },
+      { "label": "System FAQ", "href": "/faq" }
+    ]
+  }
+]

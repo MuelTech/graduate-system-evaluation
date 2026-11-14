@@ -20,6 +20,7 @@
 | **WP-9** | Student Portal V2 Alignment (`<ThesisJourneyShell>`, 2-Step Disclosure & Unified Defense Cards) | **COMPLETED** | V2 `#FFF8F0` / `#b71c1c` collapsible shell, `<ThesisJourneyShell>`, 2-step disclosure, unified 3-card `DefenseStatusPanel`, and plain-language labels |
 | **WP-10** | Faculty Portal V2 Alignment (`/faculty/*` Canonical Routes & Entrance Exam Essay Evaluations) | **COMPLETED** | `/faculty/*` canonical routes, V2 collapsible Faculty shell, Entrance Exam Essay Evaluations (`/faculty/essay-evaluations` & `[id]`), and V2 Faculty pages |
 | **WP-11** | Comprehensive Page Guide Audit, Plain-Language Naming & End-to-End V2 QA | **COMPLETED** | Complete `data-guide` coverage for Public/Applicant/Student/Faculty, plain-language naming (no `GS-020`/`RAP` jargon), and `npm run build` verification |
+| **WP-12** | RAG-Powered Multilingual Gemini Chatbot & Knowledge Base | **COMPLETED** | 67-chunk Manual & Portal KB, hybrid vector/lexical RAG, `@google/genai` (`gemini-4-hydrogen`) + local fallback, 50/50 (100%) accuracy benchmark |
 
 ---
 
@@ -204,4 +205,18 @@
   - Implemented responsive mobile drawer auto-sync (`earist-guide-sidebar-toggle` event) so portal sidebars slide open automatically during guide steps targeting navigation menus, with safe viewport spotlight clamping and centered card geometry on mobile.
 - [x] **11.3 Production Build & Verification:**
   - Run `npm run build` and verify zero TypeScript or Next.js build errors (47/47 static pages generated cleanly).
+
+---
+
+### WP-12: RAG-Powered Multilingual Gemini Chatbot & Knowledge Base
+**Goal:** Integrate a role-aware, multilingual (Tagalog / Taglish / English) RAG chatbot grounded strictly in the EARIST Graduate School Manual of Operations and system workflows, powered by the official Gemini API (`@google/genai`) with deterministic local fallback for Vercel Free Tier.
+
+- [x] **12.1 Curated Structured Knowledge Base (`src/data/chatbot-knowledge.json`):**
+  - Structurally curated 67 non-redundant chunks across 11 categories from the 35-page EARIST Graduate School Manual of Operations (Sections 1.0–21.0) and Public, Applicant, Student, Faculty, and Admin portal workflows, complete with English/Tagalog answers, common Taglish/Tagalog/English inquiry variations, keywords, and clickable route links.
+- [x] **12.2 Hybrid Vector/Lexical RAG Retriever & Gemini API Route (`src/lib/chatbot-rag.ts`, `src/app/api/chat/route.ts`):**
+  - Implemented normalized TF-IDF cosine vector similarity + lexical keyword/phrase overlap + common inquiry matching + role context boosting, automatic query language detection (`en` / `tl` / `taglish`), `RAG_CONFIDENCE_THRESHOLD` + out-of-scope boundary enforcement, and strict system instructions for `@google/genai` (`gemini-4-hydrogen`) with local grounded fallback when `GEMINI_API_KEY` is unset.
+- [x] **12.3 Role-Aware Multilingual Chatbot Widget (`src/components/chatbot/chatbot-widget.tsx`):**
+  - Updated the floating chatbot UI to detect active portal context from the current route, provide role-specific quick questions, call `POST /api/chat` (with client-side fallback), and render source citations plus clickable in-app route pills.
+- [x] **12.4 Automated Accuracy Benchmark & Build Verification (`scripts/verify-chatbot-rag.mjs`):**
+  - Verified 50/50 benchmark queries (100.0% accuracy across English, Tagalog, Taglish, role navigation, and out-of-scope boundary checks) and passed `npm run build`.
 

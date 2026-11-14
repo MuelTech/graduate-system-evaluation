@@ -1,0 +1,1070 @@
+import knowledgeData from "../data/chatbot-knowledge.json";
+
+export type KnowledgeRole =
+  | "public"
+  | "applicant"
+  | "student"
+  | "faculty"
+  | "admin";
+
+export type QueryLanguage = "en" | "tl" | "taglish";
+
+export interface RelatedRoute {
+  label: string;
+  href: string;
+}
+
+export interface KnowledgeChunk {
+  id: string;
+  category: string;
+  section: string;
+  title: string;
+  roles: KnowledgeRole[];
+  keywords: string[];
+  commonInquiries: string[];
+  answerEn: string;
+  answerTl: string;
+  relatedRoutes: RelatedRoute[];
+}
+
+export interface RetrievalHit {
+  chunk: KnowledgeChunk;
+  score: number;
+  vectorScore: number;
+  lexicalScore: number;
+  inquiryScore: number;
+}
+
+export interface RetrievalResult {
+  query: string;
+  language: QueryLanguage;
+  isGreeting: boolean;
+  isOutOfScope: boolean;
+  topScore: number;
+  hits: RetrievalHit[];
+}
+
+const KNOWLEDGE_CHUNKS = knowledgeData as KnowledgeChunk[];
+
+/**
+ * Confidence threshold for the RAG Scope Boundary Gate.
+ * Queries below this hybrid similarity score trigger the human-readable fallback.
+ */
+export const RAG_CONFIDENCE_THRESHOLD = 0.16;
+
+const TAGALOG_MARKERS = new Set([
+  "ako",
+  "ang",
+  "ano",
+  "anong",
+  "ba",
+  "bago",
+  "bakit",
+  "bagsak",
+  "bayad",
+  "beses",
+  "bawal",
+  "buwan",
+  "daan",
+  "dapat",
+  "di",
+  "dito",
+  "diyan",
+  "doon",
+  "gagamit",
+  "gawa",
+  "gawin",
+  "grumadweyt",
+  "gumamit",
+  "gumawa",
+  "gumraduate",
+  "hanggang",
+  "hawakan",
+  "hindi",
+  "ho",
+  "ibig",
+  "ikaw",
+  "ilan",
+  "ilang",
+  "ipapasa",
+  "ipasa",
+  "ito",
+  "iyan",
+  "iyon",
+  "kailangan",
+  "kailangang",
+  "kailan",
+  "kami",
+  "kamusta",
+  "kapag",
+  "kayo",
+  "ko",
+  "kulay",
+  "kumusta",
+  "kung",
+  "kurso",
+  "lang",
+  "lamang",
+  "linggo",
+  "lipat",
+  "lilipat",
+  "maaari",
+  "magapply",
+  "magbayad",
+  "magenroll",
+  "magpasa",
+  "magsumite",
+  "magtanong",
+  "magtapos",
+  "magkano",
+  "maging",
+  "makakuha",
+  "makapag",
+  "makapagtapos",
+  "makapasa",
+  "makapasok",
+  "makukuha",
+  "marka",
+  "matapos",
+  "may",
+  "mayroon",
+  "meron",
+  "mga",
+  "mo",
+  "mula",
+  "muna",
+  "na",
+  "nagbayad",
+  "nagpasa",
+  "naman",
+  "namin",
+  "nang",
+  "nasa",
+  "natin",
+  "ng",
+  "ngunit",
+  "ni",
+  "nila",
+  "niya",
+  "noong",
+  "ninyo",
+  "oo",
+  "opo",
+  "pa",
+  "paano",
+  "pag",
+  "pagbayad",
+  "pagkatapos",
+  "pagkuha",
+  "pagpasa",
+  "pagsusulit",
+  "pagtatapos",
+  "pala",
+  "palit",
+  "para",
+  "pasado",
+  "pero",
+  "pili",
+  "po",
+  "pumasa",
+  "puwede",
+  "pwede",
+  "pwedeng",
+  "sa",
+  "saan",
+  "sabay",
+  "sagot",
+  "sakop",
+  "salamat",
+  "sino",
+  "siya",
+  "taon",
+  "tapos",
+  "tanong",
+  "tayo",
+  "toga",
+  "tulong",
+  "tungkol",
+  "ung",
+  "wala",
+  "walang",
+  "yung",
+]);
+
+const ENGLISH_CONTENT_MARKERS = new Set([
+  "academic",
+  "admission",
+  "adviser",
+  "alignment",
+  "and",
+  "applicant",
+  "apply",
+  "are",
+  "bridging",
+  "certificate",
+  "comprehensive",
+  "cor",
+  "costume",
+  "course",
+  "courses",
+  "credits",
+  "curriculum",
+  "dashboard",
+  "dba",
+  "deadline",
+  "defense",
+  "degree",
+  "diploma",
+  "dissertation",
+  "doctoral",
+  "documents",
+  "dpa",
+  "drop",
+  "dropping",
+  "edd",
+  "enroll",
+  "enrollment",
+  "entrance",
+  "essay",
+  "evaluation",
+  "exam",
+  "examination",
+  "faculty",
+  "fees",
+  "final",
+  "for",
+  "forecast",
+  "grade",
+  "grades",
+  "grading",
+  "graduate",
+  "graduation",
+  "gown",
+  "gwa",
+  "history",
+  "how",
+  "id",
+  "incentive",
+  "incomplete",
+  "is",
+  "journal",
+  "load",
+  "login",
+  "maed",
+  "maie",
+  "major",
+  "manuscript",
+  "masters",
+  "mat",
+  "mba",
+  "modalities",
+  "mpa",
+  "mrr",
+  "online",
+  "osh",
+  "panelist",
+  "passing",
+  "phd",
+  "pinnacle",
+  "plagiarism",
+  "portal",
+  "program",
+  "programs",
+  "proposal",
+  "publication",
+  "pwd",
+  "rap",
+  "register",
+  "registration",
+  "repository",
+  "requirements",
+  "residency",
+  "results",
+  "schedule",
+  "scholarship",
+  "score",
+  "shift",
+  "shifting",
+  "signature",
+  "similarity",
+  "slots",
+  "strike",
+  "student",
+  "subjects",
+  "submit",
+  "system",
+  "the",
+  "thesis",
+  "title",
+  "tomorrow",
+  "transcript",
+  "tuition",
+  "under",
+  "units",
+  "upload",
+  "waiver",
+  "weather",
+  "what",
+  "when",
+  "where",
+  "which",
+  "who",
+  "why",
+  "with",
+]);
+
+const STOPWORDS = new Set([
+  // English stopwords
+  "a",
+  "about",
+  "all",
+  "an",
+  "and",
+  "any",
+  "are",
+  "as",
+  "at",
+  "be",
+  "been",
+  "being",
+  "but",
+  "by",
+  "can",
+  "could",
+  "did",
+  "do",
+  "does",
+  "for",
+  "from",
+  "get",
+  "had",
+  "has",
+  "have",
+  "how",
+  "i",
+  "if",
+  "in",
+  "into",
+  "is",
+  "it",
+  "its",
+  "make",
+  "me",
+  "more",
+  "my",
+  "need",
+  "no",
+  "not",
+  "of",
+  "on",
+  "or",
+  "our",
+  "tell",
+  "that",
+  "the",
+  "their",
+  "there",
+  "these",
+  "they",
+  "this",
+  "those",
+  "to",
+  "use",
+  "want",
+  "was",
+  "we",
+  "were",
+  "what",
+  "when",
+  "where",
+  "which",
+  "who",
+  "whom",
+  "whose",
+  "why",
+  "will",
+  "with",
+  "would",
+  "yes",
+  "you",
+  "your",
+  // Tagalog stopwords
+  "ako",
+  "alin",
+  "alinman",
+  "ang",
+  "ano",
+  "anong",
+  "at",
+  "ay",
+  "ba",
+  "bago",
+  "bakit",
+  "dahil",
+  "daw",
+  "di",
+  "din",
+  "dito",
+  "diyan",
+  "doon",
+  "hanggang",
+  "hindi",
+  "ho",
+  "ikaw",
+  "ito",
+  "iyan",
+  "iyon",
+  "kailangan",
+  "kailangang",
+  "kailan",
+  "kami",
+  "kapag",
+  "kasi",
+  "kay",
+  "kayo",
+  "kina",
+  "ko",
+  "kung",
+  "lamang",
+  "lang",
+  "mag",
+  "may",
+  "mayroon",
+  "mayroong",
+  "meron",
+  "mga",
+  "mo",
+  "mula",
+  "muna",
+  "na",
+  "nag",
+  "naman",
+  "namin",
+  "nang",
+  "nasa",
+  "natin",
+  "ng",
+  "ngunit",
+  "ni",
+  "nila",
+  "ninyo",
+  "niya",
+  "o",
+  "oo",
+  "opo",
+  "pa",
+  "paano",
+  "pag",
+  "pagkatapos",
+  "pala",
+  "para",
+  "pero",
+  "po",
+  "puwede",
+  "pwede",
+  "pwedeng",
+  "raw",
+  "rin",
+  "sa",
+  "saan",
+  "si",
+  "sila",
+  "sino",
+  "siya",
+  "subalit",
+  "tayo",
+  "tungkol",
+  "ung",
+  "wala",
+  "walang",
+  "yata",
+  "yung",
+]);
+
+/**
+ * Bilingual synonym & concept expansion table for English, Tagalog, and Taglish queries.
+ */
+const SYNONYM_EXPANSIONS: Array<{ pattern: RegExp; tokens: string[] }> = [
+  {
+    pattern: /\b(toga|sablay|gown|costume|attire|suot)\b/i,
+    tokens: ["academic", "costume", "gown", "toga", "color"],
+  },
+  {
+    pattern: /\b(compre|comprehensive)\b/i,
+    tokens: ["written", "comprehensive", "examination", "75", "percent"],
+  },
+  {
+    pattern: /\b(shift|shifting|lipat|lilipat|palit)\b/i,
+    tokens: ["change", "program", "shifting", "form"],
+  },
+  {
+    pattern: /\b(absent|absences|liban|attendance)\b/i,
+    tokens: ["class", "attendance", "unexcused", "20", "percent", "dropped"],
+  },
+  {
+    pattern: /\b(drop|dropping|mag-?drop)\b/i,
+    tokens: ["dropping", "courses", "midterm", "registrar"],
+  },
+  {
+    pattern: /\b(grade|grades|grading|marka|grado|pasado|bagsak)\b/i,
+    tokens: ["grading", "system", "scale", "passed", "failed"],
+  },
+  {
+    pattern: /\b(inc|incomplete)\b/i,
+    tokens: ["incomplete", "inc", "removal", "1", "year"],
+  },
+  {
+    pattern: /\b(tuition|matrikula|bayad|fees|magkano|fms)\b/i,
+    tokens: ["school", "fees", "tuition", "fms", "miscellaneous"],
+  },
+  {
+    pattern: /\b(f2f|face[- ]to[- ]face|online class|blended|modality|modalities|synchronous|asynchronous)\b/i,
+    tokens: ["learning", "modalities", "face-to-face", "blended", "online"],
+  },
+  {
+    pattern: /\b(ai|chatgpt|grammarly|generative|llm)\b/i,
+    tokens: ["research", "ethics", "ai", "policy", "chatgpt", "grammarly", "disclosure"],
+  },
+  {
+    pattern: /\b(plagiarism|similarity|strike|turnitin)\b/i,
+    tokens: ["strike", "plagiarism", "similarity", "20", "percent", "clearance"],
+  },
+  {
+    pattern: /\b(rap|rapporteur)\b/i,
+    tokens: ["rapporteur", "report", "proposal", "final", "defense"],
+  },
+  {
+    pattern: /\b(gs-?0?20|adviser|advisor|tagapayo)\b/i,
+    tokens: ["adviser", "request", "1:5", "ratio", "panel"],
+  },
+  {
+    pattern: /\b(egat|ecat|entrance exam|pagsusulit)\b/i,
+    tokens: ["entrance", "examination", "egat", "exam"],
+  },
+  {
+    pattern: /\b(cor|certificate of registration|ocr)\b/i,
+    tokens: ["cor", "certificate", "registration", "upload", "ocr", "5mb"],
+  },
+  {
+    pattern: /\b(aligned|misaligned|alignment|unrelated|waiver|bridging)\b/i,
+    tokens: ["program", "alignment", "bridging", "waiver", "9", "units"],
+  },
+  {
+    pattern: /\b(mrr|maximum residence|length of study|ilang taon)\b/i,
+    tokens: ["maximum", "residence", "rule", "4", "years", "6", "years"],
+  },
+  {
+    pattern: /\b(loa|leave of absence|mag-?loa|pahinga)\b/i,
+    tokens: ["leave", "absence", "loa", "1", "academic", "year"],
+  },
+  {
+    pattern: /\b(scholarship|discount|exemption|exempt|fegssc|personnel|cna)\b/i,
+    tokens: ["scholarship", "exemption", "fegssc", "personnel", "refund"],
+  },
+  {
+    pattern: /\b(incentive|incentives|honoraria|honorarium|creative work|software|copyrighted)\b/i,
+    tokens: ["creative", "work", "incentives", "honoraria", "software"],
+  },
+  {
+    pattern: /\b(osh|safety|drill|drills|ppe|ert|first aid|mental health)\b/i,
+    tokens: ["occupational", "safety", "health", "osh", "drills", "ppe"],
+  },
+  {
+    pattern: /\b(diploma|credentials|transcript|tor|claim)\b/i,
+    tokens: ["academic", "credentials", "diploma", "transcript", "clearance"],
+  },
+  {
+    pattern: /\b(grumadweyt|makapagtapos|graduation|graduate)\b/i,
+    tokens: ["graduation", "requirements", "publication", "output"],
+  },
+  {
+    pattern: /\b(journal|publish|publication|apa|peer review|call for papers)\b/i,
+    tokens: ["journal", "publication", "apa", "7th", "peer", "review"],
+  },
+  {
+    pattern: /\b(history|founded|established|kasaysayan|itinatag|presidents|presidente)\b/i,
+    tokens: ["history", "earist", "presidents"],
+  },
+  {
+    pattern: /\b(contact|address|email|phone|telephone|number|location|nagtahan)\b/i,
+    tokens: ["contact", "email", "phone", "address", "nagtahan", "manila"],
+  },
+  {
+    pattern: /\b(pinnacle|apply|mag-?apply|register|magparehistro|mag-?register|sign up)\b/i,
+    tokens: ["apply", "register", "registration", "pinnacle", "applicant", "id"],
+  },
+  {
+    pattern: /\b(workspace|annotate|annotation|rubric|essay evaluation|grade essay)\b/i,
+    tokens: ["faculty", "defense", "workspace", "essay", "evaluations", "rubric"],
+  },
+  {
+    pattern: /\b(maed|maie|mat|mba|mpa|maip|msm|master|masteral|masters)\b/i,
+    tokens: ["masters", "programs", "pqf", "level", "7"],
+  },
+  {
+    pattern: /\b(edd|ed\.d|phd|ph\.d|dpa|dba|doctoral|doctorate)\b/i,
+    tokens: ["doctoral", "programs", "pqf", "level", "8"],
+  },
+  {
+    pattern: /\b(international|foreign|visa|embassy)\b/i,
+    tokens: ["international", "student", "visa", "embassy", "english", "proficiency"],
+  },
+  {
+    pattern: /\b(gad|safe spaces|harassment|pwd|disability|special needs)\b/i,
+    tokens: ["gad", "safe", "spaces", "pwd", "special", "needs"],
+  },
+  {
+    pattern: /\b(audit|auditing)\b/i,
+    tokens: ["class", "audit", "no", "credit"],
+  },
+  {
+    pattern: /\b(dual registration|two programs|dalawang course|sabay)\b/i,
+    tokens: ["dual", "registration", "prohibited", "simultaneous"],
+  },
+  {
+    pattern: /\b(transfer|transferee|credit|pa-?credit)\b/i,
+    tokens: ["transfer", "credits", "6", "units", "5", "years"],
+  },
+  {
+    pattern: /\b(re-?defense|redefense|panelists fee)\b/i,
+    tokens: ["oral", "defense", "re-defense", "panelists", "fee"],
+  },
+  {
+    pattern: /\b(admin|administrator)\b/i,
+    tokens: ["admin", "administrator", "cor", "verification", "waiver", "slots"],
+  },
+];
+
+/**
+ * Off-topic guard patterns for queries clearly outside the EARIST GS domain.
+ */
+const EXPLICIT_OUT_OF_SCOPE_PATTERNS: RegExp[] = [
+  /\b(weather|forecast|typhoon|bagyo|temperature|rain)\b/i,
+  /\b(nba|pba|basketball|football|soccer|boxing|olympics|esports|valorant|mlbb)\b/i,
+  /\b(recipe|cook|ulams?|adobo|sinigang|baking|restaurant|menu)\b/i,
+  /\b(bitcoin|crypto|ethereum|stock market|forex|trading)\b/i,
+  /\b(movie|netflix|k-?drama|anime|spotify|song|lyrics|concert)\b/i,
+  /\b(horoscope|zodiac|lotto|lottery|suwertres)\b/i,
+  /\b(presidente ng pilipinas|president of the philippines|president of the usa|us president)\b/i,
+  /\b(python script|bubble sort|react native|flutter|laravel|php tutorial)\b/i,
+  /\b(capital of|tallest mountain|distance to the moon|solar system)\b/i,
+];
+
+const GREETING_PATTERN =
+  /^(hi+|hello+|hey+|good\s*(morning|afternoon|evening)|magandang\s*(umaga|hapon|gabi)|kamusta|kumusta|help|tulong|patulong|start|menu)([!.,?\s]*)$/i;
+
+function normalizeText(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/ph\.d/g, "phd")
+    .replace(/ed\.d/g, "edd")
+    .replace(/(\d+)\s*%/g, "$1 percent")
+    .replace(/1\s*:\s*5/g, "1 to 5 ratio 5 students")
+    .replace(/[^a-z0-9\s\-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function tokenize(text: string, expandSynonyms = false): string[] {
+  const normalized = normalizeText(text);
+  const rawTokens = normalized.split(" ").filter(Boolean);
+  const result: string[] = [];
+
+  for (const token of rawTokens) {
+    // Split hyphenated Taglish words like mag-apply, mag-drop, pa-credit
+    if (token.includes("-")) {
+      const parts = token.split("-").filter(Boolean);
+      for (const part of parts) {
+        if (!STOPWORDS.has(part) && part.length > 1) {
+          result.push(part);
+        }
+      }
+    }
+    if (!STOPWORDS.has(token) && (token.length > 1 || /^\d+$/.test(token))) {
+      result.push(token);
+    }
+  }
+
+  if (expandSynonyms) {
+    for (const rule of SYNONYM_EXPANSIONS) {
+      if (rule.pattern.test(text)) {
+        result.push(...rule.tokens);
+      }
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Detects whether the user inquiry is English, Tagalog, or Taglish.
+ */
+export function detectQueryLanguage(query: string): QueryLanguage {
+  const lower = query.toLowerCase();
+  const words = lower.replace(/[^a-z0-9\s\-]/g, " ").split(/\s+/).filter(Boolean);
+
+  let tagalogHits = 0;
+  let englishHits = 0;
+
+  for (const word of words) {
+    if (
+      TAGALOG_MARKERS.has(word) ||
+      /^(mag|nag|pag|nakapag|pinag|ipapa|ipa|ma|na|pa)-[a-z]{2,}$/.test(word)
+    ) {
+      tagalogHits++;
+    }
+    if (ENGLISH_CONTENT_MARKERS.has(word)) {
+      englishHits++;
+    }
+  }
+
+  if (tagalogHits === 0) {
+    return "en";
+  }
+  if (englishHits >= 1) {
+    return "taglish";
+  }
+  return "tl";
+}
+
+interface IndexedChunk {
+  chunk: KnowledgeChunk;
+  vector: Map<string, number>;
+  norm: number;
+  keywordSet: Set<string>;
+  normalizedInquiries: string[];
+  normalizedTitle: string;
+}
+
+// Build inverted index & TF-IDF vectors once on module initialization
+const { indexedChunks, idfMap, maxIdf } = (() => {
+  const docCount = KNOWLEDGE_CHUNKS.length;
+  const docFreq = new Map<string, number>();
+
+  const chunkTokenLists = KNOWLEDGE_CHUNKS.map((chunk) => {
+    const weightedTokens: string[] = [
+      ...tokenize(chunk.title, false),
+      ...tokenize(chunk.title, false), // 2x weight for title
+      ...tokenize(chunk.section, false),
+      ...tokenize(chunk.keywords.join(" "), false),
+      ...tokenize(chunk.keywords.join(" "), false), // 2x weight for keywords
+      ...tokenize(chunk.commonInquiries.join(" "), false),
+      ...tokenize(chunk.answerEn, false),
+      ...tokenize(chunk.answerTl, false),
+    ];
+
+    const uniqueTokens = new Set(weightedTokens);
+    for (const tok of uniqueTokens) {
+      docFreq.set(tok, (docFreq.get(tok) ?? 0) + 1);
+    }
+
+    return weightedTokens;
+  });
+
+  const computedIdf = new Map<string, number>();
+  for (const [term, df] of docFreq.entries()) {
+    computedIdf.set(term, Math.log((docCount + 1) / (df + 1)) + 1);
+  }
+  const defaultMaxIdf = Math.log(docCount + 1) + 1;
+
+  const builtChunks: IndexedChunk[] = KNOWLEDGE_CHUNKS.map((chunk, idx) => {
+    const tokens = chunkTokenLists[idx];
+    const tf = new Map<string, number>();
+    for (const tok of tokens) {
+      tf.set(tok, (tf.get(tok) ?? 0) + 1);
+    }
+
+    const vec = new Map<string, number>();
+    let sqSum = 0;
+    for (const [term, count] of tf.entries()) {
+      const weight = (1 + Math.log(count)) * (computedIdf.get(term) ?? 1);
+      vec.set(term, weight);
+      sqSum += weight * weight;
+    }
+
+    const keywordSet = new Set<string>();
+    for (const kw of chunk.keywords) {
+      for (const t of tokenize(kw, false)) {
+        keywordSet.add(t);
+      }
+    }
+
+    return {
+      chunk,
+      vector: vec,
+      norm: Math.sqrt(sqSum) || 1,
+      keywordSet,
+      normalizedInquiries: chunk.commonInquiries.map((q) => normalizeText(q)),
+      normalizedTitle: normalizeText(chunk.title),
+    };
+  });
+
+  return {
+    indexedChunks: builtChunks,
+    idfMap: computedIdf,
+    maxIdf: defaultMaxIdf,
+  };
+})();
+
+function normalizeRole(role?: string): KnowledgeRole | undefined {
+  if (!role) return undefined;
+  const r = role.toLowerCase();
+  if (r === "panelist" || r === "faculty") return "faculty";
+  if (r === "applicant") return "applicant";
+  if (r === "student") return "student";
+  if (r === "admin" || r === "administrator") return "admin";
+  if (r === "public") return "public";
+  return undefined;
+}
+
+/**
+ * Retrieves the top-K relevant knowledge chunks using Hybrid Vector + Lexical scoring
+ * and enforces the strict Scope Boundary Gate for out-of-scope queries.
+ */
+export function retrieveKnowledgeChunks(
+  query: string,
+  activeRole?: string,
+  topK = 4,
+): RetrievalResult {
+  const trimmed = query.trim();
+  const language = detectQueryLanguage(trimmed);
+
+  if (GREETING_PATTERN.test(trimmed)) {
+    return {
+      query: trimmed,
+      language,
+      isGreeting: true,
+      isOutOfScope: false,
+      topScore: 1,
+      hits: [],
+    };
+  }
+
+  // Hard off-topic check unless the user explicitly mentions EARIST or Graduate School
+  const mentionsEarist = /\b(earist|graduate school|gs-?is)\b/i.test(trimmed);
+  if (
+    !mentionsEarist &&
+    EXPLICIT_OUT_OF_SCOPE_PATTERNS.some((pat) => pat.test(trimmed))
+  ) {
+    return {
+      query: trimmed,
+      language,
+      isGreeting: false,
+      isOutOfScope: true,
+      topScore: 0,
+      hits: [],
+    };
+  }
+
+  const rawContentTokens = tokenize(trimmed, false);
+  const expandedTokens = tokenize(trimmed, true);
+
+  if (expandedTokens.length === 0) {
+    return {
+      query: trimmed,
+      language,
+      isGreeting: false,
+      isOutOfScope: true,
+      topScore: 0,
+      hits: [],
+    };
+  }
+
+  // Build weighted query vector (penalize OOV tokens with maxIdf to prevent generic-word false positives)
+  const qTf = new Map<string, number>();
+  for (const tok of expandedTokens) {
+    qTf.set(tok, (qTf.get(tok) ?? 0) + 1);
+  }
+  const qVec = new Map<string, number>();
+  let qSqSum = 0;
+  for (const [term, count] of qTf.entries()) {
+    const idf = idfMap.get(term) ?? maxIdf;
+    const weight = (1 + Math.log(count)) * idf;
+    qVec.set(term, weight);
+    qSqSum += weight * weight;
+  }
+  const qNorm = Math.sqrt(qSqSum) || 1;
+
+  const normalizedQuery = normalizeText(trimmed);
+  const roleKey = normalizeRole(activeRole);
+
+  const scored: RetrievalHit[] = indexedChunks.map((entry) => {
+    // 1. Cosine Similarity on TF-IDF vector space
+    let dot = 0;
+    for (const [term, qWeight] of qVec.entries()) {
+      const dWeight = entry.vector.get(term);
+      if (dWeight) {
+        dot += qWeight * dWeight;
+      }
+    }
+    const vectorScore = dot / (qNorm * entry.norm);
+
+    // 2. Lexical / Keyword overlap score
+    let keywordMatches = 0;
+    const uniqueExpanded = new Set(expandedTokens);
+    for (const tok of uniqueExpanded) {
+      if (entry.keywordSet.has(tok) || entry.normalizedTitle.includes(tok)) {
+        keywordMatches++;
+      }
+    }
+    const phraseMatchBoost = entry.chunk.keywords.some(
+      (kw) => kw.length > 3 && normalizedQuery.includes(normalizeText(kw)),
+    )
+      ? 0.28
+      : 0;
+    const lexicalScore = Math.min(
+      1,
+      keywordMatches / Math.max(uniqueExpanded.size, 2) + phraseMatchBoost,
+    );
+
+    // 3. Common Inquiry similarity (word overlap with curated FB/FAQ variations)
+    let bestInquiryOverlap = 0;
+    const rawSet = new Set(rawContentTokens);
+    if (rawSet.size > 0) {
+      for (const inq of entry.normalizedInquiries) {
+        const inqTokens = tokenize(inq, false);
+        if (inqTokens.length === 0) continue;
+        let overlap = 0;
+        for (const t of inqTokens) {
+          if (rawSet.has(t)) overlap++;
+        }
+        const ratio = overlap / Math.max(rawSet.size, inqTokens.length * 0.7);
+        if (ratio > bestInquiryOverlap) {
+          bestInquiryOverlap = ratio;
+        }
+      }
+    }
+    const inquiryScore = Math.min(1, bestInquiryOverlap);
+
+    // 4. Gentle role-context boost (only when content already has a baseline match)
+    const baseScore =
+      0.48 * vectorScore + 0.34 * lexicalScore + 0.18 * inquiryScore;
+    const roleBoost =
+      roleKey && entry.chunk.roles.includes(roleKey) && baseScore > 0.12
+        ? 0.03
+        : 0;
+
+    return {
+      chunk: entry.chunk,
+      score: baseScore + roleBoost,
+      vectorScore,
+      lexicalScore,
+      inquiryScore,
+    };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+  const topHits = scored.slice(0, topK);
+  const topScore = topHits[0]?.score ?? 0;
+  const isOutOfScope = topScore < RAG_CONFIDENCE_THRESHOLD;
+
+  return {
+    query: trimmed,
+    language,
+    isGreeting: false,
+    isOutOfScope,
+    topScore,
+    hits: isOutOfScope ? [] : topHits.filter((h) => h.score >= 0.11),
+  };
+}
+
+export function getGreetingReply(
+  language: QueryLanguage,
+  activeRole?: string,
+): string {
+  const roleLabel = normalizeRole(activeRole);
+  if (language === "tl" || language === "taglish") {
+    return `Kumusta! Ako ang EARIST Graduate School AI Assistant${roleLabel ? ` (${roleLabel.toUpperCase()} view)` : ""}. Pwede kang magtanong sa English, Tagalog, o Taglish tungkol sa:\n\n• Admission requirements, Pinnacle ID, at Program Alignment\n• Entrance Exam schedule, format, at resulta\n• Graduate School policies (GWA, units, Compre Exam, LOA, toga colors)\n• 5-Step Thesis Journey (Title, Adviser, Proposal, STRIKE, Final Defense)\n• Paggamit ng portal at navigation`;
+  }
+  return `Hello! I'm the EARIST Graduate School AI Assistant${roleLabel ? ` (${roleLabel.toUpperCase()} view)` : ""}. You can ask me in English, Tagalog, or Taglish about:\n\n• Admissions, Pinnacle ID & Program Alignment\n• Entrance Exam scheduling, coverage & results\n• Graduate School policies (GWA, unit load, Compre Exam, LOA, gown colors)\n• 5-Step Thesis Journey (Title, Adviser, Proposal, STRIKE, Final Defense)\n• System navigation across Applicant, Student & Faculty portals`;
+}
+
+export function getOutOfScopeFallbackReply(language: QueryLanguage): string {
+  if (language === "tl" || language === "taglish") {
+    return "Paumanhin, ngunit ang iyong tanong ay labas sa saklaw ng opisyal na EARIST Graduate School Manual of Operations, configured FAQs, at system navigation.\n\nMaaari kang magtanong tungkol sa admissions, academic policies, thesis defense guidelines, graduate programs, o kung paano gamitin ang portal. Kung kailangan mo ng opisyal na tulong mula sa opisina, maaari kang makipag-ugnayan sa earistofficial1945@gmail.com o (02) 7738 5059.";
+  }
+  return "I'm sorry, but your question is outside the configured knowledge base of the EARIST Graduate School Manual of Operations, official FAQs, and system navigation.\n\nPlease ask about Graduate School admissions, programs, academic policies, thesis/defense procedures, or portal features. For other official inquiries, please contact the Graduate School Office at earistofficial1945@gmail.com or (02) 7738 5059.";
+}
+
+/**
+ * Deterministic RAG fallback synthesizer used when GEMINI_API_KEY is not configured
+ * or when the external LLM API reaches rate limits.
+ */
+export function buildGroundedResponseFallback(
+  retrieval: RetrievalResult,
+  activeRole?: string,
+): {
+  reply: string;
+  citations: string[];
+  relatedRoutes: RelatedRoute[];
+} {
+  if (retrieval.isGreeting) {
+    return {
+      reply: getGreetingReply(retrieval.language, activeRole),
+      citations: [],
+      relatedRoutes: [],
+    };
+  }
+
+  if (retrieval.isOutOfScope || retrieval.hits.length === 0) {
+    return {
+      reply: getOutOfScopeFallbackReply(retrieval.language),
+      citations: [],
+      relatedRoutes: [{ label: "System FAQ", href: "/faq" }],
+    };
+  }
+
+  const useTagalog =
+    retrieval.language === "tl" || retrieval.language === "taglish";
+
+  const primary = retrieval.hits[0];
+  const secondary = retrieval.hits[1];
+
+  // Include secondary hit if its score is close to primary and it belongs to a distinct section
+  const includeSecondary =
+    secondary &&
+    secondary.score >= primary.score * 0.72 &&
+    secondary.chunk.id !== primary.chunk.id;
+
+  const primaryAnswer = useTagalog
+    ? primary.chunk.answerTl
+    : primary.chunk.answerEn;
+
+  const replyParts = [primaryAnswer];
+  const citations = [primary.chunk.section];
+  const routeMap = new Map<string, RelatedRoute>();
+
+  for (const r of primary.chunk.relatedRoutes) {
+    routeMap.set(r.href, r);
+  }
+
+  if (includeSecondary) {
+    const secAnswer = useTagalog
+      ? secondary.chunk.answerTl
+      : secondary.chunk.answerEn;
+    replyParts.push(
+      useTagalog
+        ? `Dagdag na impormasyon (${secondary.chunk.title}):\n${secAnswer}`
+        : `Related detail (${secondary.chunk.title}):\n${secAnswer}`,
+    );
+    citations.push(secondary.chunk.section);
+    for (const r of secondary.chunk.relatedRoutes) {
+      if (!routeMap.has(r.href)) {
+        routeMap.set(r.href, r);
+      }
+    }
+  }
+
+  return {
+    reply: replyParts.join("\n\n"),
+    citations: Array.from(new Set(citations)),
+    relatedRoutes: Array.from(routeMap.values()).slice(0, 3),
+  };
+}
+
+export function getKnowledgeBaseStats() {
+  return {
+    totalChunks: KNOWLEDGE_CHUNKS.length,
+    categories: Array.from(new Set(KNOWLEDGE_CHUNKS.map((c) => c.category))),
+  };
+}
