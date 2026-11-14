@@ -465,6 +465,22 @@ const BENCHMARK_CASES = [
     expectConversational: true,
     maxReplyLength: 120,
   },
+  {
+    id: "Q57",
+    query: "Thanks for the information!",
+    role: "public",
+    expectedLang: "en",
+    expectConversational: true,
+    maxReplyLength: 120,
+  },
+  {
+    id: "Q58",
+    query: "Salamat sa iyong impormasyon!",
+    role: "student",
+    expectedLang: ["tl", "taglish"],
+    expectConversational: true,
+    maxReplyLength: 120,
+  },
 ];
 
 let passed = 0;

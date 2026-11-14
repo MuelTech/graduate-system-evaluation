@@ -51,6 +51,7 @@ export interface RetrievalResult {
   isConversational: boolean;
   isIdentityQuery: boolean;
   isOutOfScope: boolean;
+  isExplicitOutOfScope: boolean;
   conversationalReply?: string;
   topScore: number;
   hits: RetrievalHit[];
@@ -889,10 +890,17 @@ function detectConversationalIntent(
 
   const isTl = language === "tl" || language === "taglish";
   const firstName = userContext?.userName?.trim().split(/\s+/)[0];
+  const words = plain.split(/\s+/).filter(Boolean);
+  const hasInterrogativeOrCommand =
+    /\b(ano|anong|paano|pano|saan|kailan|kelan|ilan|ilang|magkano|sino|bakit|explain|tell|show|list|describe|check|about|tungkol|what|how|where|when|why|who|which|can|could|pwede|puwede|meron|may)\b/i.test(
+      plain,
+    );
 
-  // 1. Gratitude ("Thanks!", "Salamat!", "Thank you po")
+  // 1. Gratitude ("Thanks!", "Thanks for the information!", "Salamat sa iyong impormasyon!")
   if (
-    /^(?:(?:ok(?:ay)?|sige|noted|got\s+it|alright)[,\s]+)?(?:many\s+|maraming\s+|super\s+)?(?:thanks?|thank\s+you(?:\s+(?:so|very)\s+much)?|tysm|ty|thx|salamat(?:\s+po)?|appreciate\s+it)(?:[,\s]+(?:po|din|rin|so\s+much|very\s+much|again|for\s+the\s+help|for\s+the\s+info|for\s+answering))?$/i.test(
+    words.length <= 12 &&
+    !hasInterrogativeOrCommand &&
+    /^(?:(?:ok(?:ay)?|sige|ge|noted|got\s+it|alright|ahh?|oh+)[,\s]+)?(?:(?:very\s+|so\s+|many\s+|maraming\s+|super\s+)?(?:thanks?|thank\s+you|tysm|ty|thx|salamat(?:\s+po)?)|(?:i\s+)?appreciate\s+(?:it|that|this|the\s+\w+))(?:\s+.*)?$/i.test(
       plain,
     )
   ) {
@@ -901,9 +909,11 @@ function detectConversationalIntent(
       : "You're welcome! Let me know anytime if you have another question.";
   }
 
-  // 2. Hold / Pause ("Wait", "Wait lang", "Teka lang", "Hold on")
+  // 2. Hold / Pause ("Wait", "Wait lang", "Teka lang", "Hold on", "One sec please")
   if (
-    /^(?:wait(?:\s+lang)?|teka(?:\s+lang)?|sandali(?:\s+lang)?|saglit(?:\s+lang)?|hold\s+on|one\s+(?:sec(?:ond)?|moment)|just\s+a\s+(?:sec(?:ond)?|moment))(?:\s+(?:po|ha|ah|muna|pls|please))?$/i.test(
+    words.length <= 8 &&
+    !hasInterrogativeOrCommand &&
+    /^(?:wait(?:\s+lang)?|teka(?:\s+lang)?|sandali(?:\s+lang)?|saglit(?:\s+lang)?|hold\s+on|give\s+me\s+a\s+(?:sec(?:ond)?|moment|minute)|one\s+(?:sec(?:ond)?|moment)|just\s+a\s+(?:sec(?:ond)?|moment))(?:\s+.*)?$/i.test(
       plain,
     )
   ) {
@@ -912,9 +922,11 @@ function detectConversationalIntent(
       : "Sure, take your time! Just message me whenever you're ready.";
   }
 
-  // 3. Simple Acknowledgments / Closings ("Ok", "Sige", "Noted", "Got it", "Bye")
+  // 3. Simple Acknowledgments / Closings ("Ok", "Sige", "Noted", "Got it", "Bye", "Ok got it thanks")
   if (
-    /^(?:ok(?:ay|i)?|sige|ge|cge|noted|copy|got\s+it|gets(?:\s+ko\s+na)?|i\s+see|alright|ahh?|oh+|nice|great|cool|good|wala\s+na(?:\s+po)?|none|nothing\s+else|that(?:'s|\s+is)\s+all|bye+|goodbye|paalam)(?:\s+(?:po|na|ah|ha|naman|din))?$/i.test(
+    words.length <= 8 &&
+    !hasInterrogativeOrCommand &&
+    /^(?:ok(?:ay|i)?|sige|ge|cge|noted|copy|got\s+it|gets(?:\s+ko\s+na)?|i\s+see|alright|ahh?|oh+|nice|great|cool|good|makes\s+sense|wala\s+na(?:\s+po)?|none|nothing\s+else|that(?:'s|\s+is)\s+all|bye+|goodbye|paalam)(?:[,\s]+.*)?$/i.test(
       plain,
     )
   ) {
@@ -973,6 +985,7 @@ export function retrieveKnowledgeChunks(
       isConversational: false,
       isIdentityQuery: false,
       isOutOfScope: false,
+      isExplicitOutOfScope: false,
       topScore: 1,
       hits: [],
     };
@@ -986,6 +999,7 @@ export function retrieveKnowledgeChunks(
       isConversational: false,
       isIdentityQuery: true,
       isOutOfScope: false,
+      isExplicitOutOfScope: false,
       topScore: 1,
       hits: [],
     };
@@ -1004,6 +1018,7 @@ export function retrieveKnowledgeChunks(
       isConversational: true,
       isIdentityQuery: false,
       isOutOfScope: false,
+      isExplicitOutOfScope: false,
       conversationalReply,
       topScore: 1,
       hits: [],
@@ -1023,6 +1038,7 @@ export function retrieveKnowledgeChunks(
       isConversational: false,
       isIdentityQuery: false,
       isOutOfScope: true,
+      isExplicitOutOfScope: true,
       topScore: 0,
       hits: [],
     };
@@ -1039,6 +1055,7 @@ export function retrieveKnowledgeChunks(
       isConversational: false,
       isIdentityQuery: false,
       isOutOfScope: true,
+      isExplicitOutOfScope: false,
       topScore: 0,
       hits: [],
     };
@@ -1139,6 +1156,7 @@ export function retrieveKnowledgeChunks(
     isConversational: false,
     isIdentityQuery: false,
     isOutOfScope,
+    isExplicitOutOfScope: false,
     topScore,
     hits: isOutOfScope ? [] : topHits.filter((h) => h.score >= 0.11),
   };

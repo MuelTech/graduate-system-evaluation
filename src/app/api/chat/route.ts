@@ -80,18 +80,21 @@ function buildSystemInstruction(
   pathname: string,
   userContext?: UserLiveStateContext,
 ): string {
-  const knowledgeContext = retrieval.hits
-    .slice(0, 2)
-    .map((hit, idx) => {
-      const cleanEn = cleanAssistantReply(hit.chunk.answerEn);
-      const cleanTl = cleanAssistantReply(hit.chunk.answerTl);
-      return [
-        `[Source ${idx + 1}: ${hit.chunk.title}]`,
-        `English: ${cleanEn}`,
-        `Tagalog/Taglish: ${cleanTl}`,
-      ].join("\n");
-    })
-    .join("\n\n---\n\n");
+  const knowledgeContext =
+    retrieval.hits.length > 0
+      ? retrieval.hits
+          .slice(0, 2)
+          .map((hit, idx) => {
+            const cleanEn = cleanAssistantReply(hit.chunk.answerEn);
+            const cleanTl = cleanAssistantReply(hit.chunk.answerTl);
+            return [
+              `[Source ${idx + 1}: ${hit.chunk.title}]`,
+              `English: ${cleanEn}`,
+              `Tagalog/Taglish: ${cleanTl}`,
+            ].join("\n");
+          })
+          .join("\n\n---\n\n")
+      : "No specific EARIST Manual of Operations section matched this message directly.";
 
   const languageRule =
     retrieval.language === "tl"
@@ -121,7 +124,8 @@ Strict Response Format & Persona Rules:
 3. HUMAN-READABLE STAFF TONE: Never mention internal handbook codes or policy citations (no "Manual Sec. 7.10", "Sec. 7.18", "CMO No. 15", etc.), and refer to pages by plain name (e.g., "Proposal Defense page", "Student Dashboard") rather than raw URL paths like /student/thesis.
 4. MODEL & IDENTITY GUARDRAIL: Never mention Gemini, Google, Hydrogen, OpenAI, GPT, or being a large language model. If asked who or what you are, state only that you are the EARIST Graduate School Assistant.
 5. LIVE PORTAL STATE AWARENESS: Only include the user's <LIVE_USER_PORTAL_STATE> details when they explicitly ask about their own current status, step, title, adviser, or what to do on the current page. Do NOT add unsolicited summaries of their dashboard status or extra topic suggestions if they did not ask for them.
-6. KNOWLEDGE BOUNDARY: Rely ONLY on <LIVE_USER_PORTAL_STATE> and <RETRIEVED_KNOWLEDGE_BASE>. Never invent fees, dates, or rules. If the answer is not in those sources, politely say it is outside your Graduate School information and refer them to earistofficial1945@gmail.com or (02) 7738 5059.
+6. KNOWLEDGE BOUNDARY: For factual Graduate School inquiries, rely ONLY on <LIVE_USER_PORTAL_STATE> and <RETRIEVED_KNOWLEDGE_BASE> (and recent conversation context). Never invent fees, dates, or rules. If a substantive factual question is not answered in those sources, politely say it is outside your Graduate School information and refer them to earistofficial1945@gmail.com or (02) 7738 5059.
+7. CONVERSATIONAL & PRE-QUESTION MESSAGES: If the user sends a greeting, thank-you message (e.g., "Thanks for the information!", "Salamat sa iyong impormasyon!"), pause ("Wait lang"), closing, acknowledgment ("Ok", "Noted"), or pre-question opener ("May tanong ako sa thesis"), reply warmly and naturally in ONLY ONE short sentence without refusing them, without summarizing their dashboard, and without extra paragraphs.
 
 <RETRIEVED_KNOWLEDGE_BASE>
 ${knowledgeContext}
@@ -213,12 +217,15 @@ export async function POST(request: Request) {
       }
     }
 
-    // Immediate deterministic response for greetings, small talk, identity guardrail, and out-of-scope gate
+    const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+
+    // Only identity guardrail and explicit off-topic queries short-circuit before Gemini.
+    // Greetings, conversational messages (thanks/ok/wait), and borderline queries are processed by Gemini
+    // when an API key is configured; offline/no-key environments use the deterministic local fallback.
     if (
-      retrieval.isGreeting ||
-      retrieval.isConversational ||
+      !apiKey ||
       retrieval.isIdentityQuery ||
-      retrieval.isOutOfScope
+      retrieval.isExplicitOutOfScope
     ) {
       const fallback = buildGroundedResponseFallback(
         retrieval,
@@ -231,33 +238,57 @@ export async function POST(request: Request) {
         relatedRoutes: [],
         language: retrieval.language,
         mode: "local-rag",
-        isOutOfScope: retrieval.isOutOfScope,
+        isOutOfScope:
+          retrieval.isOutOfScope &&
+          !retrieval.isConversational &&
+          !retrieval.isGreeting,
       });
     }
 
-    const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
-    if (apiKey) {
-      const ai = new GoogleGenAI({ apiKey });
-      const systemInstruction = buildSystemInstruction(
-        retrieval,
-        activeRole,
-        pathname,
-        userContext,
-      );
-      const input = buildConversationInput(message, history);
+    const ai = new GoogleGenAI({ apiKey });
+    const systemInstruction = buildSystemInstruction(
+      retrieval,
+      activeRole,
+      pathname,
+      userContext,
+    );
+    const input = buildConversationInput(message, history);
 
+    try {
+      const interaction = await ai.interactions.create({
+        model: GEMINI_MODEL,
+        input,
+        system_instruction: systemInstruction,
+        store: false,
+      });
+
+      const geminiText = interaction.output_text?.trim();
+      if (geminiText) {
+        return NextResponse.json({
+          reply: cleanAssistantReply(geminiText),
+          citations: [],
+          relatedRoutes: [],
+          language: retrieval.language,
+          mode: "gemini-rag",
+          isOutOfScope: false,
+        });
+      }
+    } catch (interactionErr) {
+      // Fallback to generateContent before falling back to deterministic local RAG
       try {
-        const interaction = await ai.interactions.create({
+        const response = await ai.models.generateContent({
           model: GEMINI_MODEL,
-          input,
-          system_instruction: systemInstruction,
-          store: false,
+          contents: input,
+          config: {
+            systemInstruction,
+            temperature: 0.2,
+          },
         });
 
-        const geminiText = interaction.output_text?.trim();
-        if (geminiText) {
+        const generatedText = response.text?.trim();
+        if (generatedText) {
           return NextResponse.json({
-            reply: cleanAssistantReply(geminiText),
+            reply: cleanAssistantReply(generatedText),
             citations: [],
             relatedRoutes: [],
             language: retrieval.language,
@@ -265,40 +296,16 @@ export async function POST(request: Request) {
             isOutOfScope: false,
           });
         }
-      } catch (interactionErr) {
-        // Fallback to generateContent before falling back to deterministic local RAG
-        try {
-          const response = await ai.models.generateContent({
-            model: GEMINI_MODEL,
-            contents: input,
-            config: {
-              systemInstruction,
-              temperature: 0.2,
-            },
-          });
-
-          const generatedText = response.text?.trim();
-          if (generatedText) {
-            return NextResponse.json({
-              reply: cleanAssistantReply(generatedText),
-              citations: [],
-              relatedRoutes: [],
-              language: retrieval.language,
-              mode: "gemini-rag",
-              isOutOfScope: false,
-            });
-          }
-        } catch (fallbackErr) {
-          console.warn(
-            "Gemini API call failed, serving deterministic RAG fallback:",
-            interactionErr,
-            fallbackErr,
-          );
-        }
+      } catch (fallbackErr) {
+        console.warn(
+          "Gemini API call failed, serving deterministic RAG fallback:",
+          interactionErr,
+          fallbackErr,
+        );
       }
     }
 
-    // Deterministic Local RAG Fallback (works offline, without API key, or during quota limits)
+    // Deterministic Local RAG Fallback (used if Gemini returns empty or hits quota limits)
     const fallback = buildGroundedResponseFallback(
       retrieval,
       activeRole,
@@ -310,7 +317,10 @@ export async function POST(request: Request) {
       relatedRoutes: [],
       language: retrieval.language,
       mode: "local-rag",
-      isOutOfScope: false,
+      isOutOfScope:
+        retrieval.isOutOfScope &&
+        !retrieval.isConversational &&
+        !retrieval.isGreeting,
     });
   } catch (error) {
     console.error("Chat API error:", error);
