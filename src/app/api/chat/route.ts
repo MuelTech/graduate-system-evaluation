@@ -4,7 +4,6 @@ import {
   buildGroundedResponseFallback,
   cleanAssistantReply,
   retrieveKnowledgeChunks,
-  type RelatedRoute,
   type RetrievalResult,
   type UserLiveStateContext,
 } from "@/lib/chatbot-rag";
@@ -119,7 +118,7 @@ Language Instruction:
 Strict Response Format & Persona Rules:
 1. PLAIN TEXT ONLY: Never use Markdown symbols (*, **, #, ###, ---, or backticks). For numbered steps, use simple plain lines like "1. Title Defense - ...".
 2. CONCISE ("sakto lang"): Keep your answer focused and easy to scan (about 2 to 4 short sentences, or a brief 1 to 5 numbered list under ~90 words). Answer only what was asked without dumping extra background.
-3. HUMAN-READABLE STAFF TONE: Never mention internal handbook codes or policy citations (no "Manual Sec. 7.10", "Sec. 7.18", "CMO No. 15", etc.), and do not include raw URL paths (like /student/thesis or /applicant/schedule) because clickable navigation buttons are already displayed below your message. Refer to pages by plain name (e.g., "Proposal Defense page", "Student Dashboard").
+3. HUMAN-READABLE STAFF TONE: Never mention internal handbook codes or policy citations (no "Manual Sec. 7.10", "Sec. 7.18", "CMO No. 15", etc.), and refer to pages by plain name (e.g., "Proposal Defense page", "Student Dashboard") rather than raw URL paths like /student/thesis.
 4. MODEL & IDENTITY GUARDRAIL: Never mention Gemini, Google, Hydrogen, OpenAI, GPT, or being a large language model. If asked who or what you are, state only that you are the EARIST Graduate School Assistant.
 5. LIVE PORTAL STATE AWARENESS: Only include the user's <LIVE_USER_PORTAL_STATE> details when they explicitly ask about their own current status, step, title, adviser, or what to do on the current page. Do NOT add unsolicited summaries of their dashboard status or extra topic suggestions if they did not ask for them.
 6. KNOWLEDGE BOUNDARY: Rely ONLY on <LIVE_USER_PORTAL_STATE> and <RETRIEVED_KNOWLEDGE_BASE>. Never invent fees, dates, or rules. If the answer is not in those sources, politely say it is outside your Graduate School information and refer them to earistofficial1945@gmail.com or (02) 7738 5059.
@@ -229,22 +228,12 @@ export async function POST(request: Request) {
       return NextResponse.json({
         reply: fallback.reply,
         citations: [],
-        relatedRoutes: fallback.relatedRoutes,
+        relatedRoutes: [],
         language: retrieval.language,
         mode: "local-rag",
         isOutOfScope: retrieval.isOutOfScope,
       });
     }
-
-    const routeMap = new Map<string, RelatedRoute>();
-    for (const hit of retrieval.hits.slice(0, 2)) {
-      for (const route of hit.chunk.relatedRoutes) {
-        if (!routeMap.has(route.href)) {
-          routeMap.set(route.href, route);
-        }
-      }
-    }
-    const relatedRoutes = Array.from(routeMap.values()).slice(0, 3);
 
     const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
     if (apiKey) {
@@ -270,7 +259,7 @@ export async function POST(request: Request) {
           return NextResponse.json({
             reply: cleanAssistantReply(geminiText),
             citations: [],
-            relatedRoutes,
+            relatedRoutes: [],
             language: retrieval.language,
             mode: "gemini-rag",
             isOutOfScope: false,
@@ -293,7 +282,7 @@ export async function POST(request: Request) {
             return NextResponse.json({
               reply: cleanAssistantReply(generatedText),
               citations: [],
-              relatedRoutes,
+              relatedRoutes: [],
               language: retrieval.language,
               mode: "gemini-rag",
               isOutOfScope: false,
@@ -318,7 +307,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       reply: fallback.reply,
       citations: [],
-      relatedRoutes: fallback.relatedRoutes,
+      relatedRoutes: [],
       language: retrieval.language,
       mode: "local-rag",
       isOutOfScope: false,
@@ -330,7 +319,7 @@ export async function POST(request: Request) {
         reply:
           "Sorry, I encountered a temporary issue processing your request. Please try again or visit the System FAQ page.",
         citations: [],
-        relatedRoutes: [{ label: "System FAQ", href: "/faq" }],
+        relatedRoutes: [],
         language: "en",
         mode: "local-rag",
         isOutOfScope: false,

@@ -1,20 +1,17 @@
 "use client";
 
 import { useState, useRef, useEffect, useMemo } from "react";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   MessageCircle,
   X,
   Send,
   Sparkles,
-  ArrowUpRight,
   RotateCcw,
 } from "lucide-react";
 import {
   buildGroundedResponseFallback,
   retrieveKnowledgeChunks,
-  type RelatedRoute,
   type UserLiveStateContext,
 } from "@/lib/chatbot-rag";
 import {
@@ -34,13 +31,11 @@ interface Message {
   role: "user" | "bot";
   content: string;
   timestamp: Date | null;
-  relatedRoutes?: RelatedRoute[];
   isOutOfScope?: boolean;
 }
 
 interface ChatApiResponse {
   reply: string;
-  relatedRoutes?: RelatedRoute[];
   isOutOfScope?: boolean;
 }
 
@@ -408,7 +403,6 @@ export function ChatbotWidget() {
         role: "bot",
         content: data.reply,
         timestamp: new Date(),
-        relatedRoutes: data.relatedRoutes ?? [],
         isOutOfScope: data.isOutOfScope ?? false,
       };
       setMessages((prev) => [...prev, botMessage]);
@@ -430,7 +424,6 @@ export function ChatbotWidget() {
         role: "bot",
         content: fallback.reply,
         timestamp: new Date(),
-        relatedRoutes: fallback.relatedRoutes,
         isOutOfScope: retrieval.isOutOfScope,
       };
       setMessages((prev) => [...prev, botMessage]);
@@ -527,25 +520,6 @@ export function ChatbotWidget() {
                     <p className="leading-relaxed whitespace-pre-line">
                       {message.content}
                     </p>
-
-                    {/* Clickable Navigation Links */}
-                    {message.role === "bot" &&
-                      message.relatedRoutes &&
-                      message.relatedRoutes.length > 0 && (
-                        <div className="mt-2 flex flex-wrap gap-1.5">
-                          {message.relatedRoutes.map((route) => (
-                            <Link
-                              key={route.href}
-                              href={route.href}
-                              onClick={() => setIsOpen(false)}
-                              className="inline-flex items-center gap-1 rounded-full border border-(--earist-primary)/30 bg-white px-2.5 py-1 text-[11px] font-medium text-(--earist-primary) transition-colors hover:bg-(--earist-surface-light-red)"
-                            >
-                              {route.label}
-                              <ArrowUpRight className="h-3 w-3" />
-                            </Link>
-                          ))}
-                        </div>
-                      )}
 
                     <p
                       suppressHydrationWarning
