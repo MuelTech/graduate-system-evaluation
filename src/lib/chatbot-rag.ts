@@ -633,6 +633,22 @@ const SYNONYM_EXPANSIONS: Array<{ pattern: RegExp; tokens: string[] }> = [
     pattern: /\b(admin|administrator)\b/i,
     tokens: ["admin", "administrator", "cor", "verification", "waiver", "slots"],
   },
+  {
+    pattern:
+      /\b(process|proseso|steps|hakbang|journey|flow)\b.*\b(thesis|tesis|dissertation|disertation|disertasyon)\b|\b(thesis|tesis|dissertation|disertation|disertasyon)\b.*\b(process|proseso|steps|hakbang|journey|flow)\b/i,
+    tokens: [
+      "thesis",
+      "dissertation",
+      "process",
+      "title",
+      "defense",
+      "proposal",
+      "final",
+      "5",
+      "steps",
+      "journey",
+    ],
+  },
 ];
 
 /**
@@ -660,6 +676,16 @@ function normalizeText(text: string): string {
     .replace(/ed\.d/g, "edd")
     .replace(/(\d+)\s*%/g, "$1 percent")
     .replace(/1\s*:\s*5/g, "1 to 5 ratio 5 students")
+    .replace(/\b(disertation|disertasyon|dissertasyon)\b/g, "dissertation")
+    .replace(/\b(tesis)\b/g, "thesis")
+    .replace(/\b(proseso)\b/g, "process")
+    .replace(/\b(re-?defence)\b/g, "re-defense")
+    .replace(/\b(defence)\b/g, "defense")
+    .replace(/\b(adriser|advicer)\b/g, "adviser")
+    .replace(/\b(plagarism)\b/g, "plagiarism")
+    .replace(/\b(rikwayrments|requirments)\b/g, "requirements")
+    .replace(/\b(skedyul|iskedyul)\b/g, "schedule")
+    .replace(/\b(kurikulum)\b/g, "curriculum")
     .replace(/[^a-z0-9\s\-]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -1020,11 +1046,13 @@ export function buildGroundedResponseFallback(
   const primary = retrieval.hits[0];
   const secondary = retrieval.hits[1];
 
-  // Include secondary hit if its score is close to primary and it belongs to a distinct section
+  // Include secondary hit only if it belongs to the exact same category, clears high confidence, and closely matches primary
   const includeSecondary =
     secondary &&
-    secondary.score >= primary.score * 0.72 &&
-    secondary.chunk.id !== primary.chunk.id;
+    secondary.chunk.id !== primary.chunk.id &&
+    secondary.chunk.category === primary.chunk.category &&
+    secondary.score >= 0.42 &&
+    secondary.score >= primary.score * 0.85;
 
   const primaryAnswer = useTagalog
     ? primary.chunk.answerTl

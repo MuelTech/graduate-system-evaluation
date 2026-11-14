@@ -570,17 +570,21 @@
     "id": "thesis-defense-stages-contents",
     "category": "Thesis & Defense Pipeline",
     "section": "Manual Sec. 7.18 — Title, Proposal & Final Defense Requirements",
-    "title": "Required Manuscript Contents for Title, Proposal & Final Defense",
-    "roles": ["student", "faculty", "admin"],
-    "keywords": ["title defense", "proposal defense", "final defense", "three proposed titles", "chapters 1-3", "chapters 1-5", "abstract", "cv", "curriculum vitae"],
+    "title": "Thesis / Dissertation Process & Required Manuscript Contents",
+    "roles": ["public", "applicant", "student", "faculty", "admin"],
+    "keywords": ["thesis process", "dissertation process", "process ng thesis", "proseso ng thesis", "thesis dissertation", "steps in thesis", "title proposal final defense", "title defense", "proposal defense", "final defense", "three proposed titles", "chapters 1-3", "chapters 1-5", "abstract", "cv", "curriculum vitae"],
     "commonInquiries": [
+      "What is the thesis or dissertation process in EARIST Graduate School?",
+      "Ano ang process ng thesis o dissertation?",
+      "Paano ang proseso ng thesis at dissertation sa Graduate School?",
       "What do I need to present/include in Title Defense, Proposal Defense, and Final Defense?",
       "Which chapters are required for Proposal Defense vs. Final Defense?",
       "Ano ang laman ng manuscript sa Title, Proposal, at Final Defense?"
     ],
-    "answerEn": "Sec. 7.18 Defense Process: 1) Title Defense: Student presents three (3) proposed titles for evaluation. 2) Proposal Defense: Manuscript includes title page, table of contents, Chapters 1–3, references, appendix, and CV. 3) Final Defense: Manuscript includes title page, certification/approval/acceptance page, abstract, acknowledgment, dedication, table of contents, Chapters 1–5, references, appendix, and CV.",
-    "answerTl": "Tatlong Defense Stages (Sec. 7.18): 1) Title Defense: magpre-present ng 3 proposed titles. 2) Proposal Defense: title page, TOC, Chapters 1–3, references, appendix, at CV. 3) Final Defense: buong manuscript mula title page, certification/approval/acceptance, abstract, ack, dedication, TOC, Chapters 1–5, references, appendix, at CV.",
+    "answerEn": "EARIST Thesis/Dissertation Process (Sec. 7.17–7.18): After passing the Written Comprehensive Exam, complete the 5-step Thesis Journey in /student/thesis:\n1) Title Defense: Present three (3) proposed titles for panel evaluation.\n2) Adviser Request: Select an eligible doctoral-degree adviser (1:5 cap) via digital e-signature.\n3) Proposal Defense: Submit adviser-endorsed manuscript (title page, TOC, Chapters 1–3, references, appendix, CV) at least 7 days before defense.\n4) STRIKE Plagiarism Check: Pass similarity screening (<20%) for clearance.\n5) Final Defense: Submit full manuscript (certification/approval/acceptance pages, abstract, ack, dedication, TOC, Chapters 1–5, references, appendix, CV), pass oral defense, then submit archival copy to /student/repository/submit and fulfill required journal publication.",
+    "answerTl": "Proseso ng Thesis / Dissertation (Sec. 7.17–7.18):\nPagkatapos maipasa ang Comprehensive Exam, dadaan ka sa 5-Step Thesis Journey sa Student Portal (/student/thesis):\n1) Title Defense: Magpre-present ng 3 proposed titles sa panel.\n2) Adviser Request: Pipili ng Thesis/Dissertation Adviser (may doctoral degree, max 1:5 ratio).\n3) Proposal Defense: Ipasa ang Chapters 1–3 (kasama title page, TOC, references, appendix, at CV) nang hindi bababa sa 7 days bago ang defense.\n4) STRIKE Plagiarism Check: Kailangang <20% similarity index para makakuha ng clearance.\n5) Final Defense: Ipasa ang buong Chapters 1–5 (with abstract, approval sheets, references, CV), tapusin ang oral defense, mag-upload sa Repository (/student/repository/submit), at tuparin ang journal publication requirement.",
     "relatedRoutes": [
+      { "label": "Thesis Hub", "href": "/student/thesis" },
       { "label": "Title Defense", "href": "/student/thesis/title-defense" },
       { "label": "Proposal Defense", "href": "/student/thesis/proposal-defense" },
       { "label": "Final Defense", "href": "/student/thesis/final-defense" }
@@ -1061,12 +1065,13 @@
     "category": "System Navigation & Portal Guide",
     "section": "System Guide — Student Thesis Journey Hub",
     "title": "Overview of the 5-Step Thesis Journey in the Student Portal",
-    "roles": ["student", "faculty"],
-    "keywords": ["thesis hub", "thesis journey", "5 steps", "thesis pipeline", "step 1", "step 5", "ano mga steps sa thesis"],
+    "roles": ["public", "student", "faculty"],
+    "keywords": ["thesis hub", "thesis journey", "5 steps", "thesis pipeline", "step 1", "step 5", "ano mga steps sa thesis", "process ng thesis", "thesis process", "dissertation process", "proseso ng thesis", "paano ang thesis"],
     "commonInquiries": [
       "What are the 5 steps of the Student Thesis Journey?",
       "Where can I access all thesis milestones in the Student Portal?",
-      "Ano ang 5 steps sa Thesis Journey sa Student Portal?"
+      "Ano ang 5 steps sa Thesis Journey sa Student Portal?",
+      "Ano ang process ng thesis dissertation sa portal?"
     ],
     "answerEn": "Visit /student/thesis to view the 5-Step Thesis Journey: Step 1) Title Defense (/student/thesis/title-defense), Step 2) Adviser Request (/student/thesis/adviser-request), Step 3) Proposal Defense (/student/thesis/proposal-defense), Step 4) STRIKE Plagiarism Check (/student/thesis/strike), and Step 5) Final Defense (/student/thesis/final-defense), followed by Thesis Repository Archival (/student/repository/submit).",
     "answerTl": "Sa /student/thesis makikita ang 5-Step Thesis Journey: 1) Title Defense, 2) Adviser Request, 3) Proposal Defense, 4) STRIKE Plagiarism Check, at 5) Final Defense—bago ang pag-submit sa Thesis Repository.",

@@ -48,7 +48,7 @@ function loadChatbotRagModule() {
 const rag = loadChatbotRagModule();
 
 /**
- * 50 representative evaluation queries covering:
+ * 51 representative evaluation queries covering:
  * - English, Tagalog, and Taglish Handbook policies (Sec 1.0–21.0)
  * - Role-based System Navigation & Configured FAQs (Public, Applicant, Student, Faculty, Admin)
  * - Out-of-Scope boundary enforcement
@@ -418,6 +418,13 @@ const BENCHMARK_CASES = [
     role: "student",
     expectedLang: ["tl", "taglish"],
     expectOutOfScope: true,
+  },
+  {
+    id: "Q51",
+    query: "Ano ang process ng thesis disertation?",
+    role: "public",
+    expectedLang: "taglish",
+    expectedIds: ["thesis-defense-stages-contents", "student-thesis-hub"],
   },
 ];
 
